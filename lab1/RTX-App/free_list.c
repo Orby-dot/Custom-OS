@@ -1,6 +1,15 @@
 #include "common.h"
-#include "math.h"
 #include "free_list.h"
+
+int findLevel(int size) {
+    int pow = 0;
+    int i = 1;
+    while(i < size) {
+        i *=2;
+        pow++;
+    }
+    return -pow + 15;
+}
 
 int initializeArrayOfFreeLists(freeList_t *freeListArray) {
 	for (int i=0; i<LEVELS; i++) {
@@ -13,13 +22,13 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray) {
 		freeList.head = &dummyNode;
 		freeList.tail = &dummyNode;
 		
-		if(i==0){
+		if (i==0) {
 			node_t startingNode;
 			startingNode.next = NULL;
 			startingNode.prev = &dummyNode;
 			startingNode.startAddress = 0;
 			dummyNode.next = &startingNode;
-		}else {
+		} else {
 			dummyNode.next = NULL;
 		}
 		
@@ -29,8 +38,7 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray) {
 
 int allocate(int size, freeList_t *freeListArray) {
 	// find which level that block will be on
-	int level = pow(2, ceil(log(size)/log(2))) - 1; // - 1 beacause of arry aindexing
-	// TODO: not super sure about this^
+	int level = findLevel(size);
 	
 	// if there is a free block use it
 	if(freeListArray[level].head->next->next->next != NULL) {
@@ -52,18 +60,18 @@ int allocate(int size, freeList_t *freeListArray) {
 		}
 	}
 	
-		// remove parent node from freeList
-		node_t *parent = freeListArray[level].head->next->next;
-		parent->prev->next = parent->next;
-		parent->next->prev = parent->prev;
-		parent->next = NULL;
-		parent->prev = NULL;
+	// remove parent node from freeList
+	node_t *parent = freeListArray[level].head->next->next;
+	parent->prev->next = parent->next;
+	parent->next->prev = parent->prev;
+	parent->next = NULL;
+	parent->prev = NULL;
 	
 	// keep splitting... only keep right node of each level
 	U32 leftNodeIndex = 2*parent->startAddress;
 	level++;
 	
-	while (level < pow(2, ceil(log(size)/log(2))) - 1) {
+	while (level < findLevel(size)) - 1) {
 		// add right-node of parent to level + 1
 		node_t *dummyNode = freeListArray[level+1].head;
 		node_t *newRightNode;
