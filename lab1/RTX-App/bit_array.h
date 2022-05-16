@@ -9,6 +9,8 @@ typedef struct bitArray{
 	U8 bitStatus[ARRAY_SIZE];
 } bitArray;
 
+void initializeBitArray(bitArray *array);
+void allocateNode(bitArray * array, U32 sizeToAllocate);
 void removeNode(bitArray *array, U8 level, U32 node);
 void coalesce(bitArray *array, U8 level, U32 node);
 void updateParentNodes(bitArray *array, U8 level, U32 node);
