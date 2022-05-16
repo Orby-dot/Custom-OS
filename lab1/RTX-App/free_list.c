@@ -71,7 +71,7 @@ int allocate(int size, freeList_t *freeListArray) {
 	U32 leftNodeIndex = 2*parent->startAddress;
 	level++;
 	
-	while (level < findLevel(size)) - 1) {
+	while (level < findLevel(size) - 1) {
 		// add right-node of parent to level + 1
 		node_t *dummyNode = freeListArray[level+1].head;
 		node_t *newRightNode;
