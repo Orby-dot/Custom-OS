@@ -50,7 +50,6 @@ int allocate(int size, freeList_t *freeListArray) {
 		
 		return toReturn->startAddress;
 	}
-	// TODO: Check the number of nexts again^
 	
 	// If, not go above and look for one. Once you find it, split it.
 	while(freeListArray[level].head->next->next != NULL) {
@@ -88,4 +87,55 @@ int allocate(int size, freeList_t *freeListArray) {
 	
 	// return level;
 	return leftNodeIndex + 1;
+}
+
+/*Probaby don't need this but leaving here for now
+
+void deallocate(int level, int xPosition, freeList_t *freeListArray) {
+	int buddyPosition = xPosition % 2 == 0 ? xPosition+1 : xPosition-1;
+	while(level>0){
+		node_t *currNode = freeListArray[level].head;
+		while(currNode && currNode->startAddress<buddyPosition){
+			currNode = currNode->next;
+		}
+		if(!currNode || currNode->startAddress!=buddyPosition){
+			node_t *newNode;
+			newNode->startAddress = xPosition;
+			currNode->prev->next = newNode;
+			newNode->next = currNode;
+			currNode->prev = newNode;
+			break;
+		}
+		level--;
+		buddyPosition = (buddyPosition/2)%2==0 ? buddyPosition/2+1 : buddyPosition/2-1;
+	}
+}*/
+
+void addNode(int level, int xPosition, freeList_t *freeListArray){
+	node_t *currNode = freeListArray[level].head;
+	
+	while(currNode->next && currNode->startAddress<xPosition){
+		currNode = currNode->next;
+	}
+	node_t *newNode;
+	if(currNode->next){
+		newNode->next = currNode->next;
+		currNode->next->prev = newNode;
+	}
+	currNode->next = newNode;
+	newNode->prev = currNode;
+}
+
+void removeNode(int level, int xPosition, freeList_t *freeListArray){
+	node_t *currNode = freeListArray[level].head;
+	
+	while(currNode->startAddress!=xPosition){
+		currNode = currNode->next;
+	}
+	currNode->prev->next = currNode->next;
+	currNode->next->prev = currNode->prev;
+	
+	currNode->startAddress=0;
+	currNode->prev=NULL;
+	currNode->next=NULL;
 }

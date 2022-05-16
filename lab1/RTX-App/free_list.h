@@ -21,4 +21,6 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray);
 
 int allocate(int size, freeList_t *freeListArray);
 
-int deallocate();
+void addNode(int level, int xPosition, freeList_t *freeListArray);
+
+void removeNode(int level, int xPosition, freeList_t *freeListArray);
