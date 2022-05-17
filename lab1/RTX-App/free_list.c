@@ -55,7 +55,7 @@ int allocate(int size, freeList_t *freeListArray) {
 	while(freeListArray[level].head->next->next != NULL) {
 		level--;
 		if (level < 0) {
-			// exit?
+			return -1;
 		}
 	}
 	
