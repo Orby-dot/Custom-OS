@@ -1,18 +1,12 @@
 #include "common.h"
 #include "free_list.h"
+#include "helper.h"
+	
+U8 levels;
 
-int findLevel(int size) {
-    int pow = 0;
-    int i = 1;
-    while(i < size) {
-        i *=2;
-        pow++;
-    }
-    return -pow + 15;
-}
-
-int initializeArrayOfFreeLists(freeList_t *freeListArray) {
-	for (int i=0; i<LEVELS; i++) {
+int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput) {
+	levels = levelsInput;
+	for (int i=0; i<levels; i++) {
 		freeList_t freeList;
 		
 		node_t dummyNode;
@@ -38,7 +32,7 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray) {
 
 int allocate(int size, freeList_t *freeListArray) {
 	// find which level that block will be on
-	int level = findLevel(size);
+	int level = findLevel(size, levels);
 	
 	// if there is a free block use it
 	if(freeListArray[level].head->next->next->next != NULL) {
@@ -70,7 +64,7 @@ int allocate(int size, freeList_t *freeListArray) {
 	U32 leftNodeIndex = 2*parent->startAddress;
 	level++;
 	
-	while (level < findLevel(size) - 1) {
+	while (level < findLevel(size, levels) - 1) {
 		// add right-node of parent to level + 1
 		node_t *dummyNode = freeListArray[level+1].head;
 		node_t *newRightNode;
@@ -85,7 +79,6 @@ int allocate(int size, freeList_t *freeListArray) {
 		level++;
 	}
 	
-	// return level;
 	return leftNodeIndex + 1;
 }
 
