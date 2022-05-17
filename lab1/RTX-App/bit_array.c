@@ -33,36 +33,31 @@ BOOL isLeaf(bitArray* array, U32 leftAddress, U8 level){
 	
 }
 
+//get address from level and x position for node
+/*
+int getNodeAddress(bitArray* array, U8 level, U8 x){
+	return ((array->size)>>level)*x;
+}
+*/
 
 //returns index from 0 to 2^h - 1
-int locateNode(bitArray* array, U32 leftAddress, U32 rightAddress, U32 targetAddress, U8 level){
+int locateNode(bitArray* array, U8 xPosition, U8 level){
 	
-	
-	//base case where the left side of the address search is equal to the target address and it is also a leaf
-	if(leftAddress == targetAddress && isLeaf(array, leftAddress, level)){
-		
-		int index = leftAddress - array->startAddress;
-		int value = array->bitStatus[index/8];
-		int bitPosition = 1<<(index/8);
-		
-		// not sure if this will work
-		if (value & bitPosition) return RTX_ERR;
-		
-		return leftAddress-array->startAddress;
+	U32 index = (1<<level)-1+xPosition;
+	U8 bitPosition = 1<<(index%8);
+
+	if( (array->bitStatus[index/8] & bitPosition) == 1){
+		return index;
 	}
 	
-	if(rightAddress<targetAddress){
-		return locateNode(array, rightAddress/2, rightAddress, targetAddress, level+1);
-	}
-	
-	return locateNode(array, leftAddress, rightAddress/2 - 1, targetAddress, level+1);	
+	return locateNode(array, xPosition/2, level-1);
 }
 
 // allocate memory
 void allocateNode(bitArray * array, U32 sizeToAllocate){
-	//call linked list function with sizeToAllocate, returns level and node
-	U8 level;
-	U32 node;
+	//call linked list function with sizeToAllocate, returns index within a level
+	U32 node = allocate(); //allocate node in free list - get from free list
+	U8 level = findLevel(); // find level - call function from util
 
 	U32 index = (1<<level)-1+node;
 	U8 bitPosition = 1<<(index%8);
@@ -88,16 +83,33 @@ void updateParentNodes(bitArray *array, U8 level, U32 node){
 
 }
 
-// deallocate
-void removeNode(bitArray *array, U8 level, U32 node){
+U8 getHeight(bitArray*array){	
+	U8 minSize = 32;
+	U8 height = log(array->size) - log(minSize)+1;
+	return height;
+}
+
+U8 getXPosition(bitArray* array, U8 address, U8 level){
+	U8 height = getHeight(array);
+	return (address-array->startAddress)/(array->size >> (level-1));
+}
+
+void removeNode(bitArray *array, U32 address){
+	
+	U8 height = getHeight(array);
+	
+	//pass in array, x position on the bottom of the tree, and height
+	// nodePosition is from 0 to 2^h -1
+	U32 nodePosition = locateNode(array, getXPosition(array, address, height), height);
 	
 	//check the value in the bit array
-	U32 index = (1<<level)-1+node;
-	U8 bitPosition = 1<<(index%8);
+	U8 bitPosition = 1<<(nodePosition%8);
 	
-	if( (array->bitStatus[index/8] & bitPosition) > 0){
-		array->bitStatus[index/8] = (array->bitStatus[index/8] & ~bitPosition);
-		coalesce(array, level, node);
+	if( (array->bitStatus[nodePosition/8] & bitPosition) > 0){
+		array->bitStatus[nodePosition/8] = (array->bitStatus[nodePosition/8] & ~bitPosition);
+		U8 level = log(nodePosition+1);
+		U8 x = (1<<level)-1;
+		coalesce(array, level, x);
 	}
 	
 }
@@ -122,6 +134,5 @@ void coalesce(bitArray *array, U8 level, U32 node){
 		//free list needs be updated to combine buddies
 		coalesce(array, level-1, (node+1)/2);
 	}
-	
-	
+
 }
