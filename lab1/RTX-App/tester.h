@@ -18,3 +18,7 @@ TO-DO: Need to make a doc for this!
 
 void printBitArray(bitArray * array);
 void printBitLevel(bitArray * array,int level, int numOfNodes);
+void printLinkedList(bitArray * array);
+void printListLevel(freeList_t * list);
+
+

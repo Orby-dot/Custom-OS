@@ -5,7 +5,7 @@ void initializeBitArray(bitArray *array, U32 startAddress, U32 endAddress){
 	
 	array->startAddress = startAddress;
 	array->endAddress = endAddress;
-	array->size = startAddress-endAddress;
+	array->size = endAddress - startAddress +1;
 	
 	for(int i=0;i<array->size;i++){
 		array->bitStatus[i] = 0;
@@ -124,7 +124,7 @@ void coalesce(bitArray *array, U8 level, U32 node){
 
 	U32 buddyIndex = index;
 	if(node%2){
-		buddyIndex +=-1;
+		buddyIndex -=1;
 	}
 	else{
 		buddyIndex +=1;
@@ -138,5 +138,6 @@ void coalesce(bitArray *array, U8 level, U32 node){
 		
 		coalesce(array, level-1, (node+1)/2);
 	}
+
 
 }

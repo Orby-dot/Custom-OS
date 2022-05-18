@@ -11,11 +11,13 @@ TO-DO: Need to make a doc for this!
 void printBitArray(bitArray * array)
 {
 	int numOfLevels = (log_2(array->size) - log_2(MIN_SIZE));
-	int numOfNodes = 1;
+	
+	printf("Start: %u  End: %u\r\n",array->startAddress, array->endAddress);
+	printf("Size: %u \r\n",array->size);
+	printf("Num of levels: %d\r\n",numOfLevels);
 	
 	for(int i = 0 ; i < numOfLevels;i++){
-		printBitLevel(array,i,(2^i));
-		
+		printBitLevel(array,i,(1<<i));	
 	}
 }
 
@@ -38,4 +40,26 @@ void printBitLevel(bitArray * array,int level, int numOfNodes)
 	}
 	printf("\r\n");
 	
+}
+
+void printLinkedList(bitArray * array)
+{
+	int numOfLevels = (log_2(array->size) - log_2(MIN_SIZE));
+	
+	for(int i = 0 ; i < numOfLevels;i++){
+		printListLevel(&array->freeList[i]);
+		
+	}
+}
+
+void printListLevel(freeList_t * list)
+{
+	node_t * current = list->head;
+	
+	while (current != NULL){
+		printf ("%d <-> ",current->startAddress);
+	}
+	
+	
+	printf(" NULL \r\n");
 }

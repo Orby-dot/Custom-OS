@@ -11,7 +11,7 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput) {
 		
 		node_t dummyNode;
 		dummyNode.prev = NULL;
-		dummyNode.startAddress = -1;
+		dummyNode.startAddress = 0;
 		
 		freeList.head = &dummyNode;
 		freeList.tail = &dummyNode;
@@ -28,6 +28,7 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput) {
 		
 		freeListArray[i] = freeList;
 	}
+	return 0;
 }
 
 int allocate(int size, freeList_t *freeListArray) {

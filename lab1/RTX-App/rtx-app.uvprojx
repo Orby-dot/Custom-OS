@@ -438,6 +438,41 @@
               <FileType>5</FileType>
               <FilePath>.\free_list.h</FilePath>
             </File>
+            <File>
+              <FileName>bit_array.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bit_array.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>bit_array.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\bit_array.h</FilePath>
+            </File>
+            <File>
+              <FileName>helper.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\helper.h</FilePath>
+            </File>
+            <File>
+              <FileName>helper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\helper.c</FilePath>
+            </File>
+            <File>
+              <FileName>tester.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\tester.c</FilePath>
+            </File>
+            <File>
+              <FileName>tester.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\tester.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -948,6 +983,41 @@
               <FileName>free_list.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\free_list.h</FilePath>
+            </File>
+            <File>
+              <FileName>bit_array.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bit_array.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>bit_array.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\bit_array.h</FilePath>
+            </File>
+            <File>
+              <FileName>helper.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\helper.h</FilePath>
+            </File>
+            <File>
+              <FileName>helper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\helper.c</FilePath>
+            </File>
+            <File>
+              <FileName>tester.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\tester.c</FilePath>
+            </File>
+            <File>
+              <FileName>tester.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\tester.h</FilePath>
             </File>
           </Files>
         </Group>
