@@ -1,6 +1,5 @@
 #include "common.h"
 #include "bit_array.h"
-
 // init
 void initializeBitArray(bitArray *array, U32 startAddress, U32 endAddress){
 	
@@ -11,11 +10,13 @@ void initializeBitArray(bitArray *array, U32 startAddress, U32 endAddress){
 	for(int i=0;i<array->size;i++){
 		array->bitStatus[i] = 0;
 	}
+	
+	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress));
 }
 
 // checks if the 'leftAddress' is either at the bottom of the binary tree or has two children with 0 as it's bit array value
 BOOL isLeaf(bitArray* array, U32 leftAddress, U8 level){
-	int heightOfTree = log(array->size);
+	int heightOfTree = log_2(array->size);
 	if(level == heightOfTree) return TRUE;
 	
 	int index = (leftAddress - array->startAddress);
@@ -56,8 +57,8 @@ int locateNode(bitArray* array, U8 xPosition, U8 level){
 // allocate memory
 void allocateNode(bitArray * array, U32 sizeToAllocate){
 	//call linked list function with sizeToAllocate, returns index within a level
-	U32 node = allocate(); //allocate node in free list - get from free list
-	U8 level = findLevel(); // find level - call function from util
+	U32 node = allocate(sizeToAllocate, array->freeList); //allocate node in free list - get from free list
+	U8 level = findLevel(sizeToAllocate,log_2(array->size)); // find level - call function from util
 
 	U32 index = (1<<level)-1+node;
 	U8 bitPosition = 1<<(index%8);
@@ -85,7 +86,7 @@ void updateParentNodes(bitArray *array, U8 level, U32 node){
 
 U8 getHeight(bitArray*array){	
 	U8 minSize = 32;
-	U8 height = log(array->size) - log(minSize)+1;
+	U8 height = log_2(array->size) - log_2(minSize)+1;
 	return height;
 }
 
@@ -94,7 +95,7 @@ U8 getXPosition(bitArray* array, U8 address, U8 level){
 	return (address-array->startAddress)/(array->size >> (level-1));
 }
 
-void removeNode(bitArray *array, U32 address){
+void removeNodes(bitArray *array, U32 address){
 	
 	U8 height = getHeight(array);
 	
@@ -107,7 +108,7 @@ void removeNode(bitArray *array, U32 address){
 	
 	if( (array->bitStatus[nodePosition/8] & bitPosition) > 0){
 		array->bitStatus[nodePosition/8] = (array->bitStatus[nodePosition/8] & ~bitPosition);
-		U8 level = log(nodePosition+1);
+		U8 level = log_2(nodePosition+1);
 		U8 x = (1<<level)-1;
 		coalesce(array, level, x);
 	}
@@ -132,6 +133,9 @@ void coalesce(bitArray *array, U8 level, U32 node){
 	U8 buddyBitPosition = 1<<(buddyIndex%8);
 	if( (array->bitStatus[index/8] & buddyBitPosition) == 0 && (array->bitStatus[index/8] & bitPosition) == 0){
 		//free list needs be updated to combine buddies
+		removeNode(level,buddyIndex,array->freeList);
+		addNode(level-1,(node+1)/2,array->freeList);
+		
 		coalesce(array, level-1, (node+1)/2);
 	}
 
