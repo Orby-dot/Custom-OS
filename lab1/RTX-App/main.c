@@ -4,12 +4,10 @@
 #include "printf.h"
 #include "tester.h"
 //#include "bit_array.h" uncomment this when u dont need tester.h
-
+bitArray array;
 int main(){
 	
     SystemInit();
-		
-    bitArray* array = (bitArray*) RAM2_START;
     //*r2_start = 10;
     uart0_init();
     uart1_init();
@@ -18,8 +16,8 @@ int main(){
     printf("this is a string\r\n");
 		printf("%u \r\n",(RAM2_START));
 		
-		initializeBitArray(array, 0,1023);
-		printBitArray(array);
+		initializeBitArray(&array, RAM2_START,RAM2_END);
+		printBitArray(&array);
 		
     
     return 0;

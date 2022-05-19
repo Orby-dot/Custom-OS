@@ -7,7 +7,7 @@ void initializeBitArray(bitArray *array, U32 startAddress, U32 endAddress){
 	array->endAddress = endAddress;
 	array->size = endAddress - startAddress +1;
 	
-	for(int i=0;i<array->size;i++){
+	for(int i=0;i<((2*(ARRAY_SIZE)/32 -1)/8);i++){
 		array->bitStatus[i] = 0;
 	}
 	

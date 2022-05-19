@@ -3,9 +3,9 @@
 <title>Static Call Graph - [.\Objects\SIM\rtx-app-sim.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\SIM\rtx-app-sim.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed May 18 15:47:39 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu May 19 17:16:56 2022
 <BR><P>
-<H3>Maximum Stack Usage =        176 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        184 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 __rt_entry_main &rArr; main &rArr; printBitArray &rArr; printBitLevel &rArr; tfp_printf &rArr; tfp_format &rArr; putchw
 <P>
@@ -200,7 +200,7 @@ Global Symbols
 <P><STRONG><a name="[9b]"></a>__rt_entry_postsh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000009))
 
 <P><STRONG><a name="[3f]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
-<BR><BR>[Stack]<UL><LI>Max Depth = 176 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 184 + Unknown Stack Size
 <LI>Call Chain = __rt_entry_main &rArr; main &rArr; printBitArray &rArr; printBitLevel &rArr; tfp_printf &rArr; tfp_format &rArr; putchw
 </UL>
 <BR>[Calls]<UL><LI><a href="#[40]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -510,7 +510,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;initializeBitArray
 </UL>
 
-<P><STRONG><a name="[64]"></a>initializeBitArray</STRONG> (Thumb, 62 bytes, Stack size 24 bytes, bit_array.o(i.initializeBitArray))
+<P><STRONG><a name="[64]"></a>initializeBitArray</STRONG> (Thumb, 64 bytes, Stack size 24 bytes, bit_array.o(i.initializeBitArray))
 <BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = initializeBitArray &rArr; initializeArrayOfFreeLists
 </UL>
 <BR>[Calls]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_2
@@ -652,8 +652,8 @@ Global Symbols
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;initializeBitArray
 </UL>
 
-<P><STRONG><a name="[40]"></a>main</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = main &rArr; printBitArray &rArr; printBitLevel &rArr; tfp_printf &rArr; tfp_format &rArr; putchw
+<P><STRONG><a name="[40]"></a>main</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = main &rArr; printBitArray &rArr; printBitLevel &rArr; tfp_printf &rArr; tfp_format &rArr; putchw
 </UL>
 <BR>[Calls]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tfp_printf
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printBitArray
@@ -665,17 +665,17 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>
 
-<P><STRONG><a name="[73]"></a>printBitArray</STRONG> (Thumb, 72 bytes, Stack size 16 bytes, tester.o(i.printBitArray))
-<BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = printBitArray &rArr; printBitLevel &rArr; tfp_printf &rArr; tfp_format &rArr; putchw
+<P><STRONG><a name="[73]"></a>printBitArray</STRONG> (Thumb, 104 bytes, Stack size 24 bytes, tester.o(i.printBitArray))
+<BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = printBitArray &rArr; printBitLevel &rArr; tfp_printf &rArr; tfp_format &rArr; putchw
 </UL>
-<BR>[Calls]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printBitLevel
-<LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tfp_printf
+<BR>[Calls]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tfp_printf
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_2
+<LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printBitLevel
 </UL>
 <BR>[Called By]<UL><LI><a href="#[40]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[74]"></a>printBitLevel</STRONG> (Thumb, 104 bytes, Stack size 32 bytes, tester.o(i.printBitLevel))
+<P><STRONG><a name="[74]"></a>printBitLevel</STRONG> (Thumb, 112 bytes, Stack size 32 bytes, tester.o(i.printBitLevel))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = printBitLevel &rArr; tfp_printf &rArr; tfp_format &rArr; putchw
 </UL>
 <BR>[Calls]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tfp_printf
@@ -714,9 +714,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tfp_format
 </UL>
-<BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printBitLevel
-<LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printBitArray
+<BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printBitArray
 <LI><a href="#[40]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printBitLevel
 </UL>
 
 <P><STRONG><a name="[70]"></a>uart_init</STRONG> (Thumb, 96 bytes, Stack size 0 bytes, uart_polling.o(i.uart_init))
