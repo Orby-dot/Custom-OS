@@ -133,8 +133,9 @@ void coalesce(bitArray *array, U8 level, U32 node){
 	U8 buddyBitPosition = 1<<(buddyIndex%8);
 	if( (array->bitStatus[index/8] & buddyBitPosition) == 0 && (array->bitStatus[index/8] & bitPosition) == 0){
 		//free list needs be updated to combine buddies
-		removeNode(level,buddyIndex,array->freeList);
-		addNode(level-1,(node+1)/2,array->freeList);
+		U32 address = array->startAddress+8*index;
+		removeNode(level, address, buddyIndex,array->freeList);
+		addNode(level-1, address, array->freeList);
 		
 		coalesce(array, level-1, (node+1)/2);
 	}
