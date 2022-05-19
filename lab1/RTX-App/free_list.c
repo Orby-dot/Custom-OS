@@ -81,13 +81,17 @@ int allocate(int size, freeList_t *freeListArray) {
 	return leftNodeIndex + 1;
 }
 
-void addNode(int level, freeList_t *freeListArray){
+void addNode(int level, U32 address, freeList_t *freeListArray){
 	node_t *currNode = freeListArray[level].tail;
-
-	node_t *newNode;
+	node_t *newNode = (node_t*) address;
 	
-	currNode->next = newNode;
-	newNode->prev = currNode;
+	if(!currNode) {
+		freeListArray[level].head = newNode;
+	}else {
+		currNode->next = newNode;
+		newNode->prev = currNode;
+	}
+	
 	freeListArray[level].tail = newNode;
 }
 
