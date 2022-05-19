@@ -5,6 +5,7 @@
 #include "tester.h"
 //#include "bit_array.h" uncomment this when u dont need tester.h
 bitArray array;
+freeList_t list [11];
 int main(){
 	
     SystemInit();
@@ -16,7 +17,7 @@ int main(){
     printf("this is a string\r\n");
 		printf("%u \r\n",(RAM2_START));
 		
-		initializeBitArray(&array, RAM2_START,RAM2_END);
+		initializeBitArray(&array,list, RAM2_START,RAM2_END);
 		printBitArray(&array);
 		
     

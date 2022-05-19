@@ -60,7 +60,7 @@ void printListLevel(freeList_t * list)
 	node_t * current = list->head;
 	
 	while (current != NULL){
-		printf ("%d <-> ",current->startAddress);
+		printf ("%u <-> ",current->tail);
 	}
 	
 	

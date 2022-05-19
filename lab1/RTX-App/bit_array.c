@@ -1,7 +1,7 @@
 #include "common.h"
 #include "bit_array.h"
 // init
-void initializeBitArray(bitArray *array, U32 startAddress, U32 endAddress){
+void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32 endAddress){
 	
 	array->startAddress = startAddress;
 	array->endAddress = endAddress;
@@ -11,7 +11,9 @@ void initializeBitArray(bitArray *array, U32 startAddress, U32 endAddress){
 		array->bitStatus[i] = 0;
 	}
 	
-	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress));
+	array->freeList = list;
+	
+	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress) -4 ,startAddress);
 }
 
 // checks if the 'leftAddress' is either at the bottom of the binary tree or has two children with 0 as it's bit array value
