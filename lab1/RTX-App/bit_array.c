@@ -16,26 +16,6 @@ void initializeBitArray(bitArray *array,freeList_t ** list, U32 startAddress, U3
 	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress) -4 ,startAddress);
 }
 
-// checks if the 'leftAddress' is either at the bottom of the binary tree or has two children with 0 as it's bit array value
-BOOL isLeaf(bitArray* array, U32 leftAddress, U8 level){
-	int heightOfTree = log_2(array->size);
-	if(level == heightOfTree) return TRUE;
-	
-	int index = (leftAddress - array->startAddress);
-	int leftIndex = 2*index+1;
-	int rightIndex = 2*index+2;
-	U8 leftBitPosition = 1<<(leftIndex%8);
-	U8 rightBitPosition = 1<<(rightIndex%8);
-
-	
-	if( !(array->bitStatus[leftIndex/8] & leftBitPosition) && !(array->bitStatus[rightIndex/8] & rightBitPosition)){
-		return TRUE;
-	}
-	
-	return FALSE;
-	
-}
-
 //get address from level and x position for node
 /*
 int getNodeAddress(bitArray* array, U8 level, U8 x){
