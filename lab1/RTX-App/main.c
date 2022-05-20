@@ -17,8 +17,8 @@ int main(){
     printf("this is a string\r\n");
 		printf("%u \r\n",(RAM2_START));
 		
-		initializeBitArray(&array,(freeList_t**)&list, RAM2_START,RAM2_END);
-		printBitArray(&array);
+		initializeBitArray(&array,(freeList_t *)list, RAM2_START,RAM2_END);
+		// printBitArray(&array);
 		printLinkedList(&array);
 		
     
