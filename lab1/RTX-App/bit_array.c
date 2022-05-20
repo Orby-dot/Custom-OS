@@ -57,7 +57,7 @@ int locateNode(bitArray* array, U8 xPosition, U8 level){
 }
 
 // allocate memory
-/*
+
 void allocateNode(bitArray * array, U32 sizeToAllocate){
 	//call linked list function with sizeToAllocate, returns index within a level
 	U32 node = allocate(sizeToAllocate, array->freeList); //allocate node in free list - get from free list
@@ -73,7 +73,7 @@ void allocateNode(bitArray * array, U32 sizeToAllocate){
 	updateParentNodes(array, level-1, (node+1)/2);
 	
 }
-*/
+
 
 void updateParentNodes(bitArray *array, U8 level, U32 node){
 	if(level<=0) return;
@@ -127,20 +127,26 @@ void coalesce(bitArray *array, U8 level, U32 node){
 	U8 bitPosition = 1<<(index%8);
 
 	U32 buddyIndex = index;
+	U32 buddyNode = node;
 	if(node%2){
 		buddyIndex -=1;
+		buddyNode --;
 	}
 	else{
 		buddyIndex +=1;
+		buddyNode++;
 	}
 	
 	U8 buddyBitPosition = 1<<(buddyIndex%8);
 	if( (array->bitStatus[index/8] & buddyBitPosition) == 0 && (array->bitStatus[index/8] & bitPosition) == 0){
 		//free list needs be updated to combine buddies
-		//U32 address = array->startAddress+buddyIndex;
-		//removeNode(level, address,array->freeList);
-		//addNode(level-1, address, array->freeList);//<- wrong
-		
+		U32 address = array->startAddress+(1<<(15-level)) * (buddyNode-1);
+		removeNode(level, address,array->freeList);
+		if(!node%2)
+		{
+			address = array->startAddress+(1<<(15-level)) * (node-1);
+		}
+		addNode(level-1, address, array->freeList);//<- wrong
 		coalesce(array, level-1, (node+1)/2);
 	}
 
