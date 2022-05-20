@@ -8,15 +8,15 @@ U8 levels;
  * levelsInput is the number of levels
  * startAddress is the base address of either IRAM1 and IRAM2 
  */
-int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 startAddress) {
+int initializeArrayOfFreeLists(freeList_t **freeListArray, U8 levelsInput, U32 startAddress) {
 	levels = levelsInput;
 	for (int i=0; i<levels; i++) {
 		if (i == 0) {
-			freeListArray[i].head = (struct node *) startAddress;
-			freeListArray[i].tail = (struct node *) startAddress;
+			freeListArray[i]->head = (struct node *) startAddress;
+			freeListArray[i]->tail = (struct node *) startAddress;
 		} else {
-			freeListArray[i].head = NULL;
-			freeListArray[i].head = NULL;
+			freeListArray[i]->head = NULL;
+			freeListArray[i]->head = NULL;
 		}
 	}
 	return 0;
@@ -27,7 +27,7 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 st
  * startAddress: start address of IRAM1/IRAM2
  * returns NULL if can not allocate 
  */
-U32 allocate(U32 size, freeList_t *freeListArray, U32 startAddress) {
+U32 allocate(U32 size, freeList_t *freeListArray) {
 	// find which level that block will be on
 	int level = findLevel(size, levels);
 	

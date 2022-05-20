@@ -50,7 +50,7 @@ void printLinkedList(bitArray * array)
 
 	
 	for(int i = 0 ; i < numOfLevels;i++){
-		printListLevel(&array->freeList[i]);
+		printListLevel(array->freeList[i]);
 		
 	}
 }
@@ -60,7 +60,8 @@ void printListLevel(freeList_t * list)
 	node_t * current = list->head;
 	
 	while (current != NULL){
-		printf ("%u <-> ",current->tail);
+		printf ("%u <-> ",current->next);
+		current = current->next;
 	}
 	
 	

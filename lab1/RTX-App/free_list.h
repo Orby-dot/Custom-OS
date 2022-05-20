@@ -14,9 +14,9 @@ typedef struct freeList {
 	struct node *tail;
 } freeList_t;
 
-int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 startAddress);
+int initializeArrayOfFreeLists(freeList_t **freeListArray, U8 levelsInput, U32 startAddress);
 
-U32 allocate(U32 size, freeList_t *freeListArray, U32 startAddress);
+U32 allocate(U32 size, freeList_t *freeListArray);
 
 void addNode(int level, U32 address, freeList_t *freeListArray);
 
