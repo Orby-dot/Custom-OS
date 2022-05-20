@@ -4,27 +4,21 @@
 	
 U8 levels;
 
-int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput) {
+/**
+ * freeListArray is the array of free lists
+ * levelsInput is the number of levels
+ * startAddress is the base address of either IRAM1 and IRAM2 
+ */
+int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 startAddress) {
 	levels = levelsInput;
 	for (int i=0; i<levels; i++) {
-		freeList_t freeList;
-		
-		node_t dummyNode;
-		dummyNode.prev = NULL;
-		
-		freeList.head = &dummyNode;
-		freeList.tail = &dummyNode;
-		
-		if (i==0) {
-			node_t startingNode;
-			startingNode.next = NULL;
-			startingNode.prev = &dummyNode;
-			dummyNode.next = &startingNode;
+		if (i == 0) {
+			freeListArray[i].head = (struct node *) startAddress;
+			freeListArray[i].tail = (struct node *) startAddress;
 		} else {
-			dummyNode.next = NULL;
+			freeListArray[i].head = NULL;
+			freeListArray[i].head = NULL;
 		}
-		
-		freeListArray[i] = freeList;
 	}
 	return 0;
 }
