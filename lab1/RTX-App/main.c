@@ -18,7 +18,9 @@ int main(){
 		printf("%u \r\n",(RAM2_START));
 		
 		initializeBitArray(&array,(freeList_t**)&list, RAM2_START,RAM2_END);
-		printBitArray(&array);
+
+    array.freeList[0]->head->next->next = (struct node *)5;
+		// printBitArray(&array);
 		printLinkedList(&array);
 		
     
