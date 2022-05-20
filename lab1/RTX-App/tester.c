@@ -31,10 +31,10 @@ void printBitLevel(bitArray * array,int level, int numOfNodes, U8 index)
 		compare = 1 <<(7 - i%8);
 		if ((array->bitStatus[baseIndex/8] & compare) > 0)
 		{
-			printf("1 ");
+			printf("1");
 		}
 		else{
-			printf("0 ");
+			printf("0");
 		}
 		baseIndex++;
 		
@@ -48,6 +48,7 @@ void printLinkedList(bitArray * array)
 {
 	int numOfLevels = (log_2(array->size) - log_2(MIN_SIZE) +1);
 	for(int i = 0 ; i < numOfLevels;i++){
+		printf("L%d: ", i);
 		printListLevel(array->freeList[i]);
 		
 	}
