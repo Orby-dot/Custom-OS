@@ -23,56 +23,60 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 st
 	return 0;
 }
 
-int allocate(int size, freeList_t *freeListArray) {
+/**
+ * size: size to allocate. does NOT need to be rounded up to 2^n
+ * startAddress: start address of IRAM1/IRAM2
+ * returns NULL if can not allocate 
+ */
+U32 allocate(U32 size, freeList_t *freeListArray, U32 startAddress) {
 	// find which level that block will be on
 	int level = findLevel(size, levels);
 	
 	// if there is a free block use it
-	if(freeListArray[level].head->next->next->next != NULL) {
-		node_t *toReturn = freeListArray[level].head->next->next;
-		toReturn->prev->next = toReturn->next;
-		toReturn->next->prev = toReturn->prev;
-		toReturn->next = NULL;
-		toReturn->prev = NULL;
-		
-		return toReturn->startAddress;
+	if(freeListArray[level].head != NULL) {
+		node_t *toReturn = freeListArray[level].head;
+		toReturn->next->prev = NULL;
+		freeListArray[level].head = toReturn->next;
+		return (U32) toReturn;
 	}
 	
 	// If, not go above and look for one. Once you find it, split it.
-	while(freeListArray[level].head->next->next != NULL) {
+	while(freeListArray[level].head != NULL) {
 		level--;
 		if (level < 0) {
-			return -1;
+			return NULL;
 		}
 	}
 	
 	// remove parent node from freeList
-	node_t *parent = freeListArray[level].head->next->next;
-	parent->prev->next = parent->next;
-	parent->next->prev = parent->prev;
+	node_t *parent = freeListArray[level].head;
+	if (parent->next != NULL) {
+		parent->next->prev = NULL;
+	}
+	freeListArray[level].head = parent->next;
+
+	// clear parent
 	parent->next = NULL;
 	parent->prev = NULL;
-	
+
 	// keep splitting... only keep right node of each level
-	U32 leftNodeIndex = 2*parent->startAddress;
+	U32 parentAddress = ((U32)parent);
 	level++;
 	
 	while (level < findLevel(size, levels) - 1) {
 		// add right-node of parent to level + 1
-		node_t *dummyNode = freeListArray[level+1].head;
-		node_t *newRightNode;
-		newRightNode->startAddress = leftNodeIndex + 1;
+		node_t *newRightNode = (node_t *)(parentAddress + findSize(level + 1, levels)); // this is sketch
 		
-		newRightNode->next = NULL;
-		newRightNode->prev = dummyNode;
-		dummyNode->next = newRightNode;
+		newRightNode->next = NULL; 
+		newRightNode->prev = NULL;
+		
+		freeListArray[level + 1].head = newRightNode;
 		freeListArray[level + 1].tail = newRightNode;
-		
-		leftNodeIndex = 2*leftNodeIndex;
+
 		level++;
 	}
 	
-	return leftNodeIndex + 1;
+	return parentAddress;
 }
 
 void addNode(int level, U32 address, freeList_t *freeListArray){
