@@ -10,11 +10,11 @@ typedef struct node {
 } node_t;
 
 typedef struct freeList {
-	struct node *head;
-	struct node *tail;
+	node_t *head;
+	node_t *tail;
 } freeList_t;
 
-int initializeArrayOfFreeLists(freeList_t **freeListArray, U8 levelsInput, U32 startAddress);
+int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 startAddress);
 
 U32 allocate(U32 size, freeList_t *freeListArray);
 

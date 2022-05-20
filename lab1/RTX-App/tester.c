@@ -46,7 +46,6 @@ void printBitLevel(bitArray * array,int level, int numOfNodes, U8 index)
 
 void printLinkedList(bitArray * array)
 {
-	printf("Test 11");
 	int numOfLevels = (log_2(array->size) - log_2(MIN_SIZE) +1);
 	for(int i = 0 ; i < numOfLevels;i++){
 		printListLevel(array->freeList[i]);
@@ -54,9 +53,9 @@ void printLinkedList(bitArray * array)
 	}
 }
 
-void printListLevel(freeList_t * list)
+void printListLevel(freeList_t  list)
 {
-	node_t * current = list->head;
+	node_t * current = list.head;
 	while (current != NULL){
 		printf ("%x <-> ", current);
 		current = current->next;

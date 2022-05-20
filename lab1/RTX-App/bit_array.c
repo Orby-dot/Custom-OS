@@ -1,7 +1,7 @@
 #include "common.h"
 #include "bit_array.h"
 // init
-void initializeBitArray(bitArray *array,freeList_t ** list, U32 startAddress, U32 endAddress){
+void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32 endAddress){
 	
 	array->startAddress = startAddress;
 	array->endAddress = endAddress;
@@ -100,7 +100,9 @@ void removeNodes(bitArray *array, U32 address){
 }
 
 // coalesce
+
 void coalesce(bitArray *array, U8 level, U32 node){
+	
 	if(level<=0) return;
 
 	U32 index = (1<<level)-1+node;
@@ -126,9 +128,10 @@ void coalesce(bitArray *array, U8 level, U32 node){
 		{
 			address = array->startAddress+(1<<(15-level)) * (node-1);
 		}
-		addNode(level-1, address, array->freeList);//<- wrong
+		addNode(level-1, address, array->freeList);
 		coalesce(array, level-1, (node+1)/2);
 	}
 
 
 }
+

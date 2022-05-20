@@ -10,33 +10,28 @@ U8 levels;
  * levelsInput is the number of levels
  * startAddress is the base address of either IRAM1 and IRAM2 
  */
-int initializeArrayOfFreeLists(freeList_t **freeListArray, U8 levelsInput, U32 startAddress) {
+int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 startAddress) {
 	// printf("sa: %x \r\n", startAddress);
 	levels = levelsInput;
 	for (int i=0; i<levels; i++) { 
-		freeList_t tempArray;
-		tempArray.head = NULL;
-		tempArray.tail = NULL;
-		freeListArray[i] = &tempArray;
 		if (i == 0) {
 			// TODO: Create new node
-			
-			struct node *temp = (struct node *) startAddress;
+			printf("head called: %x \r\n", freeListArray[i].head);
+			node_t *temp = (node_t *) startAddress;
 			temp->next = NULL;
 			temp->prev = NULL;
 
-			freeListArray[i]->head = temp;
-			freeListArray[i]->tail = temp;
+			(freeListArray)[i].head = (node_t *) startAddress;
+			(freeListArray)[i].tail = temp;
 
-			printf("");
 			// printf("temp: %x \r\n", temp);
-			// printf("head called: %x \r\n", freeListArray[i]->head);
+			printf("head called: %x \r\n", (freeListArray)[i].head);
 			// printf("0 Called (address of head): %x \r\n", &freeListArray[i]->head);
 
 		} else {
 			// printf("In else... %d \r\n", i);
-			freeListArray[i]->head = NULL;
-			freeListArray[i]->tail = NULL;
+			freeListArray[i].head = NULL;
+			freeListArray[i].tail = NULL;
 			// printf(	"else: %x \r\n", freeListArray[i]->head);
 			// printf("else Called (address of head): %x \r\n", &freeListArray[i]->head);
 
