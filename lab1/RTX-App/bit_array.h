@@ -16,7 +16,7 @@ void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32
 U32 allocateNode(bitArray * array, U32 sizeToAllocate);
 void removeNodes(bitArray *array, U32 address);
 U8 getHeight(bitArray*array);
-U8 getXPosition(bitArray* array, U8 address, U8 level);
+U8 getXPosition(bitArray* array, U32 address, U8 level);
 int locateNode(bitArray* array, U8 xPosition, U8 level);
 void coalesce(bitArray *array, U8 level, U32 node);
-void updateParentNodes(bitArray *array, U8 level, U32 node);
+void updateParentNodes(bitArray *array, int level, U32 node);
