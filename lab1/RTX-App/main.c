@@ -20,7 +20,11 @@ int main(){
 		initializeBitArray(&array,(freeList_t *)list, RAM2_START,RAM2_END);
 		// printBitArray(&array);
 		printLinkedList(&array);
+
+    allocateNode(&array, (1 << 13) - 1);
 		
+    // printBitArray(&array);
+		printLinkedList(&array);
     
     return 0;
 }

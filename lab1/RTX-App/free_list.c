@@ -2,6 +2,7 @@
 #include "free_list.h"
 #include "printf.h"
 
+BOOL debug = TRUE;
 	
 U8 levels;
 
@@ -11,12 +12,12 @@ U8 levels;
  * startAddress is the base address of either IRAM1 and IRAM2 
  */
 int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 startAddress) {
-	// printf("sa: %x \r\n", startAddress);
+	if (debug) printf("sa: %x \r\n", startAddress);
 	levels = levelsInput;
 	for (int i=0; i<levels; i++) { 
 		if (i == 0) {
 			// TODO: Create new node
-			printf("head called: %x \r\n", freeListArray[i].head);
+			if (debug) printf("head called: %x \r\n", freeListArray[i].head);
 			node_t *temp = (node_t *) startAddress;
 			temp->next = NULL;
 			temp->prev = NULL;
@@ -25,7 +26,7 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 st
 			(freeListArray)[i].tail = temp;
 
 			// printf("temp: %x \r\n", temp);
-			printf("head called: %x \r\n", (freeListArray)[i].head);
+			if (debug) printf("head called: %x \r\n", (freeListArray)[i].head);
 			// printf("0 Called (address of head): %x \r\n", &freeListArray[i]->head);
 
 		} else {
@@ -46,25 +47,30 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 st
  * returns NULL if can not allocate 
  */
 U32 allocate(U32 size, freeList_t *freeListArray) {
+
 	// find which level that block will be on
 	int level = findLevel(size, levels);
 	
+	if (debug) printf("Allocating %u at level %d \r\n", size, level);
+
 	// if there is a free block use it
 	if(freeListArray[level].head != NULL) {
 		node_t *toReturn = freeListArray[level].head;
-		toReturn->next->prev = NULL;
+		if (toReturn->next != NULL) toReturn->next->prev = NULL;
 		freeListArray[level].head = toReturn->next;
+		if (debug) printf("No splitting, allocation found at %x. \r\n", (U32) toReturn);
 		return (U32) toReturn;
 	}
 	
 	// If, not go above and look for one. Once you find it, split it.
-	while(freeListArray[level].head != NULL) {
+	while(freeListArray[level].head == NULL) {
 		level--;
 		if (level < 0) {
-			return NULL;
+			return 4294967295;
 		}
 	}
-	
+
+	if (debug) printf("Free node found at level %d \r\n", level);
 	// remove parent node from freeList
 	node_t *parent = freeListArray[level].head;
 	if (parent->next != NULL) {
@@ -78,9 +84,11 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 
 	// keep splitting... only keep right node of each level
 	U32 parentAddress = ((U32)parent);
-	level++;
 	
-	while (level < findLevel(size, levels) - 1) {
+	if (debug) printf("Before while: %d < %u \r\n", level, findLevel(size, levels));
+
+	while (level < findLevel(size, levels)) {
+		if (debug) printf("In while: %d < %u \r\n", level, findLevel(size, levels));
 		// add right-node of parent to level + 1
 		node_t *newRightNode = (node_t *)(parentAddress + findSize(level + 1, levels)); // this is sketch
 		
@@ -93,6 +101,8 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 		level++;
 	}
 	
+	if (debug) printf("Splitting complete, allocation found at %x. \r\n", parentAddress);
+
 	return parentAddress;
 }
 

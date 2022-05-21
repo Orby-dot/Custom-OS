@@ -1,5 +1,7 @@
 #include "common.h"
 #include "bit_array.h"
+#include "printf.h"
+
 // init
 void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32 endAddress){
 	
@@ -13,7 +15,7 @@ void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32
 	
 	array->freeList = list;
 	
-	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress) -4 ,startAddress);
+	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress) - 4 + 1 ,startAddress);
 }
 
 //get address from level and x position for node
@@ -41,6 +43,10 @@ int locateNode(bitArray* array, U8 xPosition, U8 level){
 void allocateNode(bitArray * array, U32 sizeToAllocate){
 	//call linked list function with sizeToAllocate, returns index within a level
 	U32 node = allocate(sizeToAllocate, array->freeList); //allocate node in free list - get from free list
+	if (node == 4294967295 ) {
+		printf("No space\r\n");
+		return;
+	}
 	U8 level = findLevel(sizeToAllocate,log_2(array->size)); // find level - call function from util
 
 	U32 index = (1<<level)-1+node;

@@ -23,13 +23,8 @@ int log_2(int value) {
 }
 
 int findLevel(int size, U8 totalLevels) {
-    int pow = 0;
-    int i = 1;
-    while(i < size) {
-        i *=2;
-        pow++;
-    }
-    return -pow + totalLevels + 4;
+    int pow = log_2(size);
+    return -pow + totalLevels + 4 - 1;
 }
 
 int findSize(int level, U8 totalLevels) {
