@@ -52,14 +52,14 @@ U32 allocateNode(bitArray * array, U32 sizeToAllocate){
 		array->bitStatus[index/8] = (array->bitStatus[index/8] | bitPosition);
 	}	
 	
-	updateParentNodes(array, level-1, (node+1)/2);
+	updateParentNodes(array, (int)(level-1), (node+1)/2);
 	
 	return address;
 	
 }
 
 
-void updateParentNodes(bitArray *array, U8 level, U32 node){
+void updateParentNodes(bitArray *array, int level, U32 node){
 	if(level<=0)
 	{
 		array->bitStatus[0] = array->bitStatus[0]| (1<<7);
@@ -82,7 +82,7 @@ U8 getHeight(bitArray*array){
 	return height;
 }
 
-U8 getXPosition(bitArray* array, U8 address, U8 level){
+U8 getXPosition(bitArray* array, U32 address, U8 level){
 	U8 height = getHeight(array);
 	return (address-array->startAddress)/(array->size >> (level-1));
 }
