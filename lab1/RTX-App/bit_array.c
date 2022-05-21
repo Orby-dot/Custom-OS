@@ -63,27 +63,27 @@ U32 allocateNode(bitArray * array, U32 sizeToAllocate){
 		array->bitStatus[index/8] = (array->bitStatus[index/8] | bitPosition);
 	}	
 	
-	updateParentNodes(array, (int)(level-1), (node+1)/2);
+	updateParentNodes(array, (index-1)/2);
 	
 	return address;
 	
 }
 
 
-void updateParentNodes(bitArray *array, int level, U32 node){
-	if(level<=1)
+void updateParentNodes(bitArray *array, U32 parentIndex){
+	if(parentIndex<=0)
 	{
 		array->bitStatus[0] = array->bitStatus[0]| (1<<7);
 		return;
 	}
 		
 	//U32 parentIndex = (1<<level)+node-1;
-	U32 parentIndex = convertLevelToIndex(level, node);
+	//U32 parentIndex = convertLevelToIndex(level, node);
 	U32 parentPosition = getBitPositionMask(parentIndex);
 	
 	if( (array->bitStatus[parentIndex/8] & parentPosition) == 0){
 		array->bitStatus[parentIndex/8] = array->bitStatus[parentIndex/8] | (parentPosition);
-		updateParentNodes(array, level-1, (node+1)/2);
+		updateParentNodes(array, (parentIndex-1)/2);
 	}
 
 }
@@ -152,12 +152,12 @@ void coalesce(bitArray *array, U32 level, U32 node){
 	if( (array->bitStatus[index/8] & buddyBitPosition) == 0 && (array->bitStatus[index/8] & bitPosition) == 0){
 		//free list needs be updated to combine buddies		
 		U32 address = array->startAddress+(1<<(15-level+1)) * (buddyNode);
-		removeNode(level, address,array->freeList);
+		removeNode(level-1, address,array->freeList);
 		if(node%2==0)
 		{
 			address = array->startAddress+(1<<(15-level+1)) * (node);
 		}
-		addNode(level-1, address, array->freeList);
+		addNode(level-2, address, array->freeList);
 		//set current node's bit array value to 0
 
 		coalesce(array, level-1, (node-1)/2);
