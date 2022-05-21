@@ -24,7 +24,7 @@ int log_2(int value) {
 
 int findLevel(int size, U8 totalLevels) {
     int pow = log_2(size);
-    return -pow + totalLevels + 4;
+    return -pow + totalLevels + 4 - 1;
 }
 
 int findSize(int level, U8 totalLevels) {

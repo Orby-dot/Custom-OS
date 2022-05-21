@@ -21,7 +21,7 @@ int main(){
 		// printBitArray(&array);
 		printLinkedList(&array);
 
-    allocateNode(&array, (1 << 15) - 1);
+    allocateNode(&array, (1 << 13) - 1);
 		
     // printBitArray(&array);
 		printLinkedList(&array);

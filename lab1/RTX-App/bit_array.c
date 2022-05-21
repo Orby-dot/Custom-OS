@@ -15,7 +15,7 @@ void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32
 	
 	array->freeList = list;
 	
-	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress) -4 ,startAddress);
+	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress) - 4 + 1 ,startAddress);
 }
 
 //get address from level and x position for node

@@ -62,5 +62,5 @@ void printListLevel(freeList_t  list)
 		current = current->next;
 	}
 	
-	printf(" NULL \r\n");
+	printf("NULL \r\n");
 }

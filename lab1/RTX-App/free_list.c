@@ -63,13 +63,13 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 	}
 	
 	// If, not go above and look for one. Once you find it, split it.
-	while(freeListArray[level].head != NULL) {
+	while(freeListArray[level].head == NULL) {
 		level--;
 		if (level < 0) {
 			return 4294967295;
 		}
 	}
-	// level++; // TODO: probably the fix, causing access violation? 
+
 	if (debug) printf("Free node found at level %d \r\n", level);
 	// remove parent node from freeList
 	node_t *parent = freeListArray[level].head;
@@ -84,9 +84,11 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 
 	// keep splitting... only keep right node of each level
 	U32 parentAddress = ((U32)parent);
-	level++;
 	
-	while (level < findLevel(size, levels) - 1) {
+	if (debug) printf("Before while: %d < %u \r\n", level, findLevel(size, levels));
+
+	while (level < findLevel(size, levels)) {
+		if (debug) printf("In while: %d < %u \r\n", level, findLevel(size, levels));
 		// add right-node of parent to level + 1
 		node_t *newRightNode = (node_t *)(parentAddress + findSize(level + 1, levels)); // this is sketch
 		
@@ -99,7 +101,7 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 		level++;
 	}
 	
-	if (debug) printf("Splitting complete, allocation found at %u. \r\n", parentAddress);
+	if (debug) printf("Splitting complete, allocation found at %x. \r\n", parentAddress);
 
 	return parentAddress;
 }
