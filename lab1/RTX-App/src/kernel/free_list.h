@@ -1,6 +1,10 @@
 #include "common.h"
 #include "helper.h"
 
+#ifndef _FREE_LIST
+
+#define _FREE_LIST
+
 extern U8 levels; // 1 to 11
 
 typedef struct node {
@@ -20,3 +24,5 @@ U32 allocate(U32 size, freeList_t *freeListArray);
 void addNode(int level, U32 address, freeList_t *freeListArray);
 
 void removeNode(int level, U32 address, freeList_t *freeListArray);
+
+#endif

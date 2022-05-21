@@ -27,6 +27,7 @@
 #define K_MEM_H_
 #include "k_inc.h"
 #include "lpc1768_mem.h"        // board memory map
+#include "free_list.h"
 
 /*
  * ------------------------------------------------------------------------
@@ -42,6 +43,7 @@ int     k_mpool_dump    (mpool_t mpid);
 int     k_mem_init      (int algo);
 U32    *k_alloc_k_stack (task_t tid);
 U32    *k_alloc_p_stack (task_t tid);
+void printListLevelInOrder(freeList_t  *list, int level, U8 totalLevels, int *count);
 // declare newly added functions here
 
 

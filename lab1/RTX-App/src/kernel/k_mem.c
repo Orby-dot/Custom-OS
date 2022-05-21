@@ -41,6 +41,7 @@
 #include "k_inc.h"
 #include "k_mem.h"
 #include "bit_array.h"
+#include "tester.h"
 
 /*---------------------------------------------------------------------------
 The memory map of the OS image may look like the following:
@@ -121,7 +122,8 @@ U32 g_p_stacks[NUM_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
  */
  
  //constants
- const U32 MAX_INT = 4294967295;
+// const U32 MAX_INT = 4294967295;
+const U32 MAX_INT = 42949;
 
 //initialize global
 bitArray array_RAM1;
@@ -190,10 +192,10 @@ int k_mpool_dealloc(mpool_t mpid, void *ptr)
 		}
     
 		if(mpid==MPID_IRAM1){
-			removeNodes(array_RAM1, *ptr);
+			removeNodes(&array_RAM1, (U32)ptr);
 			return RTX_OK;
 		} else if (mpid==MPID_IRAM2) {
-			removeNodes(array_RAM2, *ptr);
+			removeNodes(&array_RAM2, (U32)ptr);
 			return RTX_OK;
 		}
 		
@@ -205,35 +207,32 @@ int k_mpool_dump (mpool_t mpid)
 #ifdef DEBUG_0
     printf("k_mpool_dump: mpid = %d\r\n", mpid);
 #endif /* DEBUG_0 */
+		
 	
 		int count = 0;
 		if (mpid == MPID_IRAM1){
 			for(int i=7;i>=0;i--){
-				printListLevel(free_list_RAM1, i, 7, &count);
+				printListLevelInOrder(free_list_RAM1, i, 7, &count);
 			}
-			printf ("%x free memory block(s) found\r\n", *count);
-			return *count;
+			printf ("%x free memory block(s) found\r\n", count);
+			return count;
 		} else if (mpid == MPID_IRAM2) {
 			for(int i=11;i>=0;i--){
-				printListLevel(free_list_RAM2, i, 11, &count);
+				printListLevelInOrder(free_list_RAM2, i, 11, &count);
 			}
-			printf ("%x free memory block(s) found\r\n", *count);
-			return *count;
+			printf ("%x free memory block(s) found\r\n", count);
+			return count;
 		}
 		
     return 0;
 }
 
-int findSize(int level, U8 totalLevels) {
-	return power(2, level*-1 + totalLevels + 4);
-}
-
-void printListLevel(freeList_t  list, int level, U8 totalLevels, int *count)
+void printListLevelInOrder(freeList_t *list, int level, U8 totalLevels, int *count)
 {
-	node_t * current = list.head;
+	node_t * current = list[level].head;
 	while (current != NULL){
 		//replace size with 
-		printf ("0x%x: 0x%x\r\n", current, findSize(level, totalLevels);
+		printf ("0x%x: 0x%x\r\n", current, findSize(level, totalLevels));
 		(*count)++;
 		current = current->next;
 	}

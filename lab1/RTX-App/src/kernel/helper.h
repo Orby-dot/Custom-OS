@@ -2,6 +2,9 @@
 
 #define ERROR 4294967295 // max U32
 
+#ifndef _BUDDY_HELPER
+
+#define _BUDDY_HELPER
 // From https://stackoverflow.com/questions/25525536/write-pow-function-without-math-h-in-c
 int power(int base, int exp);
 
@@ -17,3 +20,5 @@ int findSize(int level, U8 totalLevels);
 
 // Find delta from base adress for a given node at level (y) and position (x)
 int findAddressDelta(int level, int position, U8 totalLevels);
+
+#endif

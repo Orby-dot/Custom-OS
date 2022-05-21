@@ -4,6 +4,10 @@
 
 #define ARRAY_SIZE	0x16000
 
+#ifndef _BIT_ARRAY
+
+#define _BIT_ARRAY
+
 typedef struct bitArray{
 	U32 startAddress;
 	U32 endAddress;
@@ -22,3 +26,5 @@ void coalesce(bitArray *array, U32 level, U32 node);
 void updateParentNodes(bitArray *array, U32 parentIndex);
 U32 getBitPositionMask(U32 index);
 U32 convertLevelToIndex(U32 level, U32 xPosition);
+
+#endif

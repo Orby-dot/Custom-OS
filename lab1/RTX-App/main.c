@@ -21,10 +21,16 @@ int main(){
 		// printBitArray(&array);
 		printLinkedList(&array);
 
-    allocateNode(&array, (1 << 13) - 1);
+    U32 address = allocateNode(&array, (1 << 13) + 1);
+    U32 address2 = allocateNode(&array, (1 << 6) + 1);
 		
-    // printBitArray(&array);
+    printBitArray(&array);
 		printLinkedList(&array);
-    
+	
+		removeNodes(&array, address);
+
+    printBitArray(&array);
+		printLinkedList(&array);
+	
     return 0;
 }
