@@ -152,12 +152,12 @@ void coalesce(bitArray *array, U32 level, U32 node){
 	if( (array->bitStatus[buddyIndex/8] & buddyBitPosition) == 0 && (array->bitStatus[index/8] & bitPosition) == 0){
 		//free list needs be updated to combine buddies		
 		U32 address = array->startAddress+(1<<(15-level+1)) * (buddyNode);
-		removeNode(level, address,array->freeList);
+		removeNode(level-1, address,array->freeList);
 		if(node%2==0)
 		{
 			address = array->startAddress+(1<<(15-level+1)) * (node);
 		}
-		addNode(level-1, address, array->freeList);
+		addNode(level-2, address, array->freeList);
 		//set current node's bit array value to 0
 
 		coalesce(array, level-1, (node-1)/2);

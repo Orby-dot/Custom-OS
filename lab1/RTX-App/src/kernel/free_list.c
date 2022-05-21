@@ -76,6 +76,13 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 	if (parent->next != NULL) {
 		parent->next->prev = NULL;
 	}
+	if (freeListArray[level].head == freeListArray[level].tail) {
+        freeListArray[level].head = parent->next;
+        freeListArray[level].tail = parent->next;
+    } 
+	else {
+        freeListArray[level].head = parent->next;
+    }
 	freeListArray[level].head = parent->next;
 
 	// clear parent
@@ -125,6 +132,18 @@ void removeNode(int level, U32 address, freeList_t *freeListArray){
 	
 	while(currNode && (U32)currNode!=address){
 		currNode = currNode->next;
+	}
+	
+	if(currNode == freeListArray[level].head)
+	{
+		freeListArray[level].head = currNode->next;
+	}
+		
+	
+	if(currNode == freeListArray[level].tail)
+	{
+		
+		freeListArray[level].tail = NULL;
 	}
 	
 	if (currNode) {
