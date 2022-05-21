@@ -3,8 +3,8 @@
 #include "printf.h"
 
 // init
-void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32 endAddress){
-	
+void initializeBitArray(bitArray *array,freeList_t * list,U8 * bitArray, U32 startAddress, U32 endAddress){
+	array->bitStatus = bitArray;
 	array->startAddress = startAddress;
 	array->endAddress = endAddress;
 	array->size = endAddress - startAddress +1;
@@ -95,8 +95,7 @@ U32 getHeight(bitArray*array){
 }
 
 U32 getXPosition(bitArray* array, U32 address, U32 level){
-	U32 height = getHeight(array);
-	return (address-array->startAddress)/(array->size >> (level-1));
+	return (address -array->startAddress)/(array->size >> (level-1));
 }
 
 void removeNodes(bitArray *array, U32 address){
@@ -105,10 +104,19 @@ void removeNodes(bitArray *array, U32 address){
 	
 	//pass in array, x position on the bottom of the tree, and height
 	// nodePosition is from 0 to 2^h -1
+	
+	//node pos in bottom level
+	printf("add %x \r\n", address);
+	printf("height %u \r\n", height);
 	U32 xPosition = getXPosition(array, address, height);
+	printf("X pos %u \r\n", xPosition);
+	
+	//index at bottom level
 	U32 index = convertLevelToIndex(height, xPosition);
+	
+	//find a leaf node at said address
 	U32 locatedNodeIndex = 0;
-	if(index>0) locatedNodeIndex = locateNode(array, (index-1)/2); // index is 0-indexed
+	if(index>0) locatedNodeIndex = locateNode(array, (index)); // index is 0-indexed
 
 	//check the value in the bit array
 	U32 bitPosition = getBitPositionMask(locatedNodeIndex);
@@ -116,8 +124,10 @@ void removeNodes(bitArray *array, U32 address){
 	if( (array->bitStatus[locatedNodeIndex/8] & bitPosition) > 0){
 		//array->bitStatus[locatedNodeIndex/8] = (array->bitStatus[locatedNodeIndex/8] & ~bitPosition);
 		U32 level = log_2(locatedNodeIndex+1)+1;
-		U32 relativeXPosition = getXPosition(array, array->startAddress+locatedNodeIndex, level);
+
+		U32 relativeXPosition = getXPosition(array, address, level);
 		//U32 x = convertLevelToIndex(level, relativeXPosition); // flagging this - looks suspicious
+		
 		coalesce(array, level, relativeXPosition);
 	}
 	
@@ -126,6 +136,8 @@ void removeNodes(bitArray *array, U32 address){
 // coalesce
 
 void coalesce(bitArray *array, U32 level, U32 node){
+	printf("level %u \r\n",level);
+	printf("node %u \r\n",node);
 	if(level==1) node=0;
 	U32 index = convertLevelToIndex(level, node);
 	U32 bitPosition = getBitPositionMask(index);
@@ -149,6 +161,7 @@ void coalesce(bitArray *array, U32 level, U32 node){
 	}
 	
 	U32 buddyBitPosition = getBitPositionMask(buddyIndex);
+	
 	if( (array->bitStatus[buddyIndex/8] & buddyBitPosition) == 0 && (array->bitStatus[index/8] & bitPosition) == 0){
 		//free list needs be updated to combine buddies		
 		U32 address = array->startAddress+(1<<(15-level+1)) * (buddyNode);
@@ -159,8 +172,7 @@ void coalesce(bitArray *array, U32 level, U32 node){
 		}
 		addNode(level-2, address, array->freeList);
 		//set current node's bit array value to 0
-
-		coalesce(array, level-1, (node-1)/2);
+		coalesce(array, level-1, (node)/2);
 	}
 
 
