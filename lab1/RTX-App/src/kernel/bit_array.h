@@ -12,7 +12,7 @@ typedef struct bitArray{
 	U32 startAddress;
 	U32 endAddress;
 	U32 size;
-	U32 bitStatus[((2*(ARRAY_SIZE)/32 -1)/8)];
+	U8 bitStatus[((2*(ARRAY_SIZE)/32 -1)/8)];
 	freeList_t* freeList;
 } bitArray;
 

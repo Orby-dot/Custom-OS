@@ -125,6 +125,7 @@ U32 g_p_stacks[NUM_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
 const U32 MAX_INT = 4294967295;
 
 //initialize global
+
 bitArray array_RAM1;
 bitArray array_RAM2;
 
@@ -145,7 +146,6 @@ mpool_t k_mpool_create (int algo, U32 start, U32 end)
         errno = EINVAL;
         return RTX_ERR;
     }
-    
     if ( start == RAM1_START) {
         // add your own code
 				initializeBitArray(&array_RAM1,(freeList_t *)free_list_RAM1, RAM1_START,RAM1_END);
@@ -171,7 +171,7 @@ void *k_mpool_alloc (mpool_t mpid, size_t size)
 		if (errno == EINVAL) {
 			return NULL;
 		}
-	
+
 		U32 result;
 		if (mpid==MPID_IRAM1) {
 			result = allocateNode(&array_RAM1, size);
@@ -189,7 +189,6 @@ int k_mpool_dealloc(mpool_t mpid, void *ptr)
 		if (errno == EINVAL){
 			return RTX_ERR;
 		}
-    
 		if(mpid==MPID_IRAM1){
 			removeNodes(&array_RAM1, (U32)ptr);
 			return RTX_OK;
@@ -197,7 +196,6 @@ int k_mpool_dealloc(mpool_t mpid, void *ptr)
 			removeNodes(&array_RAM2, (U32)ptr);
 			return RTX_OK;
 		}
-		
     return RTX_ERR; 
 }
 
