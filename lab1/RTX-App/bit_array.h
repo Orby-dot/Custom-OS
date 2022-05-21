@@ -13,7 +13,7 @@ typedef struct bitArray{
 } bitArray;
 
 void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32 endAddress);
-void allocateNode(bitArray * array, U32 sizeToAllocate);
+U32 allocateNode(bitArray * array, U32 sizeToAllocate);
 void removeNodes(bitArray *array, U32 address);
 U8 getHeight(bitArray*array);
 U8 getXPosition(bitArray* array, U8 address, U8 level);
