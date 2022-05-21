@@ -108,7 +108,7 @@ void removeNodes(bitArray *array, U32 address){
 	U32 xPosition = getXPosition(array, address, height);
 	U32 index = convertLevelToIndex(height, xPosition);
 	U32 locatedNodeIndex = 0;
-	if(index>0) locatedNodeIndex = locateNode(array, (index-1)/2); // index is 0-indexed
+	if(index>0) locatedNodeIndex = locateNode(array, index); // index is 0-indexed
 
 	//check the value in the bit array
 	U32 bitPosition = getBitPositionMask(locatedNodeIndex);
