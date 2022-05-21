@@ -47,10 +47,14 @@ void allocateNode(bitArray * array, U32 sizeToAllocate){
 		printf("No space\r\n");
 		return;
 	}
-	U8 level = findLevel(sizeToAllocate,log_2(array->size)); // find level - call function from util
+	
+	
+	U8 level = findLevel(sizeToAllocate,levels); // find level - call function from util
 
-	U32 index = (1<<level)-1+node;
-	U8 bitPosition = 1<<(index%8);
+	node -= array->startAddress;
+	node = node/(1<<(15-level));
+	U32 index = (1<<level)+node;
+	U8 bitPosition = 1<<(8 - (index%8));
 
 	if( (array->bitStatus[index/8] & bitPosition) == 0){
 		array->bitStatus[index/8] = (array->bitStatus[index/8] | bitPosition);
@@ -62,13 +66,17 @@ void allocateNode(bitArray * array, U32 sizeToAllocate){
 
 
 void updateParentNodes(bitArray *array, U8 level, U32 node){
-	if(level<=0) return;
+	if(level<=0)
+	{
+		array->bitStatus[0] = array->bitStatus[0]| (1<<7);
+		return;
+	}
 		
-	U32 parentIndex = (1<<level)-1+node;
-	U8 parentPosition = 1<<(parentIndex%8);
+	U32 parentIndex = (1<<level)+node;
+	U8 parentPosition = 1<<(8 - (parentIndex%8));
 	
 	if( (array->bitStatus[parentIndex/8] & parentPosition) == 0){
-		array->bitStatus[parentIndex/8] = array->bitStatus[parentIndex/8] | (1<<parentPosition);
+		array->bitStatus[parentIndex/8] = array->bitStatus[parentIndex/8] | (parentPosition);
 		updateParentNodes(array, level-1, (node+1)/2);
 	}
 
