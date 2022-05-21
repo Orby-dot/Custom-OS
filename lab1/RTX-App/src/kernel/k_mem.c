@@ -40,6 +40,7 @@
 
 #include "k_inc.h"
 #include "k_mem.h"
+#include "bit_array.h"
 
 /*---------------------------------------------------------------------------
 The memory map of the OS image may look like the following:
@@ -118,6 +119,16 @@ U32 g_p_stacks[NUM_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
  *                            FUNCTIONS
  *===========================================================================
  */
+ 
+ //constants
+ const U32 MAX_INT = 4294967295;
+
+//initialize global
+bitArray array_RAM1;
+bitArray array_RAM2;
+
+freeList_t free_list_RAM1 [8];
+freeList_t free_list_RAM2 [11];
 
 /* note list[n] is for blocks with order of n */
 mpool_t k_mpool_create (int algo, U32 start, U32 end)
@@ -136,9 +147,13 @@ mpool_t k_mpool_create (int algo, U32 start, U32 end)
     
     if ( start == RAM1_START) {
         // add your own code
+				initializeBitArray(&array_RAM1,(freeList_t *)free_list_RAM1, RAM1_START,RAM1_END);
+				
     } else if ( start == RAM2_START) {
         mpid = MPID_IRAM2;
         // add your own code
+				initializeBitArray(&array_RAM2,(freeList_t *)free_list_RAM2, RAM2_START,RAM2_END);
+			
     } else {
         errno = EINVAL;
         return RTX_ERR;
@@ -152,8 +167,17 @@ void *k_mpool_alloc (mpool_t mpid, size_t size)
 #ifdef DEBUG_0
     printf("k_mpool_alloc: mpid = %d, size = %d, 0x%x\r\n", mpid, size, size);
 #endif /* DEBUG_0 */
-    return ((void *) IRAM2_BASE);
-    //return NULL;
+		if (errno == EINVAL) {
+			return NULL;
+		}
+	
+		U32 result;
+		if (mpid==MPID_IRAM1) {
+			result = allocateNode(&array_RAM1, size);
+		} else if (mpid==MPID_IRAM2){
+			result = allocateNode(&array_RAM2, size);
+		}
+		return result == MAX_INT ? NULL : (void *) result;
 }
 
 int k_mpool_dealloc(mpool_t mpid, void *ptr)
@@ -161,8 +185,19 @@ int k_mpool_dealloc(mpool_t mpid, void *ptr)
 #ifdef DEBUG_0
     printf("k_mpool_dealloc: mpid = %d, ptr = 0x%x\r\n", mpid, ptr);
 #endif /* DEBUG_0 */
+		if (errno == EINVAL){
+			return RTX_ERR;
+		}
     
-    return RTX_OK; 
+		if(mpid==MPID_IRAM1){
+			removeNodes(array_RAM1, *ptr);
+			return RTX_OK;
+		} else if (mpid==MPID_IRAM2) {
+			removeNodes(array_RAM2, *ptr);
+			return RTX_OK;
+		}
+		
+    return RTX_ERR; 
 }
 
 int k_mpool_dump (mpool_t mpid)
@@ -170,8 +205,38 @@ int k_mpool_dump (mpool_t mpid)
 #ifdef DEBUG_0
     printf("k_mpool_dump: mpid = %d\r\n", mpid);
 #endif /* DEBUG_0 */
-    
+	
+		int count = 0;
+		if (mpid == MPID_IRAM1){
+			for(int i=7;i>=0;i--){
+				printListLevel(free_list_RAM1, i, 7, &count);
+			}
+			printf ("%x free memory block(s) found\r\n", *count);
+			return *count;
+		} else if (mpid == MPID_IRAM2) {
+			for(int i=11;i>=0;i--){
+				printListLevel(free_list_RAM2, i, 11, &count);
+			}
+			printf ("%x free memory block(s) found\r\n", *count);
+			return *count;
+		}
+		
     return 0;
+}
+
+int findSize(int level, U8 totalLevels) {
+	return power(2, level*-1 + totalLevels + 4);
+}
+
+void printListLevel(freeList_t  list, int level, U8 totalLevels, int *count)
+{
+	node_t * current = list.head;
+	while (current != NULL){
+		//replace size with 
+		printf ("0x%x: 0x%x\r\n", current, findSize(level, totalLevels);
+		(*count)++;
+		current = current->next;
+	}
 }
  
 int k_mem_init(int algo)
