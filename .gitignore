@@ -49,3 +49,5 @@ manual/*.toc
 *.bak
 *.Bak
 .#*
+lab1/RTX-App/LOG/SIM/uart1.log
+*.log
