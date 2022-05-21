@@ -18,13 +18,6 @@ void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32
 	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress) - 4 + 1 ,startAddress);
 }
 
-//get address from level and x position for node
-/*
-int getNodeAddress(bitArray* array, U8 level, U8 x){
-	return ((array->size)>>level)*x;
-}
-*/
-
 //returns index from 0 to 2^h - 1
 int locateNode(bitArray* array, U8 xPosition, U8 level){
 	
@@ -39,28 +32,29 @@ int locateNode(bitArray* array, U8 xPosition, U8 level){
 }
 
 // allocate memory
-
-void allocateNode(bitArray * array, U32 sizeToAllocate){
+U32 allocateNode(bitArray * array, U32 sizeToAllocate){
 	//call linked list function with sizeToAllocate, returns index within a level
-	U32 node = allocate(sizeToAllocate, array->freeList); //allocate node in free list - get from free list
-	if (node == 4294967295 ) {
+	U32 address = allocate(sizeToAllocate, array->freeList); //allocate node in free list - get from free list
+	if (address == 4294967295 ) {
 		printf("No space\r\n");
-		return;
+		return address;
 	}
-	
 	
 	U8 level = findLevel(sizeToAllocate,levels); // find level - call function from util
 
+	U32 node = address;
 	node -= array->startAddress;
 	node = node/(1<<(15-level));
-	U32 index = (1<<level)+node;
-	U8 bitPosition = 1<<(8 - (index%8));
+	U32 index = (1<<level)+node-1;
+	U8 bitPosition = 1<<(7 - (index%8));
 
 	if( (array->bitStatus[index/8] & bitPosition) == 0){
 		array->bitStatus[index/8] = (array->bitStatus[index/8] | bitPosition);
 	}	
 	
 	updateParentNodes(array, level-1, (node+1)/2);
+	
+	return address;
 	
 }
 
@@ -72,8 +66,8 @@ void updateParentNodes(bitArray *array, U8 level, U32 node){
 		return;
 	}
 		
-	U32 parentIndex = (1<<level)+node;
-	U8 parentPosition = 1<<(8 - (parentIndex%8));
+	U32 parentIndex = (1<<level)+node-1;
+	U8 parentPosition = 1<<(7 - (parentIndex%8));
 	
 	if( (array->bitStatus[parentIndex/8] & parentPosition) == 0){
 		array->bitStatus[parentIndex/8] = array->bitStatus[parentIndex/8] | (parentPosition);
