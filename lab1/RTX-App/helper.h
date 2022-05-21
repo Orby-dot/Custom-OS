@@ -1,5 +1,7 @@
 #include "common.h"
 
+#define ERROR 4294967295 // max U32
+
 // From https://stackoverflow.com/questions/25525536/write-pow-function-without-math-h-in-c
 int power(int base, int exp);
 
