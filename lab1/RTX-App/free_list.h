@@ -1,6 +1,7 @@
 #include "common.h"
 #include "helper.h"
-#define ARRAY_SIZE 0x16000
+
+#define ERROR 4294967295 // max U32
 
 extern U8 levels; // 1 to 11
 

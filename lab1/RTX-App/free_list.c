@@ -66,7 +66,7 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 	while(freeListArray[level].head == NULL) {
 		level--;
 		if (level < 0) {
-			return 4294967295;
+			return ERROR;
 		}
 	}
 

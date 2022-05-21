@@ -35,7 +35,7 @@ int locateNode(bitArray* array, U8 xPosition, U8 level){
 U32 allocateNode(bitArray * array, U32 sizeToAllocate){
 	//call linked list function with sizeToAllocate, returns index within a level
 	U32 address = allocate(sizeToAllocate, array->freeList); //allocate node in free list - get from free list
-	if (address == 4294967295 ) {
+	if (address == ERROR ) {
 		printf("No space\r\n");
 		return address;
 	}
