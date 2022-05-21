@@ -21,3 +21,4 @@ int locateNode(bitArray* array, U32 index);
 void coalesce(bitArray *array, U32 level, U32 node);
 void updateParentNodes(bitArray *array, U32 parentIndex);
 U32 getBitPositionMask(U32 index);
+U32 convertLevelToIndex(U32 level, U32 xPosition);
