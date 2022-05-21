@@ -122,8 +122,7 @@ U32 g_p_stacks[NUM_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
  */
  
  //constants
-// const U32 MAX_INT = 4294967295;
-const U32 MAX_INT = 42949;
+const U32 MAX_INT = 4294967295;
 
 //initialize global
 bitArray array_RAM1;
