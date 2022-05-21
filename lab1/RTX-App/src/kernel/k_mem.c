@@ -40,8 +40,7 @@
 
 #include "k_inc.h"
 #include "k_mem.h"
-#include "bit_array.h"
-#include "tester.h"
+
 
 /*---------------------------------------------------------------------------
 The memory map of the OS image may look like the following:
@@ -124,13 +123,7 @@ U32 g_p_stacks[NUM_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
  //constants
 const U32 MAX_INT = 4294967295;
 
-//initialize global
 
-bitArray array_RAM1;
-bitArray array_RAM2;
-
-freeList_t free_list_RAM1 [8];
-freeList_t free_list_RAM2 [11];
 
 /* note list[n] is for blocks with order of n */
 mpool_t k_mpool_create (int algo, U32 start, U32 end)
