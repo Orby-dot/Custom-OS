@@ -15,15 +15,15 @@ int main(){
     uart0_init();
     uart1_init();
     init_printf(NULL, putc);
-    
-    printf("this is a string\r\n");
-		printf("%u \r\n",(RAM2_START));
-		
-		initializeBitArray(&array,(freeList_t *)list, bitarray_RAM2_m, RAM2_START,RAM2_END);
-		// printBitArray(&array);
-		printLinkedList(&array);
 
-/*    U32 address = allocateNode(&array, (1 << 13) + 1);
+	printf("this is a string\r\n");
+	printf("%u \r\n", (RAM2_START));
+
+	initializeBitArray(&array, (freeList_t *)list, bitarray_RAM2_m, RAM2_START, RAM2_END);
+	// printBitArray(&array);
+	printLinkedList(&array);
+
+	/*    U32 address = allocateNode(&array, (1 << 13) + 1);
     U32 address2 = allocateNode(&array, (1 << 12) + 1);
 		
     printBitArray(&array);
@@ -39,20 +39,25 @@ int main(){
     printBitArray(&array);
 		printLinkedList(&array);
 		*/
-	
-		U32 address = allocateNode(&array, (1 << 4) + 1);
-    U32 address2 = allocateNode(&array, (1 << 4) + 1);
-		U32 address3 = allocateNode(&array, (1 << 4) + 1);
-    U32 address4 = allocateNode(&array, (1 << 4) + 1);
-    printBitArray(&array);
-		printLinkedList(&array);
-		removeNodes(&array, address2);
-    printBitArray(&array);
-		printLinkedList(&array);
-		removeNodes(&array, address);
-    printBitArray(&array);
-		printLinkedList(&array);
+
+	U32 address = allocateNode(&array, (1 << 4) + 1);
+	U32 address2 = allocateNode(&array, (1 << 4) + 1);
+	U32 address3 = allocateNode(&array, (1 << 4) + 1);
+	U32 address4 = allocateNode(&array, (1 << 4) + 1);
+	//printBitArray(&array);
+	printLinkedList(&array);
+	removeNodes(&array, address2);
+	//printBitArray(&array);
+	printLinkedList(&array);
+	removeNodes(&array, address);
+	//printBitArray(&array);
+	printLinkedList(&array);
+	removeNodes(&array, address4);
+	printLinkedList(&array);
+	removeNodes(&array, address3);
+	// printBitArray(&array);
+	printLinkedList(&array);
 
 
-    return 0;
+	return 0;
 }

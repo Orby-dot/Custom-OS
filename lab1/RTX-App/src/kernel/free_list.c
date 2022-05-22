@@ -2,7 +2,7 @@
 #include "free_list.h"
 #include "printf.h"
 
-BOOL debug = TRUE;
+BOOL debug = FALSE;
 	
 U8 levels;
 
@@ -58,6 +58,9 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 		node_t *toReturn = freeListArray[level].head;
 		if (toReturn->next != NULL) toReturn->next->prev = NULL;
 		freeListArray[level].head = toReturn->next;
+		if (freeListArray[level].head == NULL) {
+			freeListArray[level].tail = NULL;
+		}
 		if (debug) printf("No splitting, allocation found at %x. \r\n", (U32) toReturn);
 		return (U32) toReturn;
 	}
@@ -114,11 +117,17 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 }
 
 void addNode(int level, U32 address, freeList_t *freeListArray){
+	if (debug) printf(" --- FL ADD NODE lvl %d address %x \r\n", level, address);
 	node_t *currNode = freeListArray[level].tail;
 	node_t *newNode = (node_t*) address;
+	newNode->next = NULL;
+	newNode->prev = NULL;
+
+	printf(" currnode %x \r\n", currNode);
 	
 	if(!currNode) {
 		freeListArray[level].head = newNode;
+		freeListArray[level].tail = newNode;
 	}else {
 		currNode->next = newNode;
 		newNode->prev = currNode;
@@ -128,6 +137,7 @@ void addNode(int level, U32 address, freeList_t *freeListArray){
 }
 
 void removeNode(int level, U32 address, freeList_t *freeListArray){
+	if (debug) printf(" --- FL REMOVE NODE lvl %d address %x \r\n", level, address);
 	node_t *currNode = freeListArray[level].head;
 	
 	while(currNode && (U32)currNode!=address){
