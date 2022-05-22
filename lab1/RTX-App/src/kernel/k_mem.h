@@ -27,7 +27,16 @@
 #define K_MEM_H_
 #include "k_inc.h"
 #include "lpc1768_mem.h"        // board memory map
-#include "free_list.h"
+#include "bit_array.h"
+#include "tester.h"
+
+//initialize global
+
+extern bitArray array_RAM1;
+extern bitArray array_RAM2;
+
+extern freeList_t free_list_RAM1 [8];
+extern freeList_t free_list_RAM2 [11];
 
 /*
  * ------------------------------------------------------------------------
