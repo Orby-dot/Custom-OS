@@ -124,15 +124,14 @@ U32 g_p_stacks[NUM_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
 const U32 MAX_INT = 4294967295;
 
 //initialize global
+bitArray array_RAM1;
+bitArray array_RAM2;
 
-extern bitArray array_RAM1;
-extern bitArray array_RAM2;
+U8 bitarray_RAM1[((2*(RAM1_SIZE)/32 -1)/8)];
+U8 bitarray_RAM2[((2*(RAM2_SIZE)/32 -1)/8)];
 
-extern U8 bitarray_RAM1[((2*(RAM1_SIZE)/32 -1)/8)];
-extern U8 bitarray_RAM2[((2*(RAM2_SIZE)/32 -1)/8)];
-
-extern freeList_t free_list_RAM1 [8];
-extern freeList_t free_list_RAM2 [11];
+freeList_t free_list_RAM1 [8];
+freeList_t free_list_RAM2 [11];
 
 /* note list[n] is for blocks with order of n */
 mpool_t k_mpool_create (int algo, U32 start, U32 end)
