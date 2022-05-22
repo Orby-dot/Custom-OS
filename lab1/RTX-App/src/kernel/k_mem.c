@@ -40,8 +40,7 @@
 
 #include "k_inc.h"
 #include "k_mem.h"
-#include "bit_array.h"
-#include "tester.h"
+
 
 /*---------------------------------------------------------------------------
 The memory map of the OS image may look like the following:
