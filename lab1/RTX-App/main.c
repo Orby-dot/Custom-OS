@@ -42,8 +42,8 @@ int main(){
 
 	U32 address = allocateNode(&array, (1 << 4) + 1);
 	U32 address2 = allocateNode(&array, (1 << 4) + 1);
-	U32 address3 = allocateNode(&array, (1 << 4) + 1);
-	U32 address4 = allocateNode(&array, (1 << 4) + 1);
+	// U32 address3 = allocateNode(&array, (1 << 4) + 1);
+	// U32 address4 = allocateNode(&array, (1 << 4) + 1);
 	//printBitArray(&array);
 	printLinkedList(&array);
 	removeNodes(&array, address2);
@@ -52,11 +52,11 @@ int main(){
 	removeNodes(&array, address);
 	//printBitArray(&array);
 	printLinkedList(&array);
-	removeNodes(&array, address4);
-	printLinkedList(&array);
-	removeNodes(&array, address3);
-	// printBitArray(&array);
-	printLinkedList(&array);
+	// removeNodes(&array, address4);
+	// printLinkedList(&array);
+	// removeNodes(&array, address3);
+	// // printBitArray(&array);
+	// printLinkedList(&array);
 
 
 	return 0;

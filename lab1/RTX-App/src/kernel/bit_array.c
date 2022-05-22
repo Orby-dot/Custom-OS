@@ -146,8 +146,8 @@ void removeNodes(bitArray *array, U32 address){
 		}
 
 		U32 buddyBitPosition = getBitPositionMask(buddyIndex);
-		printf( " ----- bitPositionMask %u \r\n", buddyBitPosition);
-		printf(" ----- buddyIndex %u buddyNode %u \r\n", buddyIndex, buddyNode);
+		if (debugBA) printf( " ----- bitPositionMask %u \r\n", buddyBitPosition);
+		if (debugBA) printf(" ----- buddyIndex %u buddyNode %u \r\n", buddyIndex, buddyNode);
 		if ((array->bitStatus[buddyIndex / 8] & buddyBitPosition) == 0)
 		{
 			coalesce(array, level, relativeXPosition);
@@ -156,7 +156,7 @@ void removeNodes(bitArray *array, U32 address){
 		{
 			array->bitStatus[index/8] = (array->bitStatus[index/8] & ~bitPosition);
 			U32 address = array->startAddress + (1 << (15 - level + 1)) * (relativeXPosition);
-			printf(" --- address:  rfs %x \r\n", address);
+			if (debugBA) printf(" --- address:  rfs %x \r\n", address);
 			addNode(level - 1, address, array->freeList);
 		}
 	}
@@ -166,10 +166,11 @@ void removeNodes(bitArray *array, U32 address){
 
 void coalesce(bitArray *array, U32 level, U32 node){
 	if (debugBA) printf(" -- BA coalesce %x lvl %u \r\n", node, level);
-	if (debugBA) printf("level %u \r\n",level);
-	if (debugBA) printf("node %u \r\n",node);
+	printLinkedList(array);
+
 	if(level==1) node=0;
 	U32 index = convertLevelToIndex(level, node);
+	if (debugBA) printf(" -- index: %u\r\n", index);
 	U32 bitPosition = getBitPositionMask(index);
 	array->bitStatus[index/8] = (array->bitStatus[index/8] & ~bitPosition);
 	if(level<=1) {
@@ -204,7 +205,6 @@ void coalesce(bitArray *array, U32 level, U32 node){
 			address = array->startAddress+(1<<(15-level+1)) * (node);
 		}
 		addNode(level-2, address, array->freeList);
-		// printLinkedList(array);
 
 		//set current node's bit array value to 0
 		coalesce(array, level-1, (node)/2);

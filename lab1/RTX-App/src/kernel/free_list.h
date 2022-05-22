@@ -21,7 +21,7 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 st
 
 U32 allocate(U32 size, freeList_t *freeListArray);
 
-void addNode(int level, U32 address, freeList_t *freeListArray);
+void addNode(U32 level, U32 address, freeList_t *freeListArray);
 
 void removeNode(int level, U32 address, freeList_t *freeListArray);
 

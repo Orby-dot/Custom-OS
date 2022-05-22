@@ -56,10 +56,9 @@ void printLinkedList(bitArray * array)
 
 void printListLevel(freeList_t  list)
 {
-	printf("////////////// %x \r\n", &list);
 	node_t * current = list.head;
 	while (current != NULL){
-		printf ("%x <-> ", current->next);
+		printf ("%x <-> ", current);
 		current = current->next;
 	}
 	

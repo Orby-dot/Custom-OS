@@ -1,6 +1,7 @@
 #include "common.h"
 #include "free_list.h"
 #include "printf.h"
+#include "tester.h"
 
 BOOL debug = FALSE;
 	
@@ -79,14 +80,16 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 	if (parent->next != NULL) {
 		parent->next->prev = NULL;
 	}
+
+	if (debug) printf(" --- parent.next %x \r\n", parent->next);
 	if (freeListArray[level].head == freeListArray[level].tail) {
-        freeListArray[level].head = parent->next;
-        freeListArray[level].tail = parent->next;
+        freeListArray[level].head = freeListArray[level].head ->next;
+        freeListArray[level].tail = freeListArray[level].head ->next;
     } 
 	else {
         freeListArray[level].head = parent->next;
     }
-	freeListArray[level].head = parent->next;
+	// freeListArray[level].head = parent->next; // don't need this
 
 	// clear parent
 	parent->next = NULL;
@@ -98,7 +101,7 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 	if (debug) printf("Before while: %d < %u \r\n", level, findLevel(size, levels));
 
 	while (level < findLevel(size, levels)) {
-		if (debug) printf("In while: %d < %u \r\n", level, findLevel(size, levels));
+		// if (debug) printf("In while: %d < %u \r\n", level, findLevel(size, levels));
 		// add right-node of parent to level + 1
 		node_t *newRightNode = (node_t *)(parentAddress + findSize(level + 1, levels)); // this is sketch
 		
@@ -116,14 +119,21 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 	return parentAddress;
 }
 
-void addNode(int level, U32 address, freeList_t *freeListArray){
+void addNode(U32 level, U32 address, freeList_t *freeListArray){
 	if (debug) printf(" --- FL ADD NODE lvl %d address %x \r\n", level, address);
+
+	for (int i = 0; i < levels; i++) {
+		if (debug) printf("AN Head of %d: %x addr %x\r\n", i, freeListArray[i].head, &freeListArray[i].head);
+	}
+
+	printListLevel(freeListArray[level]);
+
 	node_t *currNode = freeListArray[level].tail;
 	node_t *newNode = (node_t*) address;
 	newNode->next = NULL;
 	newNode->prev = NULL;
 
-	printf(" currnode %x \r\n", currNode);
+	if (debug) printf(" currnode %x \r\n", currNode);
 	
 	if(!currNode) {
 		freeListArray[level].head = newNode;
@@ -136,15 +146,22 @@ void addNode(int level, U32 address, freeList_t *freeListArray){
 	freeListArray[level].tail = newNode;
 }
 
+// bug not here
 void removeNode(int level, U32 address, freeList_t *freeListArray){
 	if (debug) printf(" --- FL REMOVE NODE lvl %d address %x \r\n", level, address);
 	node_t *currNode = freeListArray[level].head;
 	
+	for (int i = 0; i < levels; i++) {
+		if (debug) printf("RN Head of %d: %x addr %x\r\n", i, freeListArray[i].head, &freeListArray[i].head);
+		
+	}
+	printListLevel(freeListArray[level]);
+
 	while(currNode && (U32)currNode!=address){
 		currNode = currNode->next;
 	}
 	
-	if(currNode == freeListArray[level].head)
+	if(currNode && currNode == freeListArray[level].head)
 	{
 		freeListArray[level].head = currNode->next;
 	}
@@ -152,14 +169,12 @@ void removeNode(int level, U32 address, freeList_t *freeListArray){
 	
 	if(currNode == freeListArray[level].tail)
 	{
-		
 		freeListArray[level].tail = NULL;
 	}
 	
 	if (currNode) {
-		currNode->prev->next = currNode->next;
-		currNode->next->prev = currNode->prev;
-
+		if (currNode->prev != NULL) currNode->prev->next = currNode->next;
+		if (currNode->next != NULL) currNode->next->prev = currNode->prev;
 		currNode->prev=NULL;
 		currNode->next=NULL;
 	}
