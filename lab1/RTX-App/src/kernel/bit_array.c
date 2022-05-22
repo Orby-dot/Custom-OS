@@ -52,7 +52,7 @@ U32 allocateNode(bitArray * array, U32 sizeToAllocate){
 		if (debugBA) printf("No space\r\n");
 		return address;
 	}
-	
+		
 	//adding 1 to make the level 1-indexed as is consistent across bit array
 	U32 level = findLevel(sizeToAllocate,levels)+1; // find level - call function from util
 
@@ -132,7 +132,7 @@ void removeNodes(bitArray *array, U32 address){
 		U32 relativeXPosition = getXPosition(array, address, level);
 		//U32 x = convertLevelToIndex(level, relativeXPosition); // flagging this - looks suspicious
 
-		U32 buddyIndex = index;
+		U32 buddyIndex = locatedNodeIndex;
 		U32 buddyNode = relativeXPosition;
 		if (relativeXPosition % 2 == 0)
 		{ //buddy is on the right side
