@@ -12,11 +12,11 @@ typedef struct bitArray{
 	U32 startAddress;
 	U32 endAddress;
 	U32 size;
-	U8 bitStatus[((2*(ARRAY_SIZE)/32 -1)/8)];
+	U8 *bitStatus;
 	freeList_t* freeList;
 } bitArray;
 
-void initializeBitArray(bitArray *array,freeList_t * list, U32 startAddress, U32 endAddress);
+void initializeBitArray(bitArray *array,freeList_t * list, U8 * bitArray, U32 startAddress, U32 endAddress);
 U32 allocateNode(bitArray * array, U32 sizeToAllocate);
 void removeNodes(bitArray *array, U32 address);
 U32 getHeight(bitArray*array);

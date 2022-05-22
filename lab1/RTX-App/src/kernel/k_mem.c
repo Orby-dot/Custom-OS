@@ -123,7 +123,15 @@ U32 g_p_stacks[NUM_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
  //constants
 const U32 MAX_INT = 4294967295;
 
+//initialize global
+bitArray array_RAM1;
+bitArray array_RAM2;
 
+U8 bitarray_RAM1[((2*(RAM1_SIZE)/32 -1)/8)];
+U8 bitarray_RAM2[((2*(RAM2_SIZE)/32 -1)/8)];
+
+freeList_t free_list_RAM1 [8];
+freeList_t free_list_RAM2 [11];
 
 /* note list[n] is for blocks with order of n */
 mpool_t k_mpool_create (int algo, U32 start, U32 end)
@@ -141,12 +149,12 @@ mpool_t k_mpool_create (int algo, U32 start, U32 end)
     }
     if ( start == RAM1_START) {
         // add your own code
-				initializeBitArray(&array_RAM1,(freeList_t *)free_list_RAM1, RAM1_START,RAM1_END);
+				initializeBitArray(&array_RAM1,(freeList_t *)free_list_RAM1, bitarray_RAM1, RAM1_START,RAM1_END);
 				
     } else if ( start == RAM2_START) {
         mpid = MPID_IRAM2;
         // add your own code
-				initializeBitArray(&array_RAM2,(freeList_t *)free_list_RAM2, RAM2_START,RAM2_END);
+				initializeBitArray(&array_RAM2,(freeList_t *)free_list_RAM2, bitarray_RAM2, RAM2_START,RAM2_END);
 			
     } else {
         errno = EINVAL;

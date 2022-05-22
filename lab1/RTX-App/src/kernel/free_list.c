@@ -1,8 +1,9 @@
 #include "common.h"
 #include "free_list.h"
 #include "printf.h"
+#include "tester.h"
 
-BOOL debug = TRUE;
+BOOL debug = FALSE;
 	
 U8 levels;
 
@@ -12,7 +13,7 @@ U8 levels;
  * startAddress is the base address of either IRAM1 and IRAM2 
  */
 int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 startAddress) {
-	if (debug) printf("sa: %x \r\n", startAddress);
+	if (debug) printf(" ------------ INITIALIZE free lists sa: %x \r\n", startAddress);
 	levels = levelsInput;
 	for (int i=0; i<levels; i++) { 
 		if (i == 0) {
@@ -47,6 +48,7 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 st
  * returns NULL if can not allocate 
  */
 U32 allocate(U32 size, freeList_t *freeListArray) {
+	if (debug) printf(" ------------ ALLOCATE size %x \r\n", size);
 
 	// find which level that block will be on
 	int level = findLevel(size, levels);
@@ -58,6 +60,9 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 		node_t *toReturn = freeListArray[level].head;
 		if (toReturn->next != NULL) toReturn->next->prev = NULL;
 		freeListArray[level].head = toReturn->next;
+		if (freeListArray[level].head == NULL) {
+			freeListArray[level].tail = NULL;
+		}
 		if (debug) printf("No splitting, allocation found at %x. \r\n", (U32) toReturn);
 		return (U32) toReturn;
 	}
@@ -71,31 +76,29 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 	}
 
 	if (debug) printf("Free node found at level %d \r\n", level);
+
 	// remove parent node from freeList
 	node_t *parent = freeListArray[level].head;
-	if (parent->next != NULL) {
-		parent->next->prev = NULL;
-	}
-	if (freeListArray[level].head == freeListArray[level].tail) {
-        freeListArray[level].head = parent->next;
-        freeListArray[level].tail = parent->next;
+	if (freeListArray[level].head == freeListArray[level].tail) { //if there was only one element in the list, set to null 
+        freeListArray[level].head = NULL;
+        freeListArray[level].tail = NULL;
     } 
 	else {
         freeListArray[level].head = parent->next;
+		parent->next->prev = NULL;
     }
-	freeListArray[level].head = parent->next;
 
 	// clear parent
 	parent->next = NULL;
 	parent->prev = NULL;
+	U32 parentAddress = ((U32)parent);
 
 	// keep splitting... only keep right node of each level
-	U32 parentAddress = ((U32)parent);
 	
 	if (debug) printf("Before while: %d < %u \r\n", level, findLevel(size, levels));
 
 	while (level < findLevel(size, levels)) {
-		if (debug) printf("In while: %d < %u \r\n", level, findLevel(size, levels));
+		// if (debug) printf("In while: %d < %u \r\n", level, findLevel(size, levels));
 		// add right-node of parent to level + 1
 		node_t *newRightNode = (node_t *)(parentAddress + findSize(level + 1, levels)); // this is sketch
 		
@@ -113,12 +116,26 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 	return parentAddress;
 }
 
-void addNode(int level, U32 address, freeList_t *freeListArray){
+void addNode(U32 level, U32 address, freeList_t *freeListArray){
+	if (debug) printf(" -------------- FL ADD NODE lvl %d address %x \r\n", level, address);
+
+	for (int i = 0; i < levels; i++) {
+		if (debug) printf("AN hd of %d:%x addr:%x\r\n", i, freeListArray[i].head, &freeListArray[i].head);
+		if (debug) printf("AN tl of %d:%x addr:%x\r\n", i, freeListArray[i].tail, &freeListArray[i].tail);
+	}
+
+	if (debug) printListLevel(freeListArray[level]);
+
 	node_t *currNode = freeListArray[level].tail;
 	node_t *newNode = (node_t*) address;
+	newNode->next = NULL;
+	newNode->prev = NULL;
+
+	if (debug) printf(" currnode %x \r\n", currNode);
 	
 	if(!currNode) {
 		freeListArray[level].head = newNode;
+		freeListArray[level].tail = newNode;
 	}else {
 		currNode->next = newNode;
 		newNode->prev = currNode;
@@ -127,29 +144,35 @@ void addNode(int level, U32 address, freeList_t *freeListArray){
 	freeListArray[level].tail = newNode;
 }
 
+// bug not here
 void removeNode(int level, U32 address, freeList_t *freeListArray){
+	if (debug) printf(" ----------- FL REMOVE NODE lvl %d address %x \r\n", level, address);
 	node_t *currNode = freeListArray[level].head;
 	
+	for (int i = 0; i < levels; i++) {
+		if (debug) printf("RN hd of %d:%x addr:%x\r\n", i, freeListArray[i].head, &freeListArray[i].head);
+		if (debug) printf("RN tl of %d:%x addr:%x\r\n", i, freeListArray[i].tail, &freeListArray[i].tail);
+	}
+	if (debug) printListLevel(freeListArray[level]);
+
 	while(currNode && (U32)currNode!=address){
 		currNode = currNode->next;
 	}
 	
-	if(currNode == freeListArray[level].head)
+	if(currNode && currNode == freeListArray[level].head)
 	{
 		freeListArray[level].head = currNode->next;
 	}
 		
 	
-	if(currNode == freeListArray[level].tail)
+	if(currNode && currNode == freeListArray[level].tail)
 	{
-		
-		freeListArray[level].tail = NULL;
+		freeListArray[level].tail = currNode->prev;
 	}
 	
 	if (currNode) {
-		currNode->prev->next = currNode->next;
-		currNode->next->prev = currNode->prev;
-
+		if (currNode->prev != NULL) currNode->prev->next = currNode->next;
+		if (currNode->next != NULL) currNode->next->prev = currNode->prev;
 		currNode->prev=NULL;
 		currNode->next=NULL;
 	}

@@ -38,6 +38,9 @@ extern bitArray array_RAM2;
 extern freeList_t free_list_RAM1 [8];
 extern freeList_t free_list_RAM2 [11];
 
+extern U8 bitarray_RAM1[((2*(RAM1_SIZE)/32 -1)/8)];
+extern U8 bitarray_RAM2[((2*(RAM2_SIZE)/32 -1)/8)];
+
 /*
  * ------------------------------------------------------------------------
  *                             FUNCTION PROTOTYPES
