@@ -3,7 +3,7 @@
 #include "printf.h"
 #include "tester.h"
 
-BOOL debugBA = TRUE;
+BOOL debugBA = FALSE;
 
 // init
 void initializeBitArray(bitArray *array,freeList_t * list,U8 * bitArray, U32 startAddress, U32 endAddress){
@@ -102,14 +102,14 @@ U32 getXPosition(bitArray* array, U32 address, U32 level){
 }
 
 void removeNodes(bitArray *array, U32 address){
-	
+	if (debugBA) printf(" ============== BA REMOVE NODES addr %x \r\n", address);
+
 	U32 height = getHeight(array);
 	
 	//pass in array, x position on the bottom of the tree, and height
 	// nodePosition is from 0 to 2^h -1
 	
 	//node pos in bottom level
-	if (debugBA) printf(" === BA REMOVE NODES addr %x \r\n", address);
 	if (debugBA) printf("height %u \r\n", height);
 	U32 xPosition = getXPosition(array, address, height);
 	if (debugBA) printf("X pos %u \r\n", xPosition);
@@ -165,8 +165,7 @@ void removeNodes(bitArray *array, U32 address){
 // coalesce
 
 void coalesce(bitArray *array, U32 level, U32 node){
-	if (debugBA) printf(" -- BA coalesce %x lvl %u \r\n", node, level);
-	printLinkedList(array);
+	if (debugBA) printf(" ============== BA coalesce %x lvl %u \r\n", node, level);
 
 	if(level==1) node=0;
 	U32 index = convertLevelToIndex(level, node);
@@ -181,7 +180,9 @@ void coalesce(bitArray *array, U32 level, U32 node){
 	// for levels>=2, it is always true that left children are even indexed and vice versa - this works because the number of nodes 
 	// after the first level are a power of 2 which is even
 	U32 buddyIndex = index;
+	if (debugBA) printf(" ///////////// VAL, ADDRESS OF BUDDYINDEX: %u %x \r\n", buddyIndex, &buddyIndex);
 	U32 buddyNode = node;
+	if (debugBA) printf(" ///////////// VAL, ADDRESS OF BUDDYINDEX: %u %x \r\n", buddyIndex, &buddyNode);
 	if(node%2==0){ //buddy is on the right side
 		buddyIndex++;
 		buddyNode++;
@@ -194,7 +195,6 @@ void coalesce(bitArray *array, U32 level, U32 node){
 	U32 buddyBitPosition = getBitPositionMask(buddyIndex);
 	
 	if( (array->bitStatus[buddyIndex/8] & buddyBitPosition) == 0 && (array->bitStatus[index/8] & bitPosition) == 0){
-		if (debugBA) printf(" --- in coalesce if, addNode should be called \r\n");
 		//free list needs be updated to combine buddies		
 		U32 address = array->startAddress+(1<<(15-level+1)) * (node);
 		removeNode(level-1, address,array->freeList);
