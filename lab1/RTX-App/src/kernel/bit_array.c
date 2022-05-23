@@ -3,7 +3,7 @@
 #include "printf.h"
 #include "tester.h"
 
-BOOL debugBA = FALSE;
+BOOL debugBA = TRUE;
 
 // init
 void initializeBitArray(bitArray *array,freeList_t * list,U8 * bitArray, U32 startAddress, U32 endAddress){
@@ -67,8 +67,10 @@ U32 allocateNode(bitArray * array, U32 sizeToAllocate){
 	if( (array->bitStatus[index/8] & bitPosition) == 0){
 		array->bitStatus[index/8] = (array->bitStatus[index/8] | bitPosition);
 	}	
-	
-	updateParentNodes(array, (index-1)/2);
+	if(index > 0)
+	{
+		updateParentNodes(array, (index-1)/2);
+	}
 	
 	return address;
 	
@@ -150,6 +152,8 @@ void removeNodes(bitArray *array, U32 address){
 		U32 buddyBitPosition = getBitPositionMask(buddyIndex);
 		if (debugBA) printf( " ----- bitPositionMask %u \r\n", buddyBitPosition);
 		if (debugBA) printf(" ----- buddyIndex %u buddyNode %u \r\n", buddyIndex, buddyNode);
+		
+		
 		if ((array->bitStatus[buddyIndex / 8] & buddyBitPosition) == 0)
 		{
 			coalesce(array, level, relativeXPosition);
