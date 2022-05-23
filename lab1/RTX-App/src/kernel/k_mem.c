@@ -147,14 +147,14 @@ mpool_t k_mpool_create (int algo, U32 start, U32 end)
         errno = EINVAL;
         return RTX_ERR;
     }
-    if ( start == RAM1_START) {
+    if ( start == RAM1_START && end == RAM1_END ) {
         // add your own code
-		initializeBitArray(&array_RAM1,(freeList_t *)free_list_RAM1, bitarray_RAM1, RAM1_START,RAM1_END);
+				initializeBitArray(&array_RAM1,(freeList_t *)free_list_RAM1, bitarray_RAM1, RAM1_START,RAM1_END);
 				
-    } else if ( start == RAM2_START) {
+    } else if ( start == RAM2_START && end == RAM2_END ) {
         mpid = MPID_IRAM2;
         // add your own code
-		initializeBitArray(&array_RAM2,(freeList_t *)free_list_RAM2, bitarray_RAM2, RAM2_START,RAM2_END);
+				initializeBitArray(&array_RAM2,(freeList_t *)free_list_RAM2, bitarray_RAM2, RAM2_START,RAM2_END);
     } else {
         errno = EINVAL;
         return RTX_ERR;
