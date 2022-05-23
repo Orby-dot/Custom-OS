@@ -2,8 +2,6 @@
 #include "free_list.h"
 #include "helper.h"
 
-#define ARRAY_SIZE	0x16000
-
 #ifndef _BIT_ARRAY
 
 #define _BIT_ARRAY
@@ -14,6 +12,7 @@ typedef struct bitArray{
 	U32 size;
 	U8 *bitStatus;
 	freeList_t* freeList;
+	U8 totalLevels;
 } bitArray;
 
 void initializeBitArray(bitArray *array,freeList_t * list, U8 * bitArray, U32 startAddress, U32 endAddress);

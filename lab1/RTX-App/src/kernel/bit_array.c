@@ -12,13 +12,14 @@ void initializeBitArray(bitArray *array,freeList_t * list,U8 * bitArray, U32 sta
 	array->endAddress = endAddress;
 	array->size = endAddress - startAddress +1;
 	
-	for(int i=0;i<((2*(ARRAY_SIZE)/32 -1)/8);i++){
+	for(int i=0;i<((2*(array->size)/32 -1)/8);i++){
 		array->bitStatus[i] = 0;
 	}
 	
 	array->freeList = list;
+	array->totalLevels = log_2(endAddress-startAddress) - 4 + 1;
 	
-	initializeArrayOfFreeLists(array->freeList,log_2(endAddress-startAddress) - 4 + 1 ,startAddress);
+	initializeArrayOfFreeLists(array->freeList, array->totalLevels, startAddress);
 }
 
 // level is 1-indexed
@@ -46,27 +47,30 @@ int locateNode(bitArray* array, U32 index){
 
 // allocate memory
 U32 allocateNode(bitArray * array, U32 sizeToAllocate){
+	printf("TOTAL LEVELS: %u\r\n\n", array->totalLevels);
 	//call linked list function with sizeToAllocate, returns index within a level
-	U32 address = allocate(sizeToAllocate, array->freeList); //allocate node in free list - get from free list
+	U32 address = allocate(sizeToAllocate, array->freeList, array->totalLevels); //allocate node in free list - get from free list
 	if (address == ERROR ) {
 		if (debugBA) printf("No space\r\n");
 		return address;
 	}
 		
 	//adding 1 to make the level 1-indexed as is consistent across bit array
-	U32 level = findLevel(sizeToAllocate,levels)+1; // find level - call function from util
+	U32 level = findLevel(sizeToAllocate,array->totalLevels)+1; // find level - call function from util
 
 	U32 node = address;
 	node -= array->startAddress;
-	node = node/(1<<(15-level+1));
+	node = node/(1<<(array->totalLevels + 4 -level+1));
 	U32 index = convertLevelToIndex(level, node);
 	U32 bitPosition = getBitPositionMask(index);
 
 	if( (array->bitStatus[index/8] & bitPosition) == 0){
 		array->bitStatus[index/8] = (array->bitStatus[index/8] | bitPosition);
 	}	
-	
-	updateParentNodes(array, (index-1)/2);
+	if(index > 0)
+	{
+		updateParentNodes(array, (index-1)/2);
+	}
 	
 	return address;
 	
@@ -131,33 +135,44 @@ void removeNodes(bitArray *array, U32 address){
 
 		U32 relativeXPosition = getXPosition(array, address, level);
 		//U32 x = convertLevelToIndex(level, relativeXPosition); // flagging this - looks suspicious
+		if(locatedNodeIndex >0)
+		{
+			U32 buddyIndex = locatedNodeIndex;
+			U32 buddyNode = relativeXPosition;
+			if (relativeXPosition % 2 == 0)
+			{ //buddy is on the right side
+				buddyIndex++;
+				buddyNode++;
+			}
+			else
+			{ //buddy is towards the left
+				buddyIndex--;
+				buddyNode--;
+			}
 
-		U32 buddyIndex = locatedNodeIndex;
-		U32 buddyNode = relativeXPosition;
-		if (relativeXPosition % 2 == 0)
-		{ //buddy is on the right side
-			buddyIndex++;
-			buddyNode++;
+			U32 buddyBitPosition = getBitPositionMask(buddyIndex);
+			if (debugBA) printf( " ----- bitPositionMask %u \r\n", buddyBitPosition);
+			if (debugBA) printf(" ----- buddyIndex %u buddyNode %u \r\n", buddyIndex, buddyNode);
+			
+			
+			if ((array->bitStatus[buddyIndex / 8] & buddyBitPosition) == 0)
+			{
+				coalesce(array, level, relativeXPosition);
+			}
+			else
+			{
+				array->bitStatus[locatedNodeIndex/8] = (array->bitStatus[locatedNodeIndex/8] & ~bitPosition);
+				U32 address = array->startAddress + (1 << (array->totalLevels + 4 - level + 1)) * (relativeXPosition);
+				if (debugBA) printf(" --- address:  rfs %x \r\n", address);
+				addNode(level - 1, address, array->freeList, array->totalLevels);
+			}
 		}
 		else
-		{ //buddy is towards the left
-			buddyIndex--;
-			buddyNode--;
-		}
-
-		U32 buddyBitPosition = getBitPositionMask(buddyIndex);
-		if (debugBA) printf( " ----- bitPositionMask %u \r\n", buddyBitPosition);
-		if (debugBA) printf(" ----- buddyIndex %u buddyNode %u \r\n", buddyIndex, buddyNode);
-		if ((array->bitStatus[buddyIndex / 8] & buddyBitPosition) == 0)
 		{
-			coalesce(array, level, relativeXPosition);
-		}
-		else
-		{
-			array->bitStatus[index/8] = (array->bitStatus[index/8] & ~bitPosition);
-			U32 address = array->startAddress + (1 << (15 - level + 1)) * (relativeXPosition);
+			array->bitStatus[locatedNodeIndex/8] = (array->bitStatus[locatedNodeIndex/8] & ~bitPosition);
+			U32 address = array->startAddress + (1 << (array->totalLevels + 4 - level + 1)) * (relativeXPosition);
 			if (debugBA) printf(" --- address:  rfs %x \r\n", address);
-			addNode(level - 1, address, array->freeList);
+			addNode(level - 1, address, array->freeList, array->totalLevels);
 		}
 	}
 }
@@ -196,15 +211,15 @@ void coalesce(bitArray *array, U32 level, U32 node){
 	
 	if( (array->bitStatus[buddyIndex/8] & buddyBitPosition) == 0 && (array->bitStatus[index/8] & bitPosition) == 0){
 		//free list needs be updated to combine buddies		
-		U32 address = array->startAddress+(1<<(15-level+1)) * (node);
-		removeNode(level-1, address,array->freeList);
-		address = array->startAddress+(1<<(15-level+1)) * (buddyNode);
-		removeNode(level-1, address,array->freeList);
+		U32 address = array->startAddress+(1<<(array->totalLevels + 4 -level+1)) * (node);
+		removeNode(level-1, address,array->freeList, array->totalLevels);
+		address = array->startAddress+(1<<(array->totalLevels + 4-level+1)) * (buddyNode);
+		removeNode(level-1, address,array->freeList, array->totalLevels);
 		if(node%2==0)
 		{
-			address = array->startAddress+(1<<(15-level+1)) * (node);
+			address = array->startAddress+(1<<(array->totalLevels + 4-level+1)) * (node);
 		}
-		addNode(level-2, address, array->freeList);
+		addNode(level-2, address, array->freeList, array->totalLevels);
 
 		//set current node's bit array value to 0
 		coalesce(array, level-1, (node)/2);
