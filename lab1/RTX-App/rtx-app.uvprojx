@@ -429,49 +429,79 @@
               <FilePath>.\src\kernel\k_task.c</FilePath>
             </File>
             <File>
-              <FileName>free_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\free_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>free_list.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\free_list.h</FilePath>
-            </File>
-            <File>
-              <FileName>helper.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\helper.c</FilePath>
-            </File>
-            <File>
-              <FileName>helper.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\helper.h</FilePath>
-            </File>
-            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>bit_array.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\bit_array.c</FilePath>
+              <FileName>k_mem.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_mem.h</FilePath>
             </File>
             <File>
-              <FileName>tester.h</FileName>
+              <FileName>k_inc.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\tester.h</FilePath>
+              <FilePath>.\src\kernel\k_inc.h</FilePath>
+            </File>
+            <File>
+              <FileName>k_msg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_msg.h</FilePath>
+            </File>
+            <File>
+              <FileName>k_rtx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_rtx.h</FilePath>
+            </File>
+            <File>
+              <FileName>k_rtx_init.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_rtx_init.h</FilePath>
+            </File>
+            <File>
+              <FileName>k_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_task.h</FilePath>
+            </File>
+            <File>
+              <FileName>bit_array.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\bit_array.c</FilePath>
             </File>
             <File>
               <FileName>bit_array.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\bit_array.h</FilePath>
+              <FilePath>.\src\kernel\bit_array.h</FilePath>
+            </File>
+            <File>
+              <FileName>free_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\free_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>free_list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\free_list.h</FilePath>
+            </File>
+            <File>
+              <FileName>helper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\helper.c</FilePath>
+            </File>
+            <File>
+              <FileName>helper.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\helper.h</FilePath>
             </File>
             <File>
               <FileName>tester.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\tester.c</FilePath>
+              <FilePath>.\src\kernel\tester.c</FilePath>
+            </File>
+            <File>
+              <FileName>tester.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\tester.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -975,49 +1005,79 @@
               <FilePath>.\src\kernel\k_task.c</FilePath>
             </File>
             <File>
-              <FileName>free_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\free_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>free_list.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\free_list.h</FilePath>
-            </File>
-            <File>
-              <FileName>helper.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\helper.c</FilePath>
-            </File>
-            <File>
-              <FileName>helper.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\helper.h</FilePath>
-            </File>
-            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>bit_array.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\bit_array.c</FilePath>
+              <FileName>k_mem.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_mem.h</FilePath>
             </File>
             <File>
-              <FileName>tester.h</FileName>
+              <FileName>k_inc.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\tester.h</FilePath>
+              <FilePath>.\src\kernel\k_inc.h</FilePath>
+            </File>
+            <File>
+              <FileName>k_msg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_msg.h</FilePath>
+            </File>
+            <File>
+              <FileName>k_rtx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_rtx.h</FilePath>
+            </File>
+            <File>
+              <FileName>k_rtx_init.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_rtx_init.h</FilePath>
+            </File>
+            <File>
+              <FileName>k_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\k_task.h</FilePath>
+            </File>
+            <File>
+              <FileName>bit_array.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\bit_array.c</FilePath>
             </File>
             <File>
               <FileName>bit_array.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\bit_array.h</FilePath>
+              <FilePath>.\src\kernel\bit_array.h</FilePath>
+            </File>
+            <File>
+              <FileName>free_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\free_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>free_list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\free_list.h</FilePath>
+            </File>
+            <File>
+              <FileName>helper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\helper.c</FilePath>
+            </File>
+            <File>
+              <FileName>helper.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\helper.h</FilePath>
             </File>
             <File>
               <FileName>tester.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\tester.c</FilePath>
+              <FilePath>.\src\kernel\tester.c</FilePath>
+            </File>
+            <File>
+              <FileName>tester.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\tester.h</FilePath>
             </File>
           </Files>
         </Group>
