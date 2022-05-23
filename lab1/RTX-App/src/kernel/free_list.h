@@ -5,8 +5,6 @@
 
 #define _FREE_LIST
 
-extern U8 levels; // 1 to 11
-
 typedef struct node {
 	struct node *prev;
 	struct node *next;
@@ -17,12 +15,12 @@ typedef struct freeList {
 	node_t *tail;
 } freeList_t;
 
-int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 startAddress);
+int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 totalLevels, U32 startAddress);
 
-U32 allocate(U32 size, freeList_t *freeListArray);
+U32 allocate(U32 size, freeList_t *freeListArray, U8 totalLevels);
 
-void addNode(U32 level, U32 address, freeList_t *freeListArray);
+void addNode(U32 level, U32 address, freeList_t *freeListArray, U8 totalLevels);
 
-void removeNode(int level, U32 address, freeList_t *freeListArray);
+void removeNode(int level, U32 address, freeList_t *freeListArray, U8 totalLevels);
 
 #endif

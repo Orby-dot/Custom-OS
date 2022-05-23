@@ -5,29 +5,26 @@
 
 BOOL debug = FALSE;
 	
-U8 levels;
-
 /**
  * freeListArray is the array of free lists
- * levelsInput is the number of levels
+ * totalLevels is the total number of levels
  * startAddress is the base address of either IRAM1 and IRAM2 
  */
-int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 startAddress) {
-	if (debug) printf(" ------------ INITIALIZE free lists sa: %x \r\n", startAddress);
-	levels = levelsInput;
-	for (int i=0; i<levels; i++) { 
+int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 totalLevels, U32 startAddress) {
+	printf(" ------------ INITIALIZE free lists sa: %x totalLevels: %u \r\n", startAddress, totalLevels);
+	for (U8 i = 0; i<totalLevels; i++) { 
 		if (i == 0) {
 			// TODO: Create new node
-			if (debug) printf("head called: %x \r\n", freeListArray[i].head);
+			// printf("head called: %x \r\n", freeListArray[i].head);
 			node_t *temp = (node_t *) startAddress;
 			temp->next = NULL;
 			temp->prev = NULL;
 
-			(freeListArray)[i].head = (node_t *) startAddress;
-			(freeListArray)[i].tail = temp;
+			freeListArray[i].head = temp;
+			freeListArray[i].tail = temp;
 
 			// printf("temp: %x \r\n", temp);
-			if (debug) printf("head called: %x \r\n", (freeListArray)[i].head);
+			printf("head called: %x addr: %x \r\n", freeListArray[i].head, &freeListArray[i].head);
 			// printf("0 Called (address of head): %x \r\n", &freeListArray[i]->head);
 
 		} else {
@@ -47,11 +44,11 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 levelsInput, U32 st
  * startAddress: start address of IRAM1/IRAM2
  * returns NULL if can not allocate 
  */
-U32 allocate(U32 size, freeList_t *freeListArray) {
+U32 allocate(U32 size, freeList_t *freeListArray, U8 totalLevels) {
 	if (debug) printf(" ------------ ALLOCATE size %x \r\n", size);
 
 	// find which level that block will be on
-	int level = findLevel(size, levels);
+	int level = findLevel(size, totalLevels);
 	
 	if (debug) printf("Allocating %u at level %d \r\n", size, level);
 
@@ -95,12 +92,12 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 
 	// keep splitting... only keep right node of each level
 	
-	if (debug) printf("Before while: %d < %u \r\n", level, findLevel(size, levels));
+	if (debug) printf("Before while: %d < %u \r\n", level, findLevel(size, totalLevels));
 
-	while (level < findLevel(size, levels)) {
+	while (level < findLevel(size, totalLevels)) {
 		// if (debug) printf("In while: %d < %u \r\n", level, findLevel(size, levels));
 		// add right-node of parent to level + 1
-		node_t *newRightNode = (node_t *)(parentAddress + findSize(level + 1, levels)); // this is sketch
+		node_t *newRightNode = (node_t *)(parentAddress + findSize(level + 1, totalLevels)); // this is sketch
 		
 		newRightNode->next = NULL; 
 		newRightNode->prev = NULL;
@@ -116,10 +113,10 @@ U32 allocate(U32 size, freeList_t *freeListArray) {
 	return parentAddress;
 }
 
-void addNode(U32 level, U32 address, freeList_t *freeListArray){
+void addNode(U32 level, U32 address, freeList_t *freeListArray, U8 totalLevels) {
 	if (debug) printf(" -------------- FL ADD NODE lvl %d address %x \r\n", level, address);
 
-	for (int i = 0; i < levels; i++) {
+	for (int i = 0; i < totalLevels; i++) {
 		if (debug) printf("AN hd of %d:%x addr:%x\r\n", i, freeListArray[i].head, &freeListArray[i].head);
 		if (debug) printf("AN tl of %d:%x addr:%x\r\n", i, freeListArray[i].tail, &freeListArray[i].tail);
 	}
@@ -145,11 +142,11 @@ void addNode(U32 level, U32 address, freeList_t *freeListArray){
 }
 
 // bug not here
-void removeNode(int level, U32 address, freeList_t *freeListArray){
+void removeNode(int level, U32 address, freeList_t *freeListArray, U8 totalLevels){
 	if (debug) printf(" ----------- FL REMOVE NODE lvl %d address %x \r\n", level, address);
 	node_t *currNode = freeListArray[level].head;
 	
-	for (int i = 0; i < levels; i++) {
+	for (int i = 0; i < totalLevels; i++) {
 		if (debug) printf("RN hd of %d:%x addr:%x\r\n", i, freeListArray[i].head, &freeListArray[i].head);
 		if (debug) printf("RN tl of %d:%x addr:%x\r\n", i, freeListArray[i].tail, &freeListArray[i].tail);
 	}
