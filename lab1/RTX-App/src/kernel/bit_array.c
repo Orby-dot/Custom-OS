@@ -3,7 +3,7 @@
 #include "printf.h"
 #include "tester.h"
 
-BOOL debugBA = TRUE;
+BOOL debugBA = FALSE;
 
 // init
 void initializeBitArray(bitArray *array,freeList_t * list,U8 * bitArray, U32 startAddress, U32 endAddress){
@@ -135,32 +135,41 @@ void removeNodes(bitArray *array, U32 address){
 
 		U32 relativeXPosition = getXPosition(array, address, level);
 		//U32 x = convertLevelToIndex(level, relativeXPosition); // flagging this - looks suspicious
+		if(locatedNodeIndex >0)
+		{
+			U32 buddyIndex = locatedNodeIndex;
+			U32 buddyNode = relativeXPosition;
+			if (relativeXPosition % 2 == 0)
+			{ //buddy is on the right side
+				buddyIndex++;
+				buddyNode++;
+			}
+			else
+			{ //buddy is towards the left
+				buddyIndex--;
+				buddyNode--;
+			}
 
-		U32 buddyIndex = locatedNodeIndex;
-		U32 buddyNode = relativeXPosition;
-		if (relativeXPosition % 2 == 0)
-		{ //buddy is on the right side
-			buddyIndex++;
-			buddyNode++;
+			U32 buddyBitPosition = getBitPositionMask(buddyIndex);
+			if (debugBA) printf( " ----- bitPositionMask %u \r\n", buddyBitPosition);
+			if (debugBA) printf(" ----- buddyIndex %u buddyNode %u \r\n", buddyIndex, buddyNode);
+			
+			
+			if ((array->bitStatus[buddyIndex / 8] & buddyBitPosition) == 0)
+			{
+				coalesce(array, level, relativeXPosition);
+			}
+			else
+			{
+				array->bitStatus[locatedNodeIndex/8] = (array->bitStatus[locatedNodeIndex/8] & ~bitPosition);
+				U32 address = array->startAddress + (1 << (array->totalLevels + 4 - level + 1)) * (relativeXPosition);
+				if (debugBA) printf(" --- address:  rfs %x \r\n", address);
+				addNode(level - 1, address, array->freeList, array->totalLevels);
+			}
 		}
 		else
-		{ //buddy is towards the left
-			buddyIndex--;
-			buddyNode--;
-		}
-
-		U32 buddyBitPosition = getBitPositionMask(buddyIndex);
-		if (debugBA) printf( " ----- bitPositionMask %u \r\n", buddyBitPosition);
-		if (debugBA) printf(" ----- buddyIndex %u buddyNode %u \r\n", buddyIndex, buddyNode);
-		
-		
-		if ((array->bitStatus[buddyIndex / 8] & buddyBitPosition) == 0)
 		{
-			coalesce(array, level, relativeXPosition);
-		}
-		else
-		{
-			array->bitStatus[index/8] = (array->bitStatus[index/8] & ~bitPosition);
+			array->bitStatus[locatedNodeIndex/8] = (array->bitStatus[locatedNodeIndex/8] & ~bitPosition);
 			U32 address = array->startAddress + (1 << (array->totalLevels + 4 - level + 1)) * (relativeXPosition);
 			if (debugBA) printf(" --- address:  rfs %x \r\n", address);
 			addNode(level - 1, address, array->freeList, array->totalLevels);
