@@ -9,15 +9,6 @@
 
 // freeList_t list [11];
 
- bitArray array_RAM1;
-bitArray array_RAM2;
-
-U8 bitarray_RAM1[((2*(RAM1_SIZE)/32 -1)/8)];
-U8 bitarray_RAM2[((2*(RAM2_SIZE)/32 -1)/8)];
-
- freeList_t free_list_RAM1 [8];
-freeList_t free_list_RAM2 [11];
-
 int main(){
 	
     SystemInit();
