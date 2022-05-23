@@ -217,7 +217,10 @@ int k_mpool_dump (mpool_t mpid)
 			}
 			printf ("%u free memory block(s) found\r\n", count);
 			return count;
-		}
+		} else { // https://piazza.com/class/l2ahaqd6n9c6nk?cid=64
+            printf ("0 free memory block(s) found\r\n");
+            return 0;
+        }
 		
     return 0;
 }
