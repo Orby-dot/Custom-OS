@@ -20,19 +20,18 @@ int main(){
     printf("this is a string\r\n");
     printf("RAM Start: %x \r\n", (RAM2_START));
 
-    initializeBitArray(&array_RAM1, (freeList_t *)free_list_RAM1, bitarray_RAM1, RAM1_START, RAM1_END);
-		initializeBitArray(&array_RAM2, (freeList_t *)free_list_RAM2, bitarray_RAM2, RAM2_START, RAM2_END);
-
+    k_mpool_create(BUDDY, RAM1_START, RAM1_END);
+    // k_mpool_create(BUDDY, RAM2_START, RAM2_END);
 	
     printBitArray(&array_RAM1);
     printLinkedList(&array_RAM1);
 
-    U32 address = allocateNode(&array_RAM1, (1 << 4) + 1);
+    void * address = k_mpool_alloc(MPID_IRAM1, (1 << 4) + 1);
  
     printBitArray(&array_RAM1);
     printLinkedList(&array_RAM1);
     
-    removeNodes(&array_RAM1, address);
+    k_mpool_dealloc(MPID_IRAM1, address);
     
     printBitArray(&array_RAM1);
     printLinkedList(&array_RAM1);
