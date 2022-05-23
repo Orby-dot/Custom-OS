@@ -149,13 +149,12 @@ mpool_t k_mpool_create (int algo, U32 start, U32 end)
     }
     if ( start == RAM1_START) {
         // add your own code
-				initializeBitArray(&array_RAM1,(freeList_t *)free_list_RAM1, bitarray_RAM1, RAM1_START,RAM1_END);
+		initializeBitArray(&array_RAM1,(freeList_t *)free_list_RAM1, bitarray_RAM1, RAM1_START,RAM1_END);
 				
     } else if ( start == RAM2_START) {
         mpid = MPID_IRAM2;
         // add your own code
-				initializeBitArray(&array_RAM2,(freeList_t *)free_list_RAM2, bitarray_RAM2, RAM2_START,RAM2_END);
-			
+		initializeBitArray(&array_RAM2,(freeList_t *)free_list_RAM2, bitarray_RAM2, RAM2_START,RAM2_END);
     } else {
         errno = EINVAL;
         return RTX_ERR;
@@ -205,20 +204,18 @@ int k_mpool_dump (mpool_t mpid)
 #ifdef DEBUG_0
     printf("k_mpool_dump: mpid = %d\r\n", mpid);
 #endif /* DEBUG_0 */
-		
-	
 		int count = 0;
 		if (mpid == MPID_IRAM1){
 			for(int i=7;i>=0;i--){
 				printListLevelInOrder(free_list_RAM1, i, 7, &count);
 			}
-			printf ("%x free memory block(s) found\r\n", count);
+			printf ("%u free memory block(s) found\r\n", count);
 			return count;
 		} else if (mpid == MPID_IRAM2) {
 			for(int i=11;i>=0;i--){
 				printListLevelInOrder(free_list_RAM2, i, 11, &count);
 			}
-			printf ("%x free memory block(s) found\r\n", count);
+			printf ("%u free memory block(s) found\r\n", count);
 			return count;
 		}
 		

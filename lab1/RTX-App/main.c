@@ -17,13 +17,15 @@ int main()
 	k_mpool_create(BUDDY, RAM1_START, RAM1_END);	
 	k_mpool_create(BUDDY, RAM2_START, RAM2_END);
 
-	void * test = k_mpool_alloc(MPID_IRAM2, (1 << 2) - 1);
+	void * test = k_mpool_alloc(MPID_IRAM2, (1 << 14) - 1);
 
+	U32 RAM2_freeBlocks = k_mpool_dump(MPID_IRAM2);
 	printBitArray(&array_RAM2);
 	printLinkedList(&array_RAM2);
 
 	k_mpool_dealloc(MPID_IRAM2, test);
 
+	RAM2_freeBlocks = k_mpool_dump(MPID_IRAM2);
 	printBitArray(&array_RAM2);
 	printLinkedList(&array_RAM2);
 
