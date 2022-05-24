@@ -51,7 +51,7 @@
     
 #define NUM_TESTS       1       // number of tests
 #define NUM_INIT_TASKS  1       // number of tasks during initialization
-#define NUM_SUB_TESTS 	22 			//number of sub tests
+#define NUM_SUB_TESTS 	19 			//number of sub tests
 
 /*
  *===========================================================================
@@ -60,9 +60,9 @@
  */
 
 TASK_INIT    g_init_tasks[NUM_INIT_TASKS];
-const char   PREFIX[]      = "G25-TS3";
-const char   PREFIX_LOG[]  = "G25-TS3-LOG ";
-const char   PREFIX_LOG2[] = "G25-TS3-LOG2";
+const char   PREFIX[]      = "G25-TS6";
+const char   PREFIX_LOG[]  = "G25-TS6-LOG ";
+const char   PREFIX_LOG2[] = "G25-TS6-LOG2";
 
 AE_XTEST     g_ae_xtest;                // test data, re-use for each test
 AE_CASE      g_ae_cases[NUM_TESTS];
@@ -128,51 +128,103 @@ void gen_req0(int test_id)
 }
 
 /**
- * @brief a basic memory test on IRAM2
+ * @brief a basic memory test on IRAM1
  */
 
 
 /*
-simple allocation and deallocation
-i.e. Allocate then deallocate all sizes for RAM 2
+More complex allocation for RAM 2
 */
 #ifdef ECE350_P1
 int test0_start(int test_id)
 {
-    static void *p;
+    static void *p[9];
     int ret_val    = 10;
     U8 *p_index    = &(g_ae_xtest.index);
     int sub_result = 0;
     
     gen_req0(test_id);
 		*p_index= 0;
+		int count = 0;
 	
-		for (U32 i = (1<<5) ; i <= (1<<15); i = (i * 2))
+	
+		
+		//7
+		for (U32 i = (1<<5) ; i < (1<<12); i = (i * 2))
 		{
 			
 			//alloating
-			p = mem2_alloc(i);
+			p[count] = mem_alloc(i);
 			
 			sprintf(g_ae_xtest.msg, "Allocating %u B in RAM 2",i);
-			sub_result = (p == NULL) ? 0 : 1;
+			sub_result = (p[count] == NULL) ? 0 : 1;
 			process_sub_result(test_id, *p_index, sub_result);  
 			(*p_index)++;
+			count ++;
 
-			//deallocating
-			mem2_dealloc(p);
-			p = NULL;
 			
-			ret_val = mem2_dump();
+		}
+		
+/*----------------------------------------------------------------------*/
+		p[7] = mem_alloc(32);
+		sprintf(g_ae_xtest.msg, "Allocating %u B in RAM 2",32);
+		sub_result = (p[7] == NULL) ? 0 : 1;
+		process_sub_result(test_id, *p_index, sub_result);  
+		(*p_index)++;
+		
+		ret_val = mem_dump();
+			
+		strcpy(g_ae_xtest.msg, "Check if mem is full aka return is 0");
+		sub_result = (ret_val == 0) ? 1: 0;
+		process_sub_result(test_id, *p_index, sub_result);
+		(*p_index)++;
+/*----------------------------------------------------------------------*/
+		p[8] = mem_alloc(32);
+		sprintf(g_ae_xtest.msg, "Allocating %u B in RAM 2 (SHOULD FAIL)",32);
+		sub_result = (p[8] == NULL) ? 1 : 0;
+		process_sub_result(test_id, *p_index, sub_result);  
+		(*p_index)++;
+		
+		
+		ret_val = mem_dump();
+			
+		strcpy(g_ae_xtest.msg, "Check if mem is still full aka return is 0");
+		process_sub_result(test_id, *p_index, sub_result);
+		sub_result = (ret_val == 0) ? 1: 0;
+		(*p_index)++;
+		
+		
+		mem_dealloc(p[7]);
+		p[7] = NULL;
+		
+		ret_val = mem_dump();
+		
+		strcpy(g_ae_xtest.msg, "Check mem_dump return value is one (aka only bottom node is avaible)");
+		sub_result = (ret_val == 1) ? 1: 0;
+		process_sub_result(test_id, *p_index, sub_result);
+		(*p_index)++;
+		
+		
+		
+		
+		
+		count = 0;
+		for (U32 i = (1<<5) ; i < (1<<12); i = (i * 2))
+		{
+			//deallocating
+			mem_dealloc(p[count]);
+			p[count] = NULL;
+			
+			ret_val = mem_dump();
 			
 			strcpy(g_ae_xtest.msg, "Check mem2_dump return value is one (aka only the main block is free)");
-			printf(" ret val %d\r\n",ret_val);
 			sub_result = (ret_val == 1) ? 1: 0;
 			
 			process_sub_result(test_id, *p_index, sub_result);
 			(*p_index)++;
-			
+			count ++;
 		}
-		
+		count = 0;
 
     return RTX_OK;
 }

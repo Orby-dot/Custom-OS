@@ -1,3 +1,40 @@
+/*
+ ****************************************************************************
+ *
+ *                  UNIVERSITY OF WATERLOO ECE 350 RTOS LAB
+ *
+ *                     Copyright 2020-2022 Yiqing Huang
+ *                          All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *  - Redistributions of source code must retain the above copyright
+ *    notice and the following disclaimer.
+ *
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *  ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ ****************************************************************************
+ */
+
+/**************************************************************************//**
+ * @file        ae_tasks100.c
+ * @brief       P1 public testing suite 100
+ *
+ * @version     V1.2022.05
+ * @authors     Yiqing Huang
+ * @date        2022 May
+ * *
+ *****************************************************************************/
 
 #include "ae_tasks.h"
 #include "uart_polling.h"
@@ -14,6 +51,7 @@
     
 #define NUM_TESTS       1       // number of tests
 #define NUM_INIT_TASKS  1       // number of tasks during initialization
+#define NUM_SUB_TESTS 	16 			//number of sub tests
 
 /*
  *===========================================================================
@@ -22,9 +60,9 @@
  */
 
 TASK_INIT    g_init_tasks[NUM_INIT_TASKS];
-const char   PREFIX[]      = "G25-TS2";
-const char   PREFIX_LOG[]  = "G25-TS2-LOG ";
-const char   PREFIX_LOG2[] = "G25-TS2-LOG2";
+const char   PREFIX[]      = "G25-TS4";
+const char   PREFIX_LOG[]  = "G25-TS4-LOG ";
+const char   PREFIX_LOG2[] = "G25-TS4-LOG2";
 
 AE_XTEST     g_ae_xtest;                // test data, re-use for each test
 AE_CASE      g_ae_cases[NUM_TESTS];
@@ -78,7 +116,7 @@ void update_ae_xtest(int test_id)
 
 void gen_req0(int test_id)
 {
-    g_tsk_cases[test_id].p_ae_case->num_bits = 4;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = NUM_SUB_TESTS;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
     g_tsk_cases[test_id].len = 16; // assign a value no greater than MAX_LEN_SEQ
@@ -90,65 +128,51 @@ void gen_req0(int test_id)
 }
 
 /**
- * @brief a basic memory test on IRAM2
+ * @brief a basic memory test on IRAM1
  */
 
+
+/*
+simple allocation and deallocation
+i.e. Allocate then deallocate all sizes for RAM 1
+*/
 #ifdef ECE350_P1
 int test0_start(int test_id)
 {
-    
-    static void *p[4];
+    static void *p;
     int ret_val    = 10;
     U8 *p_index    = &(g_ae_xtest.index);
     int sub_result = 0;
     
     gen_req0(test_id);
-     
-    for ( int i = 0; i < 4; i++ ) {
-        p[i] = (void *)0x1;
-    }
+		*p_index= 0;
+	
+		for (U32 i = (1<<5) ; i <= (1<<12); i = (i * 2))
+		{
+			
+			//alloating
+			p = mem_alloc(i);
+			
+			sprintf(g_ae_xtest.msg, "Allocating %u B in RAM 2",i);
+			sub_result = (p == NULL) ? 0 : 1;
+			process_sub_result(test_id, *p_index, sub_result);  
+			(*p_index)++;
 
-    // IRAM1
-
-    //test 0-[0]
-    p[0] = mem_alloc(0x1000/4);
-    
-    *p_index = 0;
-    strcpy(g_ae_xtest.msg, "Allocating the quarter of the RAM, check non-NULL return");
-    sub_result = (p[0] == NULL) ? 0 : 1;
-    process_sub_result(test_id, *p_index, sub_result);  
-    
-    //test 0-[1]
-    (*p_index)++;
-    p[1] = mem_alloc(0x1000/2);
-    
-    strcpy(g_ae_xtest.msg, "Allocating the second half of the RAM, check not null, not the same as p[0]");
-    sub_result = (p[1] != p[0] && p[1] != NULL) ? 1 : 0;
-    process_sub_result(test_id, *p_index, sub_result);
-
-    //test 0-[2]
-    (*p_index)++;
-    mem_dealloc(p[0]);
-    p[0] = NULL;
-
-    mem_dealloc(p[1]);
-    p[1] = NULL;
-
-    ret_val = mem_dump();
-    
-    strcpy(g_ae_xtest.msg, "Free p[0] and p[1], checking mem_dump return val");
-    sub_result = (ret_val == 1) ? 1 : 0;
-    process_sub_result(test_id, *p_index, sub_result);
-
-    //test 0-[3]
-    (*p_index)++;
-    p[2] = mem_alloc(0x1000);
-
-    strcpy(g_ae_xtest.msg, "Allocating full RAM, check non-NULL return");
-    sub_result = (p[2] == NULL) ? 0 : 1;
-    process_sub_result(test_id, *p_index, sub_result);    
-
-    mem2_dealloc(p[2]);
+			//deallocating
+			mem_dealloc(p);
+			p = NULL;
+			
+			ret_val = mem_dump();
+			
+			strcpy(g_ae_xtest.msg, "Check mem2_dump return value is one (aka only the main block is free)");
+			printf(" ret val %d\r\n",ret_val);
+			sub_result = (ret_val == 1) ? 1: 0;
+			
+			process_sub_result(test_id, *p_index, sub_result);
+			(*p_index)++;
+			
+		}
+		
 
     return RTX_OK;
 }
