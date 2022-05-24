@@ -11,7 +11,7 @@ BOOL debug = FALSE;
  * startAddress is the base address of either IRAM1 and IRAM2 
  */
 int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 totalLevels, U32 startAddress) {
-	printf(" ------------ INITIALIZE free lists sa: %x totalLevels: %u \r\n", startAddress, totalLevels);
+	// printf(" ------------ INITIALIZE free lists sa: %x totalLevels: %u \r\n", startAddress, totalLevels);
 	for (U8 i = 0; i<totalLevels; i++) { 
 		if (i == 0) {
 			// TODO: Create new node
@@ -24,7 +24,7 @@ int initializeArrayOfFreeLists(freeList_t *freeListArray, U8 totalLevels, U32 st
 			freeListArray[i].tail = temp;
 
 			// printf("temp: %x \r\n", temp);
-			printf("head called: %x addr: %x \r\n", freeListArray[i].head, &freeListArray[i].head);
+			// printf("head called: %x addr: %x \r\n", freeListArray[i].head, &freeListArray[i].head);
 			// printf("0 Called (address of head): %x \r\n", &freeListArray[i]->head);
 
 		} else {
