@@ -12,7 +12,7 @@ void initializeBitArray(bitArray *array,freeList_t * list,U8 * bitArray, U32 sta
 	array->endAddress = endAddress;
 	array->size = endAddress - startAddress +1;
 	
-	for(int i=0;i<((2*(ARRAY_SIZE)/32 -1)/8);i++){
+	for(int i=0;i<((2*(array->size)/32 -1)/8);i++){
 		array->bitStatus[i] = 0;
 	}
 	

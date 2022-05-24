@@ -2,8 +2,6 @@
 #include "free_list.h"
 #include "helper.h"
 
-#define ARRAY_SIZE	0x16000
-
 #ifndef _BIT_ARRAY
 
 #define _BIT_ARRAY
