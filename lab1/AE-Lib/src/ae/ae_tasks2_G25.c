@@ -148,7 +148,7 @@ int test0_start(int test_id)
     sub_result = (p[2] == NULL) ? 0 : 1;
     process_sub_result(test_id, *p_index, sub_result);    
 
-    mem2_dealloc(p[2]);
+    mem_dealloc(p[2]);
 
     return RTX_OK;
 }

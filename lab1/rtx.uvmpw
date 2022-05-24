@@ -9,6 +9,7 @@
 
   <project>
     <PathAndName>.\AE-Lib\ae-lib.uvprojx</PathAndName>
+    <NodeIsExpanded>1</NodeIsExpanded>
   </project>
 
   <project>
