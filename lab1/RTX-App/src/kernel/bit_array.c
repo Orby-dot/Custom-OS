@@ -6,12 +6,11 @@
 BOOL debugBA = FALSE;
 
 // init
-void initializeBitArray(bitArray *array,freeList_t * list,U8 * bitArray, U32 startAddress, U32 endAddress, U32 isRAM2){
+void initializeBitArray(bitArray *array,freeList_t * list,U8 * bitArray, U32 startAddress, U32 endAddress){
 	array->bitStatus = bitArray;
 	array->startAddress = startAddress;
 	array->endAddress = endAddress;
 	array->size = endAddress - startAddress +1;
-	array->totalLevels = isRAM2 ? 15 : 12;
 	
 	for(int i=0;i<((2*(ARRAY_SIZE)/32 -1)/8);i++){
 		array->bitStatus[i] = 0;
@@ -59,7 +58,7 @@ U32 allocateNode(bitArray * array, U32 sizeToAllocate){
 
 	U32 node = address;
 	node -= array->startAddress;
-	node = node/(1<<(array->totalLevels-level+1));
+	node = node/(1<<(15-level+1));
 	U32 index = convertLevelToIndex(level, node);
 	U32 bitPosition = getBitPositionMask(index);
 
@@ -156,7 +155,7 @@ void removeNodes(bitArray *array, U32 address){
 		else
 		{
 			array->bitStatus[index/8] = (array->bitStatus[index/8] & ~bitPosition);
-			U32 address = array->startAddress + (1 << (array->totalLevels - level + 1)) * (relativeXPosition);
+			U32 address = array->startAddress + (1 << (15 - level + 1)) * (relativeXPosition);
 			if (debugBA) printf(" --- address:  rfs %x \r\n", address);
 			addNode(level - 1, address, array->freeList);
 		}
@@ -197,13 +196,13 @@ void coalesce(bitArray *array, U32 level, U32 node){
 	
 	if( (array->bitStatus[buddyIndex/8] & buddyBitPosition) == 0 && (array->bitStatus[index/8] & bitPosition) == 0){
 		//free list needs be updated to combine buddies		
-		U32 address = array->startAddress+(1<<(array->totalLevels-level+1)) * (node);
+		U32 address = array->startAddress+(1<<(15-level+1)) * (node);
 		removeNode(level-1, address,array->freeList);
-		address = array->startAddress+(1<<(array->totalLevels-level+1)) * (buddyNode);
+		address = array->startAddress+(1<<(15-level+1)) * (buddyNode);
 		removeNode(level-1, address,array->freeList);
 		if(node%2==0)
 		{
-			address = array->startAddress+(1<<(array->totalLevels-level+1)) * (node);
+			address = array->startAddress+(1<<(15-level+1)) * (node);
 		}
 		addNode(level-2, address, array->freeList);
 
