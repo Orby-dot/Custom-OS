@@ -108,6 +108,10 @@ U32 getXPosition(bitArray* array, U32 address, U32 level){
 void removeNodes(bitArray *array, U32 address){
 	if (debugBA) printf(" ============== BA REMOVE NODES addr %x \r\n", address);
 
+	if (address < array->startAddress || address > array->endAddress) {
+		// printf("Invalid address: %x \r\n", address);
+		return;
+	}
 	U32 height = getHeight(array);
 	
 	//pass in array, x position on the bottom of the tree, and height

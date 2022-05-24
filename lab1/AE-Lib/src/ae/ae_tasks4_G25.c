@@ -165,7 +165,6 @@ int test0_start(int test_id)
 			ret_val = mem_dump();
 			
 			strcpy(g_ae_xtest.msg, "Check mem2_dump return value is one (aka only the main block is free)");
-			printf(" ret val %d\r\n",ret_val);
 			sub_result = (ret_val == 1) ? 1: 0;
 			
 			process_sub_result(test_id, *p_index, sub_result);

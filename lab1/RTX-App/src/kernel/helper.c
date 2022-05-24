@@ -1,5 +1,6 @@
 #include "helper.h"
 
+// Simple power function, inspired from: https://stackoverflow.com/questions/25525536/write-pow-function-without-math-h-in-c
 int power(int base, int exp) {
   if(exp < 0)
     return -1;
@@ -16,6 +17,7 @@ int power(int base, int exp) {
     return result;
 }
 
+// Log Base 2 function, from: https://stackoverflow.com/questions/994593/how-to-do-an-integer-log2-in-c
 int log_2(int value) {
     int ans = 0;
     while (value >>= 1) { ++ans; }

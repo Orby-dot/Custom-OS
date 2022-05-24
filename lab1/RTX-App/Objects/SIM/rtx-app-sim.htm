@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\SIM\rtx-app-sim.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\SIM\rtx-app-sim.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Tue May 24 17:28:49 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Tue May 24 18:16:43 2022
 <BR><P>
 <H3>Maximum Stack Usage =        312 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -663,7 +663,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[37]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;k_pre_rtx_init
 </UL>
 
-<P><STRONG><a name="[50]"></a>k_mpool_alloc</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, k_mem.o(i.k_mpool_alloc))
+<P><STRONG><a name="[50]"></a>k_mpool_alloc</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, k_mem.o(i.k_mpool_alloc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = k_mpool_alloc &rArr; allocateNode &rArr; allocate &rArr; tfp_printf &rArr; tfp_format &rArr; putchw
 </UL>
 <BR>[Calls]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;allocateNode
@@ -679,7 +679,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;k_mem_init
 </UL>
 
-<P><STRONG><a name="[51]"></a>k_mpool_dealloc</STRONG> (Thumb, 56 bytes, Stack size 16 bytes, k_mem.o(i.k_mpool_dealloc))
+<P><STRONG><a name="[51]"></a>k_mpool_dealloc</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, k_mem.o(i.k_mpool_dealloc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = k_mpool_dealloc &rArr; removeNodes &rArr; coalesce &rArr;  coalesce (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;removeNodes
@@ -880,7 +880,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;coalesce
 </UL>
 
-<P><STRONG><a name="[7f]"></a>removeNodes</STRONG> (Thumb, 398 bytes, Stack size 64 bytes, bit_array.o(i.removeNodes))
+<P><STRONG><a name="[7f]"></a>removeNodes</STRONG> (Thumb, 418 bytes, Stack size 64 bytes, bit_array.o(i.removeNodes))
 <BR><BR>[Stack]<UL><LI>Max Depth = 272<LI>Call Chain = removeNodes &rArr; coalesce &rArr;  coalesce (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_2

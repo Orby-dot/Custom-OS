@@ -148,12 +148,10 @@ mpool_t k_mpool_create (int algo, U32 start, U32 end)
         return RTX_ERR;
     }
     if ( start == RAM1_START && end == RAM1_END ) {
-        // add your own code
 				initializeBitArray(&array_RAM1,(freeList_t *)free_list_RAM1, bitarray_RAM1, RAM1_START,RAM1_END);
 				
     } else if ( start == RAM2_START && end == RAM2_END ) {
         mpid = MPID_IRAM2;
-        // add your own code
 				initializeBitArray(&array_RAM2,(freeList_t *)free_list_RAM2, bitarray_RAM2, RAM2_START,RAM2_END);
     } else {
         errno = EINVAL;
@@ -171,14 +169,27 @@ void *k_mpool_alloc (mpool_t mpid, size_t size)
 		if (errno == EINVAL) {
 			return NULL;
 		}
-
+        if (size == 0) {
+            // printf("SIZE is 0\r\n");
+            // errno is not set
+            return NULL;
+        }
 		U32 result;
 		if (mpid==MPID_IRAM1) {
 			result = allocateNode(&array_RAM1, size);
 		} else if (mpid==MPID_IRAM2){
 			result = allocateNode(&array_RAM2, size);
-		}
-		return result == MAX_INT ? NULL : (void *) result;
+		} else {
+            return NULL;
+        }
+
+        if (result == MAX_INT) {
+            // printf("no mem\r\n");
+            errno = ENOMEM;
+            return NULL;
+        }
+
+		return (void *)result;
 }
 
 int k_mpool_dealloc(mpool_t mpid, void *ptr)
@@ -188,6 +199,9 @@ int k_mpool_dealloc(mpool_t mpid, void *ptr)
 #endif /* DEBUG_0 */
 		if (errno == EINVAL){
 			return RTX_ERR;
+		}
+		if ( ptr == NULL) {
+			return RTX_OK;
 		}
 		if(mpid==MPID_IRAM1){
 			removeNodes(&array_RAM1, (U32)ptr);

@@ -1,0 +1,57 @@
+G25-TS4: START
+ 
+G25-TS4-LOG2: priv_task1: basic memory test on IRAM2
+G25-TS4-LOG : Test[0]-[0]: Allocating 32 B in RAM 2.
+G25-TS4-LOG : Test[0]-[0]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G25-TS4-LOG : Test[0]-[1]: Check mem2_dump return value is one (aka only the main block is free).
+G25-TS4-LOG : Test[0]-[1]: result = 1.
+G25-TS4-LOG : Test[0]-[2]: Allocating 64 B in RAM 2.
+G25-TS4-LOG : Test[0]-[2]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G25-TS4-LOG : Test[0]-[3]: Check mem2_dump return value is one (aka only the main block is free).
+G25-TS4-LOG : Test[0]-[3]: result = 1.
+G25-TS4-LOG : Test[0]-[4]: Allocating 128 B in RAM 2.
+G25-TS4-LOG : Test[0]-[4]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G25-TS4-LOG : Test[0]-[5]: Check mem2_dump return value is one (aka only the main block is free).
+G25-TS4-LOG : Test[0]-[5]: result = 1.
+G25-TS4-LOG : Test[0]-[6]: Allocating 256 B in RAM 2.
+G25-TS4-LOG : Test[0]-[6]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G25-TS4-LOG : Test[0]-[7]: Check mem2_dump return value is one (aka only the main block is free).
+G25-TS4-LOG : Test[0]-[7]: result = 1.
+G25-TS4-LOG : Test[0]-[8]: Allocating 512 B in RAM 2.
+G25-TS4-LOG : Test[0]-[8]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G25-TS4-LOG : Test[0]-[9]: Check mem2_dump return value is one (aka only the main block is free).
+G25-TS4-LOG : Test[0]-[9]: result = 1.
+G25-TS4-LOG : Test[0]-[10]: Allocating 1024 B in RAM 2.
+G25-TS4-LOG : Test[0]-[10]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G25-TS4-LOG : Test[0]-[11]: Check mem2_dump return value is one (aka only the main block is free).
+G25-TS4-LOG : Test[0]-[11]: result = 1.
+G25-TS4-LOG : Test[0]-[12]: Allocating 2048 B in RAM 2.
+G25-TS4-LOG : Test[0]-[12]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G25-TS4-LOG : Test[0]-[13]: Check mem2_dump return value is one (aka only the main block is free).
+G25-TS4-LOG : Test[0]-[13]: result = 1.
+G25-TS4-LOG : Test[0]-[14]: Allocating 4096 B in RAM 2.
+G25-TS4-LOG : Test[0]-[14]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G25-TS4-LOG : Test[0]-[15]: Check mem2_dump return value is one (aka only the main block is free).
+G25-TS4-LOG : Test[0]-[15]: result = 1.
+G25-TS4: FINISHED
+G25-TS4-LOG : Test 0: 16/16 PASSED. Expected = 0xFFFF, result = 0xFFFF
+G25-TS4: 1/1 test function(s) COMPLETED.
+G25-TS4: 16/16 tests PASSED.
+G25-TS4: 0/16 tests FAILED.
+G25-TS4: END

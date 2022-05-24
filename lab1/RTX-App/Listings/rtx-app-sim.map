@@ -539,55 +539,55 @@ Image Symbol Table
     i.k_mbx_ls                               0x00000dc2   Section        0  k_msg.o(i.k_mbx_ls)
     i.k_mem_init                             0x00000dc8   Section        0  k_mem.o(i.k_mem_init)
     i.k_mpool_alloc                          0x00000e08   Section        0  k_mem.o(i.k_mpool_alloc)
-    i.k_mpool_create                         0x00000e50   Section        0  k_mem.o(i.k_mpool_create)
-    i.k_mpool_dealloc                        0x00000ee0   Section        0  k_mem.o(i.k_mpool_dealloc)
-    i.k_mpool_dump                           0x00000f24   Section        0  k_mem.o(i.k_mpool_dump)
-    i.k_pre_rtx_init                         0x00000fc8   Section        0  k_rtx_init.o(i.k_pre_rtx_init)
-    i.k_recv_msg                             0x00000fec   Section        0  k_msg.o(i.k_recv_msg)
-    i.k_recv_msg_nb                          0x00000ff2   Section        0  k_msg.o(i.k_recv_msg_nb)
-    i.k_rt_tsk_get                           0x00000ff8   Section        0  k_task.o(i.k_rt_tsk_get)
-    i.k_rt_tsk_set                           0x00001012   Section        0  k_task.o(i.k_rt_tsk_set)
-    i.k_rt_tsk_susp                          0x00001018   Section        0  k_task.o(i.k_rt_tsk_susp)
-    i.k_rtx_init                             0x0000101c   Section        0  k_rtx_init.o(i.k_rtx_init)
-    i.k_send_msg                             0x00001054   Section        0  k_msg.o(i.k_send_msg)
-    i.k_send_msg_nb                          0x0000105a   Section        0  k_msg.o(i.k_send_msg_nb)
-    i.k_tsk_create                           0x00001060   Section        0  k_task.o(i.k_tsk_create)
-    i.k_tsk_create_new                       0x00001068   Section        0  k_task.o(i.k_tsk_create_new)
-    i.k_tsk_get                              0x00001124   Section        0  k_task.o(i.k_tsk_get)
-    i.k_tsk_gettid                           0x00001168   Section        0  k_task.o(i.k_tsk_gettid)
-    i.k_tsk_init                             0x00001174   Section        0  k_task.o(i.k_tsk_init)
-    i.k_tsk_init_first                       0x000011f0   Section        0  k_task.o(i.k_tsk_init_first)
-    i.k_tsk_ls                               0x0000120c   Section        0  k_task.o(i.k_tsk_ls)
-    i.k_tsk_run_new                          0x00001214   Section        0  k_task.o(i.k_tsk_run_new)
-    i.k_tsk_set_prio                         0x00001260   Section        0  k_task.o(i.k_tsk_set_prio)
-    i.k_tsk_yield                            0x00001266   Section        0  k_task.o(i.k_tsk_yield)
-    i.locateNode                             0x0000126e   Section        0  bit_array.o(i.locateNode)
-    i.log_2                                  0x0000129e   Section        0  helper.o(i.log_2)
-    i.main                                   0x000012b0   Section        0  main.o(i.main)
-    i.power                                  0x00001318   Section        0  helper.o(i.power)
-    i.printListLevel                         0x0000133c   Section        0  tester.o(i.printListLevel)
-    i.printListLevelInOrder                  0x00001370   Section        0  k_mem.o(i.printListLevelInOrder)
-    i.priv_task1                             0x000013b8   Section        0  ae_tasks.o(i.priv_task1)
-    i.putc                                   0x000013e8   Section        0  uart_polling.o(i.putc)
-    i.putchw                                 0x0000142c   Section        0  printf.o(i.putchw)
-    putchw                                   0x0000142d   Thumb Code    82  printf.o(i.putchw)
-    i.removeNode                             0x00001480   Section        0  free_list.o(i.removeNode)
-    i.removeNodes                            0x000015ac   Section        0  bit_array.o(i.removeNodes)
-    i.scheduler                              0x00001800   Section        0  k_task.o(i.scheduler)
-    i.set_ae_init_tasks                      0x0000182c   Section        0  ae_tasks.o(i.set_ae_init_tasks)
-    i.set_ae_tasks                           0x00001848   Section        0  ae_tasks.o(i.set_ae_tasks)
-    i.task1                                  0x00001898   Section        0  ae_tasks.o(i.task1)
-    i.task_null                              0x000018c8   Section        0  null_task.o(i.task_null)
-    i.test_mem2                              0x000018d0   Section        0  ae_tasks.o(i.test_mem2)
-    i.tfp_format                             0x000019b0   Section        0  printf.o(i.tfp_format)
-    i.tfp_printf                             0x00001ad8   Section        0  printf.o(i.tfp_printf)
-    i.uart_init                              0x00001b04   Section        0  uart_polling.o(i.uart_init)
-    i.uart_irq_init                          0x00001b70   Section        0  uart_irq.o(i.uart_irq_init)
-    i.uart_put_char                          0x00001c2c   Section        0  uart_polling.o(i.uart_put_char)
-    i.uart_put_string                        0x00001c60   Section        0  uart_polling.o(i.uart_put_string)
-    i.ui2a                                   0x00001c86   Section        0  printf.o(i.ui2a)
-    ui2a                                     0x00001c87   Thumb Code    86  printf.o(i.ui2a)
-    i.updateParentNodes                      0x00001cdc   Section        0  bit_array.o(i.updateParentNodes)
+    i.k_mpool_create                         0x00000e60   Section        0  k_mem.o(i.k_mpool_create)
+    i.k_mpool_dealloc                        0x00000ef0   Section        0  k_mem.o(i.k_mpool_dealloc)
+    i.k_mpool_dump                           0x00000f3c   Section        0  k_mem.o(i.k_mpool_dump)
+    i.k_pre_rtx_init                         0x00000fe0   Section        0  k_rtx_init.o(i.k_pre_rtx_init)
+    i.k_recv_msg                             0x00001004   Section        0  k_msg.o(i.k_recv_msg)
+    i.k_recv_msg_nb                          0x0000100a   Section        0  k_msg.o(i.k_recv_msg_nb)
+    i.k_rt_tsk_get                           0x00001010   Section        0  k_task.o(i.k_rt_tsk_get)
+    i.k_rt_tsk_set                           0x0000102a   Section        0  k_task.o(i.k_rt_tsk_set)
+    i.k_rt_tsk_susp                          0x00001030   Section        0  k_task.o(i.k_rt_tsk_susp)
+    i.k_rtx_init                             0x00001034   Section        0  k_rtx_init.o(i.k_rtx_init)
+    i.k_send_msg                             0x0000106c   Section        0  k_msg.o(i.k_send_msg)
+    i.k_send_msg_nb                          0x00001072   Section        0  k_msg.o(i.k_send_msg_nb)
+    i.k_tsk_create                           0x00001078   Section        0  k_task.o(i.k_tsk_create)
+    i.k_tsk_create_new                       0x00001080   Section        0  k_task.o(i.k_tsk_create_new)
+    i.k_tsk_get                              0x0000113c   Section        0  k_task.o(i.k_tsk_get)
+    i.k_tsk_gettid                           0x00001180   Section        0  k_task.o(i.k_tsk_gettid)
+    i.k_tsk_init                             0x0000118c   Section        0  k_task.o(i.k_tsk_init)
+    i.k_tsk_init_first                       0x00001208   Section        0  k_task.o(i.k_tsk_init_first)
+    i.k_tsk_ls                               0x00001224   Section        0  k_task.o(i.k_tsk_ls)
+    i.k_tsk_run_new                          0x0000122c   Section        0  k_task.o(i.k_tsk_run_new)
+    i.k_tsk_set_prio                         0x00001278   Section        0  k_task.o(i.k_tsk_set_prio)
+    i.k_tsk_yield                            0x0000127e   Section        0  k_task.o(i.k_tsk_yield)
+    i.locateNode                             0x00001286   Section        0  bit_array.o(i.locateNode)
+    i.log_2                                  0x000012b6   Section        0  helper.o(i.log_2)
+    i.main                                   0x000012c8   Section        0  main.o(i.main)
+    i.power                                  0x00001330   Section        0  helper.o(i.power)
+    i.printListLevel                         0x00001354   Section        0  tester.o(i.printListLevel)
+    i.printListLevelInOrder                  0x00001388   Section        0  k_mem.o(i.printListLevelInOrder)
+    i.priv_task1                             0x000013d0   Section        0  ae_tasks.o(i.priv_task1)
+    i.putc                                   0x00001400   Section        0  uart_polling.o(i.putc)
+    i.putchw                                 0x00001444   Section        0  printf.o(i.putchw)
+    putchw                                   0x00001445   Thumb Code    82  printf.o(i.putchw)
+    i.removeNode                             0x00001498   Section        0  free_list.o(i.removeNode)
+    i.removeNodes                            0x000015c4   Section        0  bit_array.o(i.removeNodes)
+    i.scheduler                              0x0000182c   Section        0  k_task.o(i.scheduler)
+    i.set_ae_init_tasks                      0x00001858   Section        0  ae_tasks.o(i.set_ae_init_tasks)
+    i.set_ae_tasks                           0x00001874   Section        0  ae_tasks.o(i.set_ae_tasks)
+    i.task1                                  0x000018c4   Section        0  ae_tasks.o(i.task1)
+    i.task_null                              0x000018f4   Section        0  null_task.o(i.task_null)
+    i.test_mem2                              0x000018fc   Section        0  ae_tasks.o(i.test_mem2)
+    i.tfp_format                             0x000019dc   Section        0  printf.o(i.tfp_format)
+    i.tfp_printf                             0x00001b04   Section        0  printf.o(i.tfp_printf)
+    i.uart_init                              0x00001b30   Section        0  uart_polling.o(i.uart_init)
+    i.uart_irq_init                          0x00001b9c   Section        0  uart_irq.o(i.uart_irq_init)
+    i.uart_put_char                          0x00001c58   Section        0  uart_polling.o(i.uart_put_char)
+    i.uart_put_string                        0x00001c8c   Section        0  uart_polling.o(i.uart_put_string)
+    i.ui2a                                   0x00001cb2   Section        0  printf.o(i.ui2a)
+    ui2a                                     0x00001cb3   Thumb Code    86  printf.o(i.ui2a)
+    i.updateParentNodes                      0x00001d08   Section        0  bit_array.o(i.updateParentNodes)
     .data                                    0x10000000   Section       24  uart_irq.o(.data)
     gp_buffer                                0x10000010   Data           4  uart_irq.o(.data)
     .data                                    0x10000018   Section        4  timer.o(.data)
@@ -783,54 +783,54 @@ Image Symbol Table
     k_mbx_get                                0x00000dbd   Thumb Code     6  k_msg.o(i.k_mbx_get)
     k_mbx_ls                                 0x00000dc3   Thumb Code     6  k_msg.o(i.k_mbx_ls)
     k_mem_init                               0x00000dc9   Thumb Code    48  k_mem.o(i.k_mem_init)
-    k_mpool_alloc                            0x00000e09   Thumb Code    58  k_mem.o(i.k_mpool_alloc)
-    k_mpool_create                           0x00000e51   Thumb Code    98  k_mem.o(i.k_mpool_create)
-    k_mpool_dealloc                          0x00000ee1   Thumb Code    56  k_mem.o(i.k_mpool_dealloc)
-    k_mpool_dump                             0x00000f25   Thumb Code    92  k_mem.o(i.k_mpool_dump)
-    k_pre_rtx_init                           0x00000fc9   Thumb Code    36  k_rtx_init.o(i.k_pre_rtx_init)
-    k_recv_msg                               0x00000fed   Thumb Code     6  k_msg.o(i.k_recv_msg)
-    k_recv_msg_nb                            0x00000ff3   Thumb Code     6  k_msg.o(i.k_recv_msg_nb)
-    k_rt_tsk_get                             0x00000ff9   Thumb Code    26  k_task.o(i.k_rt_tsk_get)
-    k_rt_tsk_set                             0x00001013   Thumb Code     6  k_task.o(i.k_rt_tsk_set)
-    k_rt_tsk_susp                            0x00001019   Thumb Code     4  k_task.o(i.k_rt_tsk_susp)
-    k_rtx_init                               0x0000101d   Thumb Code    50  k_rtx_init.o(i.k_rtx_init)
-    k_send_msg                               0x00001055   Thumb Code     6  k_msg.o(i.k_send_msg)
-    k_send_msg_nb                            0x0000105b   Thumb Code     6  k_msg.o(i.k_send_msg_nb)
-    k_tsk_create                             0x00001061   Thumb Code     8  k_task.o(i.k_tsk_create)
-    k_tsk_create_new                         0x00001069   Thumb Code   184  k_task.o(i.k_tsk_create_new)
-    k_tsk_get                                0x00001125   Thumb Code    56  k_task.o(i.k_tsk_get)
-    k_tsk_gettid                             0x00001169   Thumb Code     8  k_task.o(i.k_tsk_gettid)
-    k_tsk_init                               0x00001175   Thumb Code   110  k_task.o(i.k_tsk_init)
-    k_tsk_init_first                         0x000011f1   Thumb Code    22  k_task.o(i.k_tsk_init_first)
-    k_tsk_ls                                 0x0000120d   Thumb Code     6  k_task.o(i.k_tsk_ls)
-    k_tsk_run_new                            0x00001215   Thumb Code    72  k_task.o(i.k_tsk_run_new)
-    k_tsk_set_prio                           0x00001261   Thumb Code     6  k_task.o(i.k_tsk_set_prio)
-    k_tsk_yield                              0x00001267   Thumb Code     8  k_task.o(i.k_tsk_yield)
-    locateNode                               0x0000126f   Thumb Code    48  bit_array.o(i.locateNode)
-    log_2                                    0x0000129f   Thumb Code    16  helper.o(i.log_2)
-    main                                     0x000012b1   Thumb Code    84  main.o(i.main)
-    power                                    0x00001319   Thumb Code    36  helper.o(i.power)
-    printListLevel                           0x0000133d   Thumb Code    28  tester.o(i.printListLevel)
-    printListLevelInOrder                    0x00001371   Thumb Code    54  k_mem.o(i.printListLevelInOrder)
-    priv_task1                               0x000013b9   Thumb Code    24  ae_tasks.o(i.priv_task1)
-    putc                                     0x000013e9   Thumb Code    28  uart_polling.o(i.putc)
-    removeNode                               0x00001481   Thumb Code   186  free_list.o(i.removeNode)
-    removeNodes                              0x000015ad   Thumb Code   398  bit_array.o(i.removeNodes)
-    scheduler                                0x00001801   Thumb Code    32  k_task.o(i.scheduler)
-    set_ae_init_tasks                        0x0000182d   Thumb Code    24  ae_tasks.o(i.set_ae_init_tasks)
-    set_ae_tasks                             0x00001849   Thumb Code    70  ae_tasks.o(i.set_ae_tasks)
-    task1                                    0x00001899   Thumb Code    24  ae_tasks.o(i.task1)
-    task_null                                0x000018c9   Thumb Code     6  null_task.o(i.task_null)
-    test_mem2                                0x000018d1   Thumb Code   188  ae_tasks.o(i.test_mem2)
-    tfp_format                               0x000019b1   Thumb Code   296  printf.o(i.tfp_format)
-    tfp_printf                               0x00001ad9   Thumb Code    34  printf.o(i.tfp_printf)
-    uart_init                                0x00001b05   Thumb Code    96  uart_polling.o(i.uart_init)
-    uart_irq_init                            0x00001b71   Thumb Code   166  uart_irq.o(i.uart_irq_init)
-    uart_put_char                            0x00001c2d   Thumb Code    42  uart_polling.o(i.uart_put_char)
-    uart_put_string                          0x00001c61   Thumb Code    38  uart_polling.o(i.uart_put_string)
-    updateParentNodes                        0x00001cdd   Thumb Code    74  bit_array.o(i.updateParentNodes)
-    Region$$Table$$Base                      0x00001d28   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00001d48   Number         0  anon$$obj.o(Region$$Table)
+    k_mpool_alloc                            0x00000e09   Thumb Code    76  k_mem.o(i.k_mpool_alloc)
+    k_mpool_create                           0x00000e61   Thumb Code    98  k_mem.o(i.k_mpool_create)
+    k_mpool_dealloc                          0x00000ef1   Thumb Code    62  k_mem.o(i.k_mpool_dealloc)
+    k_mpool_dump                             0x00000f3d   Thumb Code    92  k_mem.o(i.k_mpool_dump)
+    k_pre_rtx_init                           0x00000fe1   Thumb Code    36  k_rtx_init.o(i.k_pre_rtx_init)
+    k_recv_msg                               0x00001005   Thumb Code     6  k_msg.o(i.k_recv_msg)
+    k_recv_msg_nb                            0x0000100b   Thumb Code     6  k_msg.o(i.k_recv_msg_nb)
+    k_rt_tsk_get                             0x00001011   Thumb Code    26  k_task.o(i.k_rt_tsk_get)
+    k_rt_tsk_set                             0x0000102b   Thumb Code     6  k_task.o(i.k_rt_tsk_set)
+    k_rt_tsk_susp                            0x00001031   Thumb Code     4  k_task.o(i.k_rt_tsk_susp)
+    k_rtx_init                               0x00001035   Thumb Code    50  k_rtx_init.o(i.k_rtx_init)
+    k_send_msg                               0x0000106d   Thumb Code     6  k_msg.o(i.k_send_msg)
+    k_send_msg_nb                            0x00001073   Thumb Code     6  k_msg.o(i.k_send_msg_nb)
+    k_tsk_create                             0x00001079   Thumb Code     8  k_task.o(i.k_tsk_create)
+    k_tsk_create_new                         0x00001081   Thumb Code   184  k_task.o(i.k_tsk_create_new)
+    k_tsk_get                                0x0000113d   Thumb Code    56  k_task.o(i.k_tsk_get)
+    k_tsk_gettid                             0x00001181   Thumb Code     8  k_task.o(i.k_tsk_gettid)
+    k_tsk_init                               0x0000118d   Thumb Code   110  k_task.o(i.k_tsk_init)
+    k_tsk_init_first                         0x00001209   Thumb Code    22  k_task.o(i.k_tsk_init_first)
+    k_tsk_ls                                 0x00001225   Thumb Code     6  k_task.o(i.k_tsk_ls)
+    k_tsk_run_new                            0x0000122d   Thumb Code    72  k_task.o(i.k_tsk_run_new)
+    k_tsk_set_prio                           0x00001279   Thumb Code     6  k_task.o(i.k_tsk_set_prio)
+    k_tsk_yield                              0x0000127f   Thumb Code     8  k_task.o(i.k_tsk_yield)
+    locateNode                               0x00001287   Thumb Code    48  bit_array.o(i.locateNode)
+    log_2                                    0x000012b7   Thumb Code    16  helper.o(i.log_2)
+    main                                     0x000012c9   Thumb Code    84  main.o(i.main)
+    power                                    0x00001331   Thumb Code    36  helper.o(i.power)
+    printListLevel                           0x00001355   Thumb Code    28  tester.o(i.printListLevel)
+    printListLevelInOrder                    0x00001389   Thumb Code    54  k_mem.o(i.printListLevelInOrder)
+    priv_task1                               0x000013d1   Thumb Code    24  ae_tasks.o(i.priv_task1)
+    putc                                     0x00001401   Thumb Code    28  uart_polling.o(i.putc)
+    removeNode                               0x00001499   Thumb Code   186  free_list.o(i.removeNode)
+    removeNodes                              0x000015c5   Thumb Code   418  bit_array.o(i.removeNodes)
+    scheduler                                0x0000182d   Thumb Code    32  k_task.o(i.scheduler)
+    set_ae_init_tasks                        0x00001859   Thumb Code    24  ae_tasks.o(i.set_ae_init_tasks)
+    set_ae_tasks                             0x00001875   Thumb Code    70  ae_tasks.o(i.set_ae_tasks)
+    task1                                    0x000018c5   Thumb Code    24  ae_tasks.o(i.task1)
+    task_null                                0x000018f5   Thumb Code     6  null_task.o(i.task_null)
+    test_mem2                                0x000018fd   Thumb Code   188  ae_tasks.o(i.test_mem2)
+    tfp_format                               0x000019dd   Thumb Code   296  printf.o(i.tfp_format)
+    tfp_printf                               0x00001b05   Thumb Code    34  printf.o(i.tfp_printf)
+    uart_init                                0x00001b31   Thumb Code    96  uart_polling.o(i.uart_init)
+    uart_irq_init                            0x00001b9d   Thumb Code   166  uart_irq.o(i.uart_irq_init)
+    uart_put_char                            0x00001c59   Thumb Code    42  uart_polling.o(i.uart_put_char)
+    uart_put_string                          0x00001c8d   Thumb Code    38  uart_polling.o(i.uart_put_string)
+    updateParentNodes                        0x00001d09   Thumb Code    74  bit_array.o(i.updateParentNodes)
+    Region$$Table$$Base                      0x00001d54   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00001d74   Number         0  anon$$obj.o(Region$$Table)
     g_buffer                                 0x10000000   Data          16  uart_irq.o(.data)
     g_send_char                              0x10000014   Data           1  uart_irq.o(.data)
     g_char_in                                0x10000015   Data           1  uart_irq.o(.data)
@@ -866,9 +866,9 @@ Memory Map of the image
 
   Image Entry point : 0x000000cd
 
-  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x00001d8c, Max: 0x00080000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x00001db8, Max: 0x00080000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00001d48, Max: 0x00080000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00001d74, Max: 0x00080000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -967,81 +967,81 @@ Memory Map of the image
     0x00000dbc   0x00000dbc   0x00000006   Code   RO          387    i.k_mbx_get         k_msg.o
     0x00000dc2   0x00000dc2   0x00000006   Code   RO          388    i.k_mbx_ls          k_msg.o
     0x00000dc8   0x00000dc8   0x00000040   Code   RO          311    i.k_mem_init        k_mem.o
-    0x00000e08   0x00000e08   0x00000048   Code   RO          312    i.k_mpool_alloc     k_mem.o
-    0x00000e50   0x00000e50   0x00000090   Code   RO          313    i.k_mpool_create    k_mem.o
-    0x00000ee0   0x00000ee0   0x00000044   Code   RO          314    i.k_mpool_dealloc   k_mem.o
-    0x00000f24   0x00000f24   0x000000a4   Code   RO          315    i.k_mpool_dump      k_mem.o
-    0x00000fc8   0x00000fc8   0x00000024   Code   RO          447    i.k_pre_rtx_init    k_rtx_init.o
-    0x00000fec   0x00000fec   0x00000006   Code   RO          389    i.k_recv_msg        k_msg.o
-    0x00000ff2   0x00000ff2   0x00000006   Code   RO          390    i.k_recv_msg_nb     k_msg.o
-    0x00000ff8   0x00000ff8   0x0000001a   Code   RO          492    i.k_rt_tsk_get      k_task.o
-    0x00001012   0x00001012   0x00000006   Code   RO          493    i.k_rt_tsk_set      k_task.o
-    0x00001018   0x00001018   0x00000004   Code   RO          494    i.k_rt_tsk_susp     k_task.o
-    0x0000101c   0x0000101c   0x00000038   Code   RO          448    i.k_rtx_init        k_rtx_init.o
-    0x00001054   0x00001054   0x00000006   Code   RO          391    i.k_send_msg        k_msg.o
-    0x0000105a   0x0000105a   0x00000006   Code   RO          392    i.k_send_msg_nb     k_msg.o
-    0x00001060   0x00001060   0x00000008   Code   RO          495    i.k_tsk_create      k_task.o
-    0x00001068   0x00001068   0x000000bc   Code   RO          496    i.k_tsk_create_new  k_task.o
-    0x00001124   0x00001124   0x00000044   Code   RO          498    i.k_tsk_get         k_task.o
-    0x00001168   0x00001168   0x0000000c   Code   RO          499    i.k_tsk_gettid      k_task.o
-    0x00001174   0x00001174   0x0000007c   Code   RO          500    i.k_tsk_init        k_task.o
-    0x000011f0   0x000011f0   0x0000001c   Code   RO          501    i.k_tsk_init_first  k_task.o
-    0x0000120c   0x0000120c   0x00000006   Code   RO          502    i.k_tsk_ls          k_task.o
-    0x00001212   0x00001212   0x00000002   PAD
-    0x00001214   0x00001214   0x0000004c   Code   RO          503    i.k_tsk_run_new     k_task.o
-    0x00001260   0x00001260   0x00000006   Code   RO          504    i.k_tsk_set_prio    k_task.o
-    0x00001266   0x00001266   0x00000008   Code   RO          505    i.k_tsk_yield       k_task.o
-    0x0000126e   0x0000126e   0x00000030   Code   RO          622    i.locateNode        bit_array.o
-    0x0000129e   0x0000129e   0x00000010   Code   RO          750    i.log_2             helper.o
-    0x000012ae   0x000012ae   0x00000002   PAD
-    0x000012b0   0x000012b0   0x00000068   Code   RO         1050    i.main              ae-lib-sim.lib(main.o)
-    0x00001318   0x00001318   0x00000024   Code   RO          751    i.power             helper.o
-    0x0000133c   0x0000133c   0x00000034   Code   RO          792    i.printListLevel    tester.o
-    0x00001370   0x00001370   0x00000048   Code   RO          316    i.printListLevelInOrder  k_mem.o
-    0x000013b8   0x000013b8   0x00000030   Code   RO         1214    i.priv_task1        ae-lib-sim.lib(ae_tasks.o)
-    0x000013e8   0x000013e8   0x00000044   Code   RO            4    i.putc              uart_polling.o
-    0x0000142c   0x0000142c   0x00000052   Code   RO          847    i.putchw            printf.o
-    0x0000147e   0x0000147e   0x00000002   PAD
-    0x00001480   0x00001480   0x0000012c   Code   RO          702    i.removeNode        free_list.o
-    0x000015ac   0x000015ac   0x00000254   Code   RO          623    i.removeNodes       bit_array.o
-    0x00001800   0x00001800   0x0000002c   Code   RO          506    i.scheduler         k_task.o
-    0x0000182c   0x0000182c   0x0000001c   Code   RO         1215    i.set_ae_init_tasks  ae-lib-sim.lib(ae_tasks.o)
-    0x00001848   0x00001848   0x00000050   Code   RO         1216    i.set_ae_tasks      ae-lib-sim.lib(ae_tasks.o)
-    0x00001898   0x00001898   0x00000030   Code   RO         1217    i.task1             ae-lib-sim.lib(ae_tasks.o)
-    0x000018c8   0x000018c8   0x00000006   Code   RO          939    i.task_null         null_task.o
-    0x000018ce   0x000018ce   0x00000002   PAD
-    0x000018d0   0x000018d0   0x000000e0   Code   RO         1221    i.test_mem2         ae-lib-sim.lib(ae_tasks.o)
-    0x000019b0   0x000019b0   0x00000128   Code   RO          849    i.tfp_format        printf.o
-    0x00001ad8   0x00001ad8   0x0000002c   Code   RO          850    i.tfp_printf        printf.o
-    0x00001b04   0x00001b04   0x0000006c   Code   RO            6    i.uart_init         uart_polling.o
-    0x00001b70   0x00001b70   0x000000bc   Code   RO           89    i.uart_irq_init     uart_irq.o
-    0x00001c2c   0x00001c2c   0x00000034   Code   RO            7    i.uart_put_char     uart_polling.o
-    0x00001c60   0x00001c60   0x00000026   Code   RO            8    i.uart_put_string   uart_polling.o
-    0x00001c86   0x00001c86   0x00000056   Code   RO          852    i.ui2a              printf.o
-    0x00001cdc   0x00001cdc   0x0000004a   Code   RO          624    i.updateParentNodes  bit_array.o
-    0x00001d26   0x00001d26   0x00000002   PAD
-    0x00001d28   0x00001d28   0x00000020   Data   RO         1355    Region$$Table       anon$$obj.o
+    0x00000e08   0x00000e08   0x00000058   Code   RO          312    i.k_mpool_alloc     k_mem.o
+    0x00000e60   0x00000e60   0x00000090   Code   RO          313    i.k_mpool_create    k_mem.o
+    0x00000ef0   0x00000ef0   0x0000004c   Code   RO          314    i.k_mpool_dealloc   k_mem.o
+    0x00000f3c   0x00000f3c   0x000000a4   Code   RO          315    i.k_mpool_dump      k_mem.o
+    0x00000fe0   0x00000fe0   0x00000024   Code   RO          447    i.k_pre_rtx_init    k_rtx_init.o
+    0x00001004   0x00001004   0x00000006   Code   RO          389    i.k_recv_msg        k_msg.o
+    0x0000100a   0x0000100a   0x00000006   Code   RO          390    i.k_recv_msg_nb     k_msg.o
+    0x00001010   0x00001010   0x0000001a   Code   RO          492    i.k_rt_tsk_get      k_task.o
+    0x0000102a   0x0000102a   0x00000006   Code   RO          493    i.k_rt_tsk_set      k_task.o
+    0x00001030   0x00001030   0x00000004   Code   RO          494    i.k_rt_tsk_susp     k_task.o
+    0x00001034   0x00001034   0x00000038   Code   RO          448    i.k_rtx_init        k_rtx_init.o
+    0x0000106c   0x0000106c   0x00000006   Code   RO          391    i.k_send_msg        k_msg.o
+    0x00001072   0x00001072   0x00000006   Code   RO          392    i.k_send_msg_nb     k_msg.o
+    0x00001078   0x00001078   0x00000008   Code   RO          495    i.k_tsk_create      k_task.o
+    0x00001080   0x00001080   0x000000bc   Code   RO          496    i.k_tsk_create_new  k_task.o
+    0x0000113c   0x0000113c   0x00000044   Code   RO          498    i.k_tsk_get         k_task.o
+    0x00001180   0x00001180   0x0000000c   Code   RO          499    i.k_tsk_gettid      k_task.o
+    0x0000118c   0x0000118c   0x0000007c   Code   RO          500    i.k_tsk_init        k_task.o
+    0x00001208   0x00001208   0x0000001c   Code   RO          501    i.k_tsk_init_first  k_task.o
+    0x00001224   0x00001224   0x00000006   Code   RO          502    i.k_tsk_ls          k_task.o
+    0x0000122a   0x0000122a   0x00000002   PAD
+    0x0000122c   0x0000122c   0x0000004c   Code   RO          503    i.k_tsk_run_new     k_task.o
+    0x00001278   0x00001278   0x00000006   Code   RO          504    i.k_tsk_set_prio    k_task.o
+    0x0000127e   0x0000127e   0x00000008   Code   RO          505    i.k_tsk_yield       k_task.o
+    0x00001286   0x00001286   0x00000030   Code   RO          622    i.locateNode        bit_array.o
+    0x000012b6   0x000012b6   0x00000010   Code   RO          750    i.log_2             helper.o
+    0x000012c6   0x000012c6   0x00000002   PAD
+    0x000012c8   0x000012c8   0x00000068   Code   RO         1050    i.main              ae-lib-sim.lib(main.o)
+    0x00001330   0x00001330   0x00000024   Code   RO          751    i.power             helper.o
+    0x00001354   0x00001354   0x00000034   Code   RO          792    i.printListLevel    tester.o
+    0x00001388   0x00001388   0x00000048   Code   RO          316    i.printListLevelInOrder  k_mem.o
+    0x000013d0   0x000013d0   0x00000030   Code   RO         1214    i.priv_task1        ae-lib-sim.lib(ae_tasks.o)
+    0x00001400   0x00001400   0x00000044   Code   RO            4    i.putc              uart_polling.o
+    0x00001444   0x00001444   0x00000052   Code   RO          847    i.putchw            printf.o
+    0x00001496   0x00001496   0x00000002   PAD
+    0x00001498   0x00001498   0x0000012c   Code   RO          702    i.removeNode        free_list.o
+    0x000015c4   0x000015c4   0x00000268   Code   RO          623    i.removeNodes       bit_array.o
+    0x0000182c   0x0000182c   0x0000002c   Code   RO          506    i.scheduler         k_task.o
+    0x00001858   0x00001858   0x0000001c   Code   RO         1215    i.set_ae_init_tasks  ae-lib-sim.lib(ae_tasks.o)
+    0x00001874   0x00001874   0x00000050   Code   RO         1216    i.set_ae_tasks      ae-lib-sim.lib(ae_tasks.o)
+    0x000018c4   0x000018c4   0x00000030   Code   RO         1217    i.task1             ae-lib-sim.lib(ae_tasks.o)
+    0x000018f4   0x000018f4   0x00000006   Code   RO          939    i.task_null         null_task.o
+    0x000018fa   0x000018fa   0x00000002   PAD
+    0x000018fc   0x000018fc   0x000000e0   Code   RO         1221    i.test_mem2         ae-lib-sim.lib(ae_tasks.o)
+    0x000019dc   0x000019dc   0x00000128   Code   RO          849    i.tfp_format        printf.o
+    0x00001b04   0x00001b04   0x0000002c   Code   RO          850    i.tfp_printf        printf.o
+    0x00001b30   0x00001b30   0x0000006c   Code   RO            6    i.uart_init         uart_polling.o
+    0x00001b9c   0x00001b9c   0x000000bc   Code   RO           89    i.uart_irq_init     uart_irq.o
+    0x00001c58   0x00001c58   0x00000034   Code   RO            7    i.uart_put_char     uart_polling.o
+    0x00001c8c   0x00001c8c   0x00000026   Code   RO            8    i.uart_put_string   uart_polling.o
+    0x00001cb2   0x00001cb2   0x00000056   Code   RO          852    i.ui2a              printf.o
+    0x00001d08   0x00001d08   0x0000004a   Code   RO          624    i.updateParentNodes  bit_array.o
+    0x00001d52   0x00001d52   0x00000002   PAD
+    0x00001d54   0x00001d54   0x00000020   Data   RO         1355    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x10000000, Load base: 0x00001d48, Size: 0x00003468, Max: 0x00007000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x10000000, Load base: 0x00001d74, Size: 0x00003468, Max: 0x00007000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x10000000   0x00001d48   0x00000018   Data   RW           90    .data               uart_irq.o
-    0x10000018   0x00001d60   0x00000004   Data   RW          194    .data               timer.o
-    0x1000001c   0x00001d64   0x00000004   Data   RW          449    .data               k_rtx_init.o
-    0x10000020   0x00001d68   0x00000008   Data   RW          508    .data               k_task.o
-    0x10000028   0x00001d70   0x00000001   Data   RW          625    .data               bit_array.o
-    0x10000029   0x00001d71   0x00000001   Data   RW          703    .data               free_list.o
-    0x1000002a   0x00001d72   0x00000002   PAD
-    0x1000002c   0x00001d74   0x00000008   Data   RW          853    .data               printf.o
-    0x10000034   0x00001d7c   0x00000010   Data   RW         1051    .data               ae-lib-sim.lib(main.o)
-    0x10000044   0x00001d8c   0x00000004   PAD
+    0x10000000   0x00001d74   0x00000018   Data   RW           90    .data               uart_irq.o
+    0x10000018   0x00001d8c   0x00000004   Data   RW          194    .data               timer.o
+    0x1000001c   0x00001d90   0x00000004   Data   RW          449    .data               k_rtx_init.o
+    0x10000020   0x00001d94   0x00000008   Data   RW          508    .data               k_task.o
+    0x10000028   0x00001d9c   0x00000001   Data   RW          625    .data               bit_array.o
+    0x10000029   0x00001d9d   0x00000001   Data   RW          703    .data               free_list.o
+    0x1000002a   0x00001d9e   0x00000002   PAD
+    0x1000002c   0x00001da0   0x00000008   Data   RW          853    .data               printf.o
+    0x10000034   0x00001da8   0x00000010   Data   RW         1051    .data               ae-lib-sim.lib(main.o)
+    0x10000044   0x00001db8   0x00000004   PAD
     0x10000048        -       0x00002fe8   Zero   RW          317    .bss                k_mem.o
     0x10003030        -       0x000000a0   Zero   RW          507    .bss                k_task.o
     0x100030d0        -       0x00000060   Zero   RW         1159    .bss                c_w.l(libspace.o)
     0x10003130        -       0x00000134   Zero   RW         1222    .bss                ae-lib-sim.lib(ae_tasks.o)
-    0x10003264   0x00001d8c   0x00000004   PAD
+    0x10003264   0x00001db8   0x00000004   PAD
     0x10003268        -       0x00000000   Zero   RW          973    HEAP                startup_lpc17xx.o
     0x10003268        -       0x00000200   Zero   RW          972    STACK               startup_lpc17xx.o
 
@@ -1053,11 +1053,11 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-      1488        334          0          1          0       8150   bit_array.o
+      1508        334          0          1          0       8194   bit_array.o
       1184        470          0          1          0       4199   free_list.o
        352         38          0          0          0       5974   hal.o
        104          0          0          0          0       2351   helper.o
-       672        194          0          0      12264       6289   k_mem.o
+       696        194          0          0      12264       6317   k_mem.o
         42          0          0          0          0       3972   k_msg.o
         92          6          0          4          0       5646   k_rtx_init.o
        656         60          0          8        160      14265   k_task.o
@@ -1071,7 +1071,7 @@ Image component sizes
        266         62          0          0          0      24369   uart_polling.o
 
     ----------------------------------------------------------------------
-      6356       1302        236         52      12936     117779   Object Totals
+      6400       1302        236         52      12936     117851   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         16          0          0          2          0          0   (incl. Padding)
 
@@ -1124,15 +1124,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      7260       1436        236         68      13348     127544   Grand Totals
-      7260       1436        236         68      13348     127544   ELF Image Totals
-      7260       1436        236         68          0          0   ROM Totals
+      7304       1436        236         68      13348     127616   Grand Totals
+      7304       1436        236         68      13348     127616   ELF Image Totals
+      7304       1436        236         68          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 7496 (   7.32kB)
+    Total RO  Size (Code + RO Data)                 7540 (   7.36kB)
     Total RW  Size (RW Data + ZI Data)             13416 (  13.10kB)
-    Total ROM Size (Code + RO Data + RW Data)       7564 (   7.39kB)
+    Total ROM Size (Code + RO Data + RW Data)       7608 (   7.43kB)
 
 ==============================================================================
 
