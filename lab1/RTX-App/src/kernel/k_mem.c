@@ -166,9 +166,6 @@ void *k_mpool_alloc (mpool_t mpid, size_t size)
 #ifdef DEBUG_0
     printf("k_mpool_alloc: mpid = %d, size = %d, 0x%x\r\n", mpid, size, size);
 #endif /* DEBUG_0 */
-		if (errno == EINVAL) {
-			return NULL;
-		}
         if (size == 0) {
             // printf("SIZE is 0\r\n");
             // errno is not set
@@ -179,7 +176,8 @@ void *k_mpool_alloc (mpool_t mpid, size_t size)
 			result = allocateNode(&array_RAM1, size);
 		} else if (mpid==MPID_IRAM2){
 			result = allocateNode(&array_RAM2, size);
-		} else {
+		} else { // Invalid MPID
+            errno = EINVAL;
             return NULL;
         }
 
@@ -197,20 +195,30 @@ int k_mpool_dealloc(mpool_t mpid, void *ptr)
 #ifdef DEBUG_0
     printf("k_mpool_dealloc: mpid = %d, ptr = 0x%x\r\n", mpid, ptr);
 #endif /* DEBUG_0 */
-		if (errno == EINVAL){
+		if (errno == EINVAL){ // Previous call to alloc did not have MPID
 			return RTX_ERR;
 		}
 		if ( ptr == NULL) {
 			return RTX_OK;
 		}
 		if(mpid==MPID_IRAM1){
-			removeNodes(&array_RAM1, (U32)ptr);
+			int ret = removeNodes(&array_RAM1, (U32)ptr);
+            if (ret == -1) { // address outside start/end
+                errno = EFAULT;
+                return RTX_ERR;
+            }
 			return RTX_OK;
 		} else if (mpid==MPID_IRAM2) {
-			removeNodes(&array_RAM2, (U32)ptr);
+			int ret = removeNodes(&array_RAM2, (U32)ptr);
+            if (ret == -1) {
+                errno = EFAULT;
+                return RTX_ERR;
+            }
 			return RTX_OK;
 		}
-    return RTX_ERR; 
+        // If MPID is invalid:
+        errno = EINVAL;
+        return RTX_ERR; 
 }
 
 int k_mpool_dump (mpool_t mpid)

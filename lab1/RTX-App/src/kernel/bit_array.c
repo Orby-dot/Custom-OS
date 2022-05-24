@@ -105,12 +105,12 @@ U32 getXPosition(bitArray* array, U32 address, U32 level){
 	return (address -array->startAddress)/(array->size >> (level-1));
 }
 
-void removeNodes(bitArray *array, U32 address){
+int removeNodes(bitArray *array, U32 address){
 	if (debugBA) printf(" ============== BA REMOVE NODES addr %x \r\n", address);
 
 	if (address < array->startAddress || address > array->endAddress) {
 		// printf("Invalid address: %x \r\n", address);
-		return;
+		return -1;
 	}
 	U32 height = getHeight(array);
 	
@@ -179,6 +179,8 @@ void removeNodes(bitArray *array, U32 address){
 			addNode(level - 1, address, array->freeList, array->totalLevels);
 		}
 	}
+
+	return 0;
 }
 
 // coalesce

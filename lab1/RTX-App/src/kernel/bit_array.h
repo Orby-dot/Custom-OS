@@ -17,7 +17,7 @@ typedef struct bitArray{
 
 void initializeBitArray(bitArray *array,freeList_t * list, U8 * bitArray, U32 startAddress, U32 endAddress);
 U32 allocateNode(bitArray * array, U32 sizeToAllocate);
-void removeNodes(bitArray *array, U32 address);
+int removeNodes(bitArray *array, U32 address);
 U32 getHeight(bitArray*array);
 U32 getXPosition(bitArray* array, U32 address, U32 level);
 int locateNode(bitArray* array, U32 index);
