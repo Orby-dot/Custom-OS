@@ -14,6 +14,8 @@
     
 #define NUM_TESTS       1       // number of tests
 #define NUM_INIT_TASKS  1       // number of tasks during initialization
+#define NUM_SUB_TESTS 	5 			//number of sub tests
+
 
 /*
  *===========================================================================
@@ -22,9 +24,9 @@
  */
 
 TASK_INIT    g_init_tasks[NUM_INIT_TASKS];
-const char   PREFIX[]      = "G25-TS2";
-const char   PREFIX_LOG[]  = "G25-TS2-LOG ";
-const char   PREFIX_LOG2[] = "G25-TS2-LOG2";
+const char   PREFIX[]      = "G25-TS1";
+const char   PREFIX_LOG[]  = "G25-TS1-LOG ";
+const char   PREFIX_LOG2[] = "G25-TS1-LOG2";
 
 AE_XTEST     g_ae_xtest;                // test data, re-use for each test
 AE_CASE      g_ae_cases[NUM_TESTS];
@@ -78,7 +80,7 @@ void update_ae_xtest(int test_id)
 
 void gen_req0(int test_id)
 {
-    g_tsk_cases[test_id].p_ae_case->num_bits = 4;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = NUM_SUB_TESTS;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
     g_tsk_cases[test_id].len = 16; // assign a value no greater than MAX_LEN_SEQ
@@ -90,40 +92,41 @@ void gen_req0(int test_id)
 }
 
 /**
- * @brief a basic memory test on IRAM1
+ * @brief a basic memory test of running IRAM1 and IRAM2 simultaneously  
  */
 
 #ifdef ECE350_P1
 int test0_start(int test_id)
 {
     
-    static void *p[4];
-    int ret_val    = 10;
+    static void *p[2];
+    int ret_val    = 7;
+    int ret_val_2    = 7;
     U8 *p_index    = &(g_ae_xtest.index);
     int sub_result = 0;
     
     gen_req0(test_id);
      
-    for ( int i = 0; i < 4; i++ ) {
+    for ( int i = 0; i < 2; i++ ) {
         p[i] = (void *)0x1;
     }
 
-    // IRAM1
+    // IRAM1 & IRAM2
 
     //test 0-[0]
-    p[0] = mem_alloc(0x1000/4);
+    p[0] = mem_alloc(0x7);
+    p[1] = mem2_alloc(0x7);
     
     *p_index = 0;
-    strcpy(g_ae_xtest.msg, "Allocating the quarter of the RAM, check non-NULL return");
-    sub_result = (p[0] == NULL) ? 0 : 1;
+    strcpy(g_ae_xtest.msg, "Allocating 7B to IRAM1 and IRAM2, checking non-NULL returns");
+    sub_result = (p[0] == NULL || p[1] == NULL) ? 0 : 1;
     process_sub_result(test_id, *p_index, sub_result);  
     
     //test 0-[1]
     (*p_index)++;
-    p[1] = mem_alloc(0x1000/2);
     
-    strcpy(g_ae_xtest.msg, "Allocating the second half of the RAM, check not null, not the same as p[0]");
-    sub_result = (p[1] != p[0] && p[1] != NULL) ? 1 : 0;
+    strcpy(g_ae_xtest.msg, "Checking allocation of IRAM1 and IRAM2 are not the same");
+    sub_result = (p[0] == p[1]) ? 0 : 1;
     process_sub_result(test_id, *p_index, sub_result);
 
     //test 0-[2]
@@ -131,24 +134,39 @@ int test0_start(int test_id)
     mem_dealloc(p[0]);
     p[0] = NULL;
 
-    mem_dealloc(p[1]);
-    p[1] = NULL;
-
     ret_val = mem_dump();
+    ret_val_2 = mem2_dump();
     
-    strcpy(g_ae_xtest.msg, "Free p[0] and p[1], checking mem_dump return val");
-    sub_result = (ret_val == 1) ? 1 : 0;
+    strcpy(g_ae_xtest.msg, "Free p[0], checking free blocks in IRAM1 = 1 and IRAM2 = 10");
+    sub_result = (ret_val == 1 && ret_val_2 == 10) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
 
     //test 0-[3]
     (*p_index)++;
-    p[2] = mem_alloc(0x1000);
 
-    strcpy(g_ae_xtest.msg, "Allocating full RAM, check non-NULL return");
-    sub_result = (p[2] == NULL) ? 0 : 1;
+    mem2_dealloc(p[1]);
+    p[1] = NULL;
+
+    ret_val = mem_dump();
+    ret_val_2 = mem2_dump();
+    
+    strcpy(g_ae_xtest.msg, "Free p[1], checking free blocks in both RAM = 1");
+    sub_result = (ret_val == 1 && ret_val_2 == 1) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);    
 
-    mem2_dealloc(p[2]);
+    //test 0-[4]
+    (*p_index)++;
+
+
+    p[0] = mem_alloc(0x1000);
+    p[1] = mem2_alloc(0x1000);
+
+    ret_val = mem_dump();
+    ret_val_2 = mem2_dump();
+    
+    strcpy(g_ae_xtest.msg, "Allocate 0x1000 to both, check IRAM1 is full, IRAM2 has 3 free blocks");
+    sub_result = (ret_val == 0 && ret_val_2 == 3) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);    
 
     return RTX_OK;
 }
