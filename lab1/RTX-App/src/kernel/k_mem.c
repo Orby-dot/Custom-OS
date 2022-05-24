@@ -165,9 +165,9 @@ mpool_t k_mpool_create (int algo, U32 start, U32 end)
 
 void *k_mpool_alloc (mpool_t mpid, size_t size)
 {
-// #ifdef DEBUG_0
+#ifdef DEBUG_0
     printf("k_mpool_alloc: mpid = %d, size = %d, 0x%x\r\n", mpid, size, size);
-// #endif /* DEBUG_0 */
+#endif /* DEBUG_0 */
 		if (errno == EINVAL) {
 			return NULL;
 		}

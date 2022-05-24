@@ -24,9 +24,9 @@
  */
 
 TASK_INIT    g_init_tasks[NUM_INIT_TASKS];
-const char   PREFIX[]      = "G25-TS1";
-const char   PREFIX_LOG[]  = "G25-TS1-LOG ";
-const char   PREFIX_LOG2[] = "G25-TS1-LOG2";
+const char   PREFIX[]      = "G25-TS7";
+const char   PREFIX_LOG[]  = "G25-TS7-LOG ";
+const char   PREFIX_LOG2[] = "G25-TS7-LOG2";
 
 AE_XTEST     g_ae_xtest;                // test data, re-use for each test
 AE_CASE      g_ae_cases[NUM_TESTS];

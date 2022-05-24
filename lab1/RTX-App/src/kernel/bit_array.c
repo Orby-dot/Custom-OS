@@ -47,7 +47,7 @@ int locateNode(bitArray* array, U32 index){
 
 // allocate memory
 U32 allocateNode(bitArray * array, U32 sizeToAllocate){
-	printf("TOTAL LEVELS: %u\r\n\n", array->totalLevels);
+	// printf("TOTAL LEVELS: %u\r\n\n", array->totalLevels);
 	//call linked list function with sizeToAllocate, returns index within a level
 	U32 address = allocate(sizeToAllocate, array->freeList, array->totalLevels); //allocate node in free list - get from free list
 	if (address == ERROR ) {
