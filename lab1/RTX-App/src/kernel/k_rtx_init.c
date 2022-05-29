@@ -42,8 +42,11 @@
 #include "k_rtx_init.h"
 #include "k_rtx.h"
 #include "k_inc.h"
+#include "ready_queue.h"
 
 int errno = 0;
+
+readyQueue_t readyQueuesArray[4];
 
 /**************************************************************************//**
  * @brief   	system set up before calling rtx_init() from thread mode  
@@ -77,8 +80,10 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     if ( k_tsk_init(tasks, num_tasks) != RTX_OK ) {
         return RTX_ERR;
     }
+		
+		initializeArrayOfReadyQueues(readyQueuesArray);
     
-    /* add message passing initialization code */
+		/* add message passing initialization code */
     
     k_tsk_start();        // start the first task
     return RTX_OK;
