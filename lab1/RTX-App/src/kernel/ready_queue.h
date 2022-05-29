@@ -11,7 +11,8 @@ typedef struct readyQueue {
 } readyQueue_t;
 
 void initializeArrayOfReadyQueues(readyQueue_t * readyQueuesArray);
-void addTCB(readyQueue_t * readyQueuesArray,U32 priorityLevel, TCB tcb);
+void addTCBtoBack(readyQueue_t * readyQueuesArray,U32 priorityLevel, TCB tcb);
+void addTCBtoFront(readyQueue_t * readyQueuesArray,U32 priorityLevel, TCB tcb);
 TCB removeTCB(readyQueue_t * readyQueuesArray, U32 priorityLevel);
 
 #endif
