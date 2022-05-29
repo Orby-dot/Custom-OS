@@ -43,12 +43,17 @@
 #define K_RTX_INIT_H_
 
 #include "k_inc.h"
+#include "ready_queues.h"
 
 /*
  *===========================================================================
  *                            FUNCTION PROTOTYPES
  *===========================================================================
  */
+ 
+extern readyQueue_t readyQueuesArray[4];
+
+ 
 int  k_pre_pre_init(void *args);
 int  k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *task, int num_tasks);
 int  k_get_sys_info(RTX_SYS_INFO *buffer);
