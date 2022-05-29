@@ -36,7 +36,7 @@ void addTCBtoFront(readyQueue_t * readyQueuesArray, U32 priorityLevel, TCB tcb) 
 }
 
 
-TCB removeTCB(readyQueue_t * readyQueuesArray, U32 priorityLevel) {
+TCB *removeTCB(readyQueue_t * readyQueuesArray, U32 priorityLevel) {
 	TCB *returnTCB = readyQueuesArray[priorityLevel].head;
 	if (readyQueuesArray[priorityLevel].head == readyQueuesArray[priorityLevel].tail){
 		readyQueuesArray[priorityLevel].head = NULL;
@@ -46,5 +46,5 @@ TCB removeTCB(readyQueue_t * readyQueuesArray, U32 priorityLevel) {
 		readyQueuesArray[priorityLevel].head->prev = NULL;
 		returnTCB->next = NULL;
 	}
-	return *returnTCB;
+	return returnTCB;
 }
