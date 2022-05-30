@@ -229,7 +229,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
      *            so that you use your own dynamic memory allocator
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
-    usp = mem_alloc(KERN_STACK_SIZE);
+    usp = mem_alloc(p_taskinfo->u_stack_size);
     //usp = k_alloc_p_stack(tid);             // ***you need to change this line***
     if (usp == NULL) {
         return RTX_ERR;
