@@ -1,0 +1,45 @@
+=======RAM Target LOG - Fri May 27 17:47:20 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS141
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2022.05.27 17:47:27 =~=~=~=~=~=~=~=~=~=~=~=
+G99-TS141: START
+G99-TS141-LOG2: priv_task1: basic memory test.
+0x10007040: 0x20
+0x10007080: 0x40
+0x10007100: 0x80
+0x10007200: 0x100
+0x10007400: 0x200
+0x10007800: 0x400
+6 free memory block(s) found
+G99-TS141-LOG : Test[0]-[0]: Allocating two blocks, 1B each.
+G99-TS141-LOG : Test[0]-[0]: result = 1.
+G99-TS141-LOG : Test[0]-[1]: checking the data written.
+G99-TS141-LOG : Test[0]-[1]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G99-TS141-LOG : Test[0]-[2]: deallocating both blocks .
+G99-TS141-LOG : Test[0]-[2]: result = 1.
+0x2007c040: 0x40
+0x2007c080: 0x80
+0x2007c100: 0x100
+0x2007c200: 0x200
+0x2007c400: 0x400
+0x2007c800: 0x800
+0x2007d000: 0x1000
+0x2007e000: 0x2000
+0x20080000: 0x4000
+9 free memory block(s) found
+G99-TS141-LOG : Test[1]-[0]: Allocating two blocks, 1B each.
+G99-TS141-LOG : Test[1]-[0]: result = 1.
+G99-TS141-LOG : Test[1]-[1]: checking the data written.
+G99-TS141-LOG : Test[1]-[1]: result = 1.
+0x2007c000: 0x8000
+1 free memory block(s) found
+G99-TS141-LOG : Test[1]-[2]: deallocating both blocks .
+G99-TS141-LOG : Test[1]-[2]: result = 1.
+G99-TS141: FINISHED
+G99-TS141-LOG : Test 0: 3/3 PASSED. Expected = 0x7, result = 0x7
+G99-TS141-LOG : Test 1: 3/3 PASSED. Expected = 0x7, result = 0x7
+G99-TS141: 2/2 test function(s) COMPLETED.
+G99-TS141: 6/6 tests PASSED.
+G99-TS141: 0/6 tests FAILED.
+G99-TS141: END

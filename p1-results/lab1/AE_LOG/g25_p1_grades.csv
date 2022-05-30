@@ -1,0 +1,23 @@
+Weight,GID,25
+,Comment,0
+,Hardware Exec Multiplier,1
+,Grade,100
+,Raw points,100
+5,Build,1
+5,Report,1
+0,TS100-TF0,8
+0.5,TS101-TF0,8
+0.5,TS101-TF1,8
+1.5,TS110-TF0,6
+1.5,TS110-TF1,6
+1,TS120-TF0,8
+1,TS120-TF1,8
+1,TS141-TF0,3
+1,TS141-TF1,3
+2,TS142-TF0,3
+2,TS142-TF1,3
+5.5,TS143-TF0,2
+5.5,TS143-TF1,2
+1,TS144-TF0,4
+1,TS144-TF1,4
+-8,Inefficient Data Structure,0

@@ -1,0 +1,28 @@
+=======RAM Target LOG - Fri May 27 17:48:37 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS143
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2022.05.27 17:48:43 =~=~=~=~=~=~=~=~=~=~=~=
+G99-TS143: START
+G99-TS143-LOG2: priv_task1: basic memory test.
+0x10007000: 0x800
+1 free memory block(s) found
+G99-TS143-LOG : Test[0]-[0]: stress test, alloc then dealloc.
+G99-TS143-LOG : Test[0]-[0]: result = 1.
+0x10007000: 0x800
+1 free memory block(s) found
+G99-TS143-LOG : Test[0]-[1]: stress test, alloc , write , then dealloc.
+G99-TS143-LOG : Test[0]-[1]: result = 1.
+0x2007c000: 0x8000
+1 free memory block(s) found
+G99-TS143-LOG : Test[1]-[0]: stress test, alloc then dealloc.
+G99-TS143-LOG : Test[1]-[0]: result = 1.
+0x2007c000: 0x8000
+1 free memory block(s) found
+G99-TS143-LOG : Test[1]-[1]: stress test, alloc , write , then dealloc.
+G99-TS143-LOG : Test[1]-[1]: result = 1.
+G99-TS143: FINISHED
+G99-TS143-LOG : Test 0: 2/2 PASSED. Expected = 0x3, result = 0x3
+G99-TS143-LOG : Test 1: 2/2 PASSED. Expected = 0x3, result = 0x3
+G99-TS143: 2/2 test function(s) COMPLETED.
+G99-TS143: 4/4 tests PASSED.
+G99-TS143: 0/4 tests FAILED.
+G99-TS143: END

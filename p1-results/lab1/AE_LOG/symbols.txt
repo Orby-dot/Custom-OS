@@ -1,0 +1,19 @@
+0x00000000  0x4        MAX_INT                                  const U32
+0x00000000  0x18       array_RAM1                               bitArray
+0x00000000  0x4        array_RAM1.startAddress                  U32
+0x00000004  0x4        array_RAM1.endAddress                    U32
+0x00000008  0x4        array_RAM1.size                          U32
+0x0000000c  0x4        array_RAM1.bitStatus                     pointer to U8
+0x00000010  0x4        array_RAM1.freeList                      pointer to freeList_t
+0x00000014  0x1        array_RAM1.totalLevels                   U8
+0x00000000  0x18       array_RAM2                               bitArray
+0x00000000  0x4        array_RAM2.startAddress                  U32
+0x00000004  0x4        array_RAM2.endAddress                    U32
+0x00000008  0x4        array_RAM2.size                          U32
+0x0000000c  0x4        array_RAM2.bitStatus                     pointer to U8
+0x00000010  0x4        array_RAM2.freeList                      pointer to freeList_t
+0x00000014  0x1        array_RAM2.totalLevels                   U8
+0x00000000  0x1f       bitarray_RAM1                            array[31] of U8
+0x00000000  0xff       bitarray_RAM2                            array[255] of U8
+0x00000000  0x40       free_list_RAM1                           array[8] of freeList_t
+0x00000000  0x58       free_list_RAM2                           array[11] of freeList_t
