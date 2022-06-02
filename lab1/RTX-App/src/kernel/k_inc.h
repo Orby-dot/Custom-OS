@@ -77,6 +77,7 @@ typedef struct tcb {
     U8          tid;          /**< task id                                    */
     U8          prio;         /**< scheduling priority                        */
     U8          state;        /**< task state                                 */
+    U32        *psp;          /**< user sp  */
 } TCB;
 
 /*
