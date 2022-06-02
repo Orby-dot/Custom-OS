@@ -140,7 +140,7 @@ TCB *scheduler(void)
 			return removeTCB(ready_queues_array, i);
 		}
 	}
-	return NULL;
+	return &g_tcbs[0]; // null task
 }
 
 /**
