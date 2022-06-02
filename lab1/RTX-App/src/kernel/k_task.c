@@ -457,24 +457,31 @@ int k_tsk_get(task_t tid, RTX_TASK_INFO *buffer)
 #ifdef DEBUG_0
     printf("k_tsk_get: entering...\n\r");
     printf("tid = %d, buffer = 0x%x.\n\r", tid, buffer);
-#endif /* DEBUG_0 */    
-    if (buffer == NULL) {
+#endif /* DEBUG_0 */   
+    if (tid >= MAX_TASKS) {
+        errno = EINVAL;
         return RTX_ERR;
     }
-    /* The code fills the buffer with some fake task information. 
-       You should fill the buffer with correct information    */
+    if (buffer == NULL) {
+        errno = EFAULT;
+        return RTX_ERR;
+    }
+
+    // TODO: Check if task_id is empty in g_tcbs 
+    // TODO: Not all information has been mapped 
     
-    buffer->tid           = tid;
-    buffer->prio          = 99;
-    buffer->u_stack_size  = 0x8000;
-    buffer->priv          = 3;
-    buffer->ptask         = 0x0;
-    buffer->k_sp          = 0xDEADBEEF;
-    buffer->k_sp_base     = 0xDEADBEEF;
-    buffer->k_stack_size  = 0x0;
-    buffer->state         = 0xFF;
-    buffer->u_sp          = 0xDEAD9999;
-    buffer->u_sp_base     = 0xDEADAAAA;
+    buffer->tid           = g_tcbs[tid].tid;
+    buffer->prio          = g_tcbs[tid].prio;
+    // buffer->u_stack_size  = g_tcbs[tid].????;
+    buffer->priv          = g_tcbs[tid].priv;
+    // buffer->ptask         = g_tcbs[tid].????;
+    // buffer->k_sp          = ???;
+    // buffer->k_sp_base     = ???;
+    // buffer->k_stack_size  = ???;
+    buffer->state         = g_tcbs[tid].state;
+    // buffer->u_sp          = ???;
+    // buffer->u_sp_base     = ???;
+
     return RTX_OK;     
 }
 
@@ -482,7 +489,25 @@ int k_tsk_ls(task_t *buf, size_t count){
 #ifdef DEBUG_0
     printf("k_tsk_ls: buf=0x%x, count=%u\r\n", buf, count);
 #endif /* DEBUG_0 */
-    return 0;
+
+    if (buf == NULL || count == 0) {
+        errno = EFAULT;
+        return RTX_ERR;
+    }
+
+    int buf_i = 0;
+    for (int i = 1; i < MAX_TASKS; i++) { // skipping null task
+        if (g_tcbs[i].state != DORMANT) {
+            buf[buf_i] = g_tcbs[i].tid;
+            buf_i++;
+
+            if (buf_i == count) {
+                return count;
+            }
+        }
+    }
+
+    return buf_i;
 }
 
 int k_rt_tsk_set(TIMEVAL *p_tv)
