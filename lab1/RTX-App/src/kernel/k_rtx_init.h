@@ -43,7 +43,7 @@
 #define K_RTX_INIT_H_
 
 #include "k_inc.h"
-#include "ready_queues.h"
+#include "ready_queue.h"
 
 /*
  *===========================================================================

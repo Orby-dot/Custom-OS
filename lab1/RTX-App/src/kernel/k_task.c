@@ -402,7 +402,7 @@ int k_tsk_run_new(void)
  *****************************************************************************/
 int k_tsk_yield(void)
 {
-		addTCBtoBack(readyQueuesArray,gp_current_task->prio,gp_current_task)
+	addTCBtoBack(readyQueuesArray,gp_current_task->prio,*gp_current_task); // TODO: should we be passing pointer instead of value of gp_current_task?
     return k_tsk_run_new();
 }
 
