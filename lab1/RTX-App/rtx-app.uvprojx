@@ -498,6 +498,16 @@
               <FileType>5</FileType>
               <FilePath>.\src\kernel\tester.h</FilePath>
             </File>
+            <File>
+              <FileName>ready_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\ready_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>ready_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\ready_queue.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1068,6 +1078,16 @@
               <FileName>tester.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\kernel\tester.h</FilePath>
+            </File>
+            <File>
+              <FileName>ready_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\ready_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>ready_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\ready_queue.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -51,6 +51,7 @@
 #include "k_inc.h"
 //#include "k_task.h"
 #include "k_rtx.h"
+#include "ready_queue.h"
 
 /*
  *==========================================================================
@@ -62,6 +63,7 @@ TCB             *gp_current_task = NULL;    // the current RUNNING task
 TCB             g_tcbs[MAX_TASKS];          // an array of TCBs
 //TASK_INIT       g_null_task_info;           // The null task info
 U32             g_num_active_tasks = 0;     // number of non-dormant tasks
+readyQueue_t *ready_queues_array;
 
 /*---------------------------------------------------------------------------
 The memory map of the OS image may look like the following:
@@ -131,13 +133,18 @@ The memory map of the OS image may look like the following:
 TCB *scheduler(void)
 {
     /* *****MODIFY THIS FUNCTION ***** */
-    task_t tid = gp_current_task->tid;
-    return &g_tcbs[(++tid)%g_num_active_tasks];
-
+    //task_t tid = gp_current_task->tid;
+    //return &g_tcbs[(++tid)%g_num_active_tasks];
+	for (U8 i = 0; i < 4 ;i++) {
+		if (ready_queues_array[i].head){
+			return removeTCB(ready_queues_array, i);
+		}
+	}
+	return &g_tcbs[0]; // null task
 }
 
 /**
- * @brief initialzie the first task in the system
+ * @brief initialize the first task in the system
  */
 void k_tsk_init_first(TASK_INIT *p_task)
 {
