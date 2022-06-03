@@ -49,9 +49,10 @@
 
 
 #include "k_inc.h"
-//#include "k_task.h"
+#include "k_task.h"
 #include "k_rtx.h"
 #include "ready_queue.h"
+#include "k_mem.h"
 
 /*
  *==========================================================================
@@ -236,7 +237,8 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
      *            so that you use your own dynamic memory allocator
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
-    usp = mem_alloc(p_taskinfo->u_stack_size);
+    usp = (U32*)(k_mpool_alloc(MPID_IRAM1, p_taskinfo->u_stack_size));
+		usp += p_taskinfo->u_stack_size;
     //usp = k_alloc_p_stack(tid);             // ***you need to change this line***
     if (usp == NULL) {
         return RTX_ERR;
@@ -421,12 +423,119 @@ task_t k_tsk_gettid(void)
  *===========================================================================
  */
 
+
+/**
+* 
+*/
 int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size)
 {
 #ifdef DEBUG_0
     printf("k_tsk_create: entering...\n\r");
     printf("task = 0x%x, task_entry = 0x%x, prio=%d, stack_size = %d\n\r", task, task_entry, prio, stack_size);
 #endif /* DEBUG_0 */
+	
+    extern U32 SVC_RTE;
+
+    U32 *usp;
+    U32 *ksp;
+	
+		//get empty TCB
+	
+		TCB *freeTCB;
+		freeTCB->priv = 2; // privelege can only be 0 or 1
+		for(int i=0;i<MAX_TASKS;i++){
+			if(g_tcbs[i].state == DORMANT){
+				freeTCB = &g_tcbs[i];
+				break;
+			}			
+		}
+		if (freeTCB->priv == 2){
+			return RTX_ERR; // look into correct return
+		}
+		
+		freeTCB->tid = *task;
+		freeTCB->state = READY;
+		freeTCB->prio = prio;
+		freeTCB->priv = 0;
+
+    /*---------------------------------------------------------------
+     *  Step1: allocate user stack for the task
+     *         stacks grows down, stack base is at the high address
+     * ATTENTION: you need to modify the following three lines of code
+     *            so that you use your own dynamic memory allocator
+     *            to allocate variable size user stack.
+     * -------------------------------------------------------------*/
+		usp = (U32*)(k_mpool_alloc(MPID_IRAM1, stack_size));
+		usp += stack_size;
+    if (usp == NULL) {
+        return RTX_ERR;
+    }
+
+    /*-------------------------------------------------------------------
+     *  Step2: create task's thread mode initial context on the user stack.
+     *         fabricate the stack so that the stack looks like that
+     *         task executed and entered kernel from the SVC handler
+     *         hence had the exception stack frame saved on the user stack.
+     *         This fabrication allows the task to return
+     *         to SVC_Handler before its execution.
+     *
+     *         8 registers listed in push order
+     *         <xPSR, PC, uLR, uR12, uR3, uR2, uR1, uR0>
+     * -------------------------------------------------------------*/
+
+    // if kernel task runs under SVC mode, then no need to create user context stack frame for SVC handler entering
+    // since we never enter from SVC handler in this case
+    
+    *(--usp) = INITIAL_xPSR;             // xPSR: Initial Processor State
+    *(--usp) = (U32) (task_entry);// PC: task entry point
+        
+    // uR14(LR), uR12, uR3, uR3, uR1, uR0, 6 registers
+    for ( int j = 0; j < 6; j++ ) {
+        
+#ifdef DEBUG_0
+        *(--usp) = 0xDEADAAA0 + j;
+#else
+        *(--usp) = 0x0;
+#endif
+    }
+		
+		freeTCB->psp = usp; //probable bug
+    
+    // get kernel sp which should be initialized in freeTCB
+    ksp = freeTCB->msp;
+    if ( ksp == NULL ) {
+        return RTX_ERR;
+    }
+
+    /*---------------------------------------------------------------
+     *  Step3: create task kernel initial context on kernel stack
+     *
+     *         12 registers listed in push order
+     *         <kLR, kR4-kR12, PSP, CONTROL>
+     * -------------------------------------------------------------*/
+    // a task never run before directly exit
+
+		// save control register with bit 0 since this task will always be unprivileged
+		*(++ksp) = __get_CONTROL() | BIT(0);
+		
+    // put user sp on to the kernel stack
+    *(++ksp) = (U32) usp;
+
+		// kernel stack R4 - R12, 9 registers
+#define NUM_REGS 9    // number of registers to push
+      for ( int j = NUM_REGS-1; j >=0; j--) {        
+#ifdef DEBUG_0
+        *(++ksp) = 0xDEADCCC0 + j;
+#else
+        *(++ksp) = 0x0;
+#endif
+    }
+		
+    *(++ksp) = (U32) (&SVC_RTE);
+		addTCBtoBack(readyQueuesArray,freeTCB->prio,*freeTCB); // TODO: should we be passing pointer instead of value of freeTCB?
+
+		k_tsk_run_new();
+	
     return RTX_OK;
 
 }

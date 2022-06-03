@@ -82,7 +82,7 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     }
 		
 		initializeArrayOfReadyQueues(readyQueuesArray);
-    
+    k_mpool_create(BUDDY, RAM1_START, RAM1_END);
 		/* add message passing initialization code */
     
     k_tsk_start();        // start the first task
