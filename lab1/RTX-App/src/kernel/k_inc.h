@@ -108,7 +108,6 @@ extern TASK_INIT g_null_task_info;
 extern U32 g_num_active_tasks;	// number of non-dormant tasks */
 
 extern volatile uint32_t g_timer_count;     // remove if you do not need this variable
-
 #endif  // !K_INC_H_
 
 /*
@@ -116,3 +115,5 @@ extern volatile uint32_t g_timer_count;     // remove if you do not need this va
  *                             END OF FILE
  *===========================================================================
  */
+ 
+ 
