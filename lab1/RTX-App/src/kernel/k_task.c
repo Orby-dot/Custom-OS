@@ -467,7 +467,11 @@ int k_tsk_get(task_t tid, RTX_TASK_INFO *buffer)
         return RTX_ERR;
     }
 
-    // TODO: Check if task_id is empty in g_tcbs 
+    // TODO: Check if task_id is empty in g_tcbs - unknown if it should be null or tid null
+		if (g_tcbs[tid].tid == NULL) {
+				errno = EINVAL;
+				return RTX_ERR;
+		}
     // TODO: Not all information has been mapped 
     
     buffer->tid           = g_tcbs[tid].tid;
