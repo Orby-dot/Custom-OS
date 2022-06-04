@@ -179,7 +179,7 @@ int k_tsk_init(TASK_INIT *task, int num_tasks)
 		for(int i=0;i<MAX_TASKS;i++){
 			g_tcbs[i].msp = (U32*)&(g_k_stacks[i]);
 			g_tcbs[i].tid = i;
-			g_tcbs[i].state = UNINITIALIZED;
+			g_tcbs[i].initialized = 0;
 		}
     
     k_tsk_init_first(&taskinfo);
@@ -242,12 +242,14 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
      *            so that you use your own dynamic memory allocator
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
+
     usp = (U32*)(k_mpool_alloc(MPID_IRAM2, p_taskinfo->u_stack_size));
-		usp += p_taskinfo->u_stack_size/4;
-    //usp = k_alloc_p_stack(tid);             // ***you need to change this line***
     if (usp == NULL) {
         return RTX_ERR;
     }
+		p_tcb->psp_base = usp;
+		usp += p_taskinfo->u_stack_size/4;
+		p_tcb->psp_stack_size = p_taskinfo->u_stack_size;
 
     /*-------------------------------------------------------------------
      *  Step2: create task's thread mode initial context on the user stack.
@@ -282,6 +284,8 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
     if ( ksp == NULL ) {
         return RTX_ERR;
     }
+		p_tcb->msp_base = ksp;
+		p_tcb->msp_stack_size = KERN_STACK_SIZE;
 
     /*---------------------------------------------------------------
      *  Step3: create task kernel initial context on kernel stack
@@ -313,6 +317,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
 
     p_tcb->msp = ksp;
 		if(tid != TID_NULL) addTCBtoBack(readyQueuesArray,p_tcb->prio,p_tcb);
+		p_tcb->initialized = 1;
 
     return RTX_OK;
 }
@@ -448,7 +453,7 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 		//get empty TCB
 	
 		TCB *freeTCB;
-		freeTCB->priv = 2; // privelege can only be 0 or 1
+		freeTCB->priv = 2; // privilege can only be 0 or 1
 		for(int i=0;i<MAX_TASKS;i++){
 			if(g_tcbs[i].state == DORMANT){
 				freeTCB = &g_tcbs[i];
@@ -472,10 +477,12 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
 		usp = (U32*)(k_mpool_alloc(MPID_IRAM2, stack_size));
-		usp += stack_size/4;
     if (usp == NULL) {
         return RTX_ERR;
     }
+		freeTCB->psp_base = usp;
+		freeTCB->psp_stack_size = stack_size;
+		usp += stack_size/4;
 
     /*-------------------------------------------------------------------
      *  Step2: create task's thread mode initial context on the user stack.
@@ -508,10 +515,17 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 		freeTCB->psp = usp; //probable bug
     
     // get kernel sp which should be initialized in freeTCB
-    ksp = freeTCB->msp;
-    if ( ksp == NULL ) {
-        return RTX_ERR;
-    }
+		if(freeTCB->initialized){
+			ksp = (U32*)freeTCB->msp_base;		
+		}
+		else{
+			ksp = k_alloc_k_stack(freeTCB->tid);
+			freeTCB->msp = ksp;
+			
+		}
+		if ( ksp == NULL ) {
+				return RTX_ERR;
+		}		
 
     /*---------------------------------------------------------------
      *  Step3: create task kernel initial context on kernel stack
@@ -520,26 +534,28 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
      *         <kLR, kR4-kR12, PSP, CONTROL>
      * -------------------------------------------------------------*/
     // a task never run before directly exit
-
-		// save control register with bit 0 since this task will always be unprivileged
-		*(ksp++) = __get_CONTROL() | BIT(0);
-		
-    // put user sp on to the kernel stack
-    *(ksp++) = (U32) usp;
-
-		// kernel stack R4 - R12, 9 registers
+    *(--ksp) = (U32) (&SVC_RTE);
+    // kernel stack R4 - R12, 9 registers
 #define NUM_REGS 9    // number of registers to push
-      for ( int j = NUM_REGS-1; j >=0; j--) {        
+      for ( int j = 0; j < NUM_REGS; j++) {        
 #ifdef DEBUG_0
-        *(ksp++) = 0xDEADCCC0 + j;
+        *(--ksp) = 0xDEADCCC0 + j;
 #else
-        *(ksp++) = 0x0;
+        *(--ksp) = 0x0;
 #endif
     }
+        
+    // put user sp on to the kernel stack
+    *(--ksp) = (U32) usp;
+    
+    // save control register so that we return with correct access level
+		*(--ksp) = __get_CONTROL() | BIT(0);
 		
-    *(ksp++) = (U32) (&SVC_RTE);
 		addTCBtoBack(readyQueuesArray,freeTCB->prio,freeTCB); // TODO: should we be passing pointer instead of value of freeTCB?
+				    
+		freeTCB->msp = ksp;
 
+		freeTCB->initialized = 1;
     return RTX_OK;
 
 }
