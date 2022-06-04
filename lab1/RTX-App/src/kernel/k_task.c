@@ -136,7 +136,7 @@ TCB *scheduler(void)
     /* *****MODIFY THIS FUNCTION ***** */
     //task_t tid = gp_current_task->tid;
     //return &g_tcbs[(++tid)%g_num_active_tasks];
-	for (U8 i = 0; i < 4 ;i++) {
+	for (U8 i = 0; i < 5 ;i++) {
 		if (ready_queues_array[i].head){
 			return removeTCB(ready_queues_array, i);
 		}
@@ -237,8 +237,8 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
      *            so that you use your own dynamic memory allocator
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
-    usp = (U32*)(k_mpool_alloc(MPID_IRAM1, p_taskinfo->u_stack_size));
-		usp += p_taskinfo->u_stack_size;
+    usp = (U32*)(k_mpool_alloc(MPID_IRAM2, p_taskinfo->u_stack_size));
+		usp += p_taskinfo->u_stack_size/4;
     //usp = k_alloc_p_stack(tid);             // ***you need to change this line***
     if (usp == NULL) {
         return RTX_ERR;
@@ -307,6 +307,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
     }
 
     p_tcb->msp = ksp;
+		addTCBtoBack(readyQueuesArray,p_tcb->prio,p_tcb);
 
     return RTX_OK;
 }
@@ -404,7 +405,7 @@ int k_tsk_run_new(void)
  *****************************************************************************/
 int k_tsk_yield(void)
 {
-	addTCBtoBack(readyQueuesArray,gp_current_task->prio,*gp_current_task); // TODO: should we be passing pointer instead of value of gp_current_task?
+	addTCBtoBack(readyQueuesArray,gp_current_task->prio,gp_current_task); // TODO: should we be passing pointer instead of value of gp_current_task?
     return k_tsk_run_new();
 }
 
@@ -465,8 +466,8 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
      *            so that you use your own dynamic memory allocator
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
-		usp = (U32*)(k_mpool_alloc(MPID_IRAM1, stack_size));
-		usp += stack_size;
+		usp = (U32*)(k_mpool_alloc(MPID_IRAM2, stack_size));
+		usp += stack_size/4;
     if (usp == NULL) {
         return RTX_ERR;
     }
@@ -532,7 +533,7 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
     }
 		
     *(++ksp) = (U32) (&SVC_RTE);
-		addTCBtoBack(readyQueuesArray,freeTCB->prio,*freeTCB); // TODO: should we be passing pointer instead of value of freeTCB?
+		addTCBtoBack(readyQueuesArray,freeTCB->prio,freeTCB); // TODO: should we be passing pointer instead of value of freeTCB?
 
 		k_tsk_run_new();
 	
