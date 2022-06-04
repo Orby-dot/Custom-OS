@@ -175,6 +175,10 @@ int k_tsk_init(TASK_INIT *task, int num_tasks)
     }
     
     TASK_INIT taskinfo;
+
+		for(int i=0;i<MAX_TASKS;i++){
+			g_tcbs[i].msp = (U32*)&(g_k_stacks[i]);
+		}
     
     k_tsk_init_first(&taskinfo);
     if ( k_tsk_create_new(&taskinfo, &g_tcbs[TID_NULL], TID_NULL) == RTX_OK ) {
@@ -405,7 +409,7 @@ int k_tsk_run_new(void)
 int k_tsk_yield(void)
 {
 	addTCBtoBack(readyQueuesArray,gp_current_task->prio,gp_current_task); // TODO: should we be passing pointer instead of value of gp_current_task?
-    return k_tsk_run_new();
+	return k_tsk_run_new();
 }
 
 /**
@@ -516,22 +520,22 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
     // a task never run before directly exit
 
 		// save control register with bit 0 since this task will always be unprivileged
-		*(++ksp) = __get_CONTROL() | BIT(0);
+		*(ksp++) = __get_CONTROL() | BIT(0);
 		
     // put user sp on to the kernel stack
-    *(++ksp) = (U32) usp;
+    *(ksp++) = (U32) usp;
 
 		// kernel stack R4 - R12, 9 registers
 #define NUM_REGS 9    // number of registers to push
       for ( int j = NUM_REGS-1; j >=0; j--) {        
 #ifdef DEBUG_0
-        *(++ksp) = 0xDEADCCC0 + j;
+        *(ksp++) = 0xDEADCCC0 + j;
 #else
-        *(++ksp) = 0x0;
+        *(ksp++) = 0x0;
 #endif
     }
 		
-    *(++ksp) = (U32) (&SVC_RTE);
+    *(ksp++) = (U32) (&SVC_RTE);
 		addTCBtoBack(readyQueuesArray,freeTCB->prio,freeTCB); // TODO: should we be passing pointer instead of value of freeTCB?
 
 		k_tsk_run_new();
