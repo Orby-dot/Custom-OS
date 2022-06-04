@@ -293,28 +293,6 @@ U32* k_alloc_k_stack(task_t tid)
     return sp;
 }
 
-/**
- * @brief allocate user/process stack statically
- * @attention  you should not use this function in your lab
- */
-
-U32* k_alloc_p_stack(task_t tid)
-{
-    if ( tid >= NUM_TASKS ) {
-        errno = EAGAIN;
-        return NULL;
-    }
-    
-    U32 *sp = g_p_stacks[tid+1];
-    
-    
-    // 8B stack alignment adjustment
-    if ((U32)sp & 0x04) {   // if sp not 8B aligned, then it must be 4B aligned
-        sp--;               // adjust it to 8B aligned
-    }
-    return sp;
-}
-
 /*
  *===========================================================================
  *                             END OF FILE

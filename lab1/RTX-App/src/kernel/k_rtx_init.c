@@ -61,7 +61,6 @@ int k_pre_rtx_init (void *args)
         return RTX_ERR;
     }
     
-    //__set_PSP((U32) k_alloc_p_stack(TID_NULL));
 		U32* psp = (U32*)k_mpool_alloc(MPID_IRAM2, PROC_STACK_SIZE);
 		psp += (PROC_STACK_SIZE/4);
     __set_PSP((U32) psp);
