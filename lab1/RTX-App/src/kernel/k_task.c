@@ -451,13 +451,13 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 			if(g_tcbs[i].state == DORMANT){
 				freeTCB = &g_tcbs[i];
 				break;
-			}			
+			}
 		}
 		if (freeTCB->priv == 2){
 			return RTX_ERR; // look into correct return
 		}
 		
-		freeTCB->tid = *task;
+		*task=freeTCB->tid;
 		freeTCB->state = READY;
 		freeTCB->prio = prio;
 		freeTCB->priv = 0;
