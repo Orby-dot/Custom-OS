@@ -558,8 +558,11 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
     printf("k_tsk_set_prio: entering...\n\r");
     printf("task_id = %d, prio = %d.\n\r", task_id, prio);
 #endif /* DEBUG_0 */
-	
+		U8 prioBefore = g_tcbs[(U32) task_id].prio;
 		g_tcbs[(U32) task_id].prio = prio;
+		addTCBtoBack(readyQueuesArray,prio,&g_tcbs[(U32) task_id]);
+		k_tsk_run_new();
+		
     return RTX_OK;    
 }
 
