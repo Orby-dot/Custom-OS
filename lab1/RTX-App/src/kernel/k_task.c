@@ -179,6 +179,7 @@ int k_tsk_init(TASK_INIT *task, int num_tasks)
 		for(int i=0;i<MAX_TASKS;i++){
 			g_tcbs[i].msp = (U32*)&(g_k_stacks[i]);
 			g_tcbs[i].tid = i;
+			g_tcbs[i].state = UNINITIALIZED;
 		}
     
     k_tsk_init_first(&taskinfo);
