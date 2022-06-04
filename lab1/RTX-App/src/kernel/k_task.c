@@ -53,7 +53,7 @@
 #include "k_rtx.h"
 #include "ready_queue.h"
 #include "k_mem.h"
-
+#include "tester2.h"
 /*
  *==========================================================================
  *                            GLOBAL VARIABLES
@@ -178,6 +178,7 @@ int k_tsk_init(TASK_INIT *task, int num_tasks)
 
 		for(int i=0;i<MAX_TASKS;i++){
 			g_tcbs[i].msp = (U32*)&(g_k_stacks[i]);
+			g_tcbs[i].tid = i;
 		}
     
     k_tsk_init_first(&taskinfo);
@@ -538,8 +539,6 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
     *(ksp++) = (U32) (&SVC_RTE);
 		addTCBtoBack(readyQueuesArray,freeTCB->prio,freeTCB); // TODO: should we be passing pointer instead of value of freeTCB?
 
-		k_tsk_run_new();
-	
     return RTX_OK;
 
 }
@@ -561,7 +560,6 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
 		U8 prioBefore = g_tcbs[(U32) task_id].prio;
 		g_tcbs[(U32) task_id].prio = prio;
 		addTCBtoBack(readyQueuesArray,prio,&g_tcbs[(U32) task_id]);
-		k_tsk_run_new();
 		
     return RTX_OK;    
 }
