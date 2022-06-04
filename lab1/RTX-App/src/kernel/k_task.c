@@ -310,7 +310,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
     }
 
     p_tcb->msp = ksp;
-		addTCBtoBack(readyQueuesArray,p_tcb->prio,p_tcb);
+		if(tid != TID_NULL) addTCBtoBack(readyQueuesArray,p_tcb->prio,p_tcb);
 
     return RTX_OK;
 }
