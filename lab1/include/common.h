@@ -122,6 +122,7 @@
 #define PRIO_NULL           0xFF    /* hidden priority for the null task */
 
 /* Task States */
+#define UNINITIALIZED             -1       /* unused task state */
 #define DORMANT             0       /* terminated task state */
 #define READY               1       /* A ready to run task   */
 #define RUNNING             2       /* Executing */

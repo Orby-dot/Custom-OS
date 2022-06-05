@@ -53,7 +53,7 @@
 #include "k_rtx.h"
 #include "ready_queue.h"
 #include "k_mem.h"
-
+#include "tester2.h"
 /*
  *==========================================================================
  *                            GLOBAL VARIABLES
@@ -64,7 +64,6 @@ TCB             *gp_current_task = NULL;    // the current RUNNING task
 TCB             g_tcbs[MAX_TASKS];          // an array of TCBs
 //TASK_INIT       g_null_task_info;           // The null task info
 U32             g_num_active_tasks = 0;     // number of non-dormant tasks
-readyQueue_t *ready_queues_array;
 
 /*---------------------------------------------------------------------------
 The memory map of the OS image may look like the following:
@@ -136,9 +135,9 @@ TCB *scheduler(void)
     /* *****MODIFY THIS FUNCTION ***** */
     //task_t tid = gp_current_task->tid;
     //return &g_tcbs[(++tid)%g_num_active_tasks];
-	for (U8 i = 0; i < 4 ;i++) {
-		if (ready_queues_array[i].head){
-			return removeTCB(ready_queues_array, i);
+	for (U8 i = 0; i < 5 ;i++) {
+		if (readyQueuesArray[i].head){
+			return removeTCB(readyQueuesArray, i);
 		}
 	}
 	return &g_tcbs[0]; // null task
@@ -176,6 +175,12 @@ int k_tsk_init(TASK_INIT *task, int num_tasks)
     }
     
     TASK_INIT taskinfo;
+
+		for(int i=0;i<MAX_TASKS;i++){
+			g_tcbs[i].msp = (U32*)&(g_k_stacks[i]);
+			g_tcbs[i].tid = i;
+			g_tcbs[i].initialized = 0;
+		}
     
     k_tsk_init_first(&taskinfo);
     if ( k_tsk_create_new(&taskinfo, &g_tcbs[TID_NULL], TID_NULL) == RTX_OK ) {
@@ -237,12 +242,14 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
      *            so that you use your own dynamic memory allocator
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
-    usp = (U32*)(k_mpool_alloc(MPID_IRAM1, p_taskinfo->u_stack_size));
-		usp += p_taskinfo->u_stack_size;
-    //usp = k_alloc_p_stack(tid);             // ***you need to change this line***
+
+    usp = (U32*)(k_mpool_alloc(MPID_IRAM2, p_taskinfo->u_stack_size));
     if (usp == NULL) {
         return RTX_ERR;
     }
+		p_tcb->psp_base = usp;
+		usp += p_taskinfo->u_stack_size/4;
+		p_tcb->psp_stack_size = p_taskinfo->u_stack_size;
 
     /*-------------------------------------------------------------------
      *  Step2: create task's thread mode initial context on the user stack.
@@ -277,6 +284,8 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
     if ( ksp == NULL ) {
         return RTX_ERR;
     }
+		p_tcb->msp_base = ksp;
+		p_tcb->msp_stack_size = KERN_STACK_SIZE;
 
     /*---------------------------------------------------------------
      *  Step3: create task kernel initial context on kernel stack
@@ -307,6 +316,8 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
     }
 
     p_tcb->msp = ksp;
+		if(tid != TID_NULL) addTCBtoBack(readyQueuesArray,p_tcb->prio,p_tcb);
+		p_tcb->initialized = 1;
 
     return RTX_OK;
 }
@@ -404,8 +415,8 @@ int k_tsk_run_new(void)
  *****************************************************************************/
 int k_tsk_yield(void)
 {
-	addTCBtoBack(readyQueuesArray,gp_current_task->prio,*gp_current_task); // TODO: should we be passing pointer instead of value of gp_current_task?
-    return k_tsk_run_new();
+	addTCBtoBack(readyQueuesArray,gp_current_task->prio,gp_current_task); // TODO: should we be passing pointer instead of value of gp_current_task?
+	return k_tsk_run_new();
 }
 
 /**
@@ -442,18 +453,18 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 		//get empty TCB
 	
 		TCB *freeTCB;
-		freeTCB->priv = 2; // privelege can only be 0 or 1
+		freeTCB->priv = 2; // privilege can only be 0 or 1
 		for(int i=0;i<MAX_TASKS;i++){
 			if(g_tcbs[i].state == DORMANT){
 				freeTCB = &g_tcbs[i];
 				break;
-			}			
+			}
 		}
 		if (freeTCB->priv == 2){
 			return RTX_ERR; // look into correct return
 		}
 		
-		freeTCB->tid = *task;
+		*task=freeTCB->tid;
 		freeTCB->state = READY;
 		freeTCB->prio = prio;
 		freeTCB->priv = 0;
@@ -465,11 +476,13 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
      *            so that you use your own dynamic memory allocator
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
-		usp = (U32*)(k_mpool_alloc(MPID_IRAM1, stack_size));
-		usp += stack_size;
+		usp = (U32*)(k_mpool_alloc(MPID_IRAM2, stack_size));
     if (usp == NULL) {
         return RTX_ERR;
     }
+		freeTCB->psp_base = usp;
+		freeTCB->psp_stack_size = stack_size;
+		usp += stack_size/4;
 
     /*-------------------------------------------------------------------
      *  Step2: create task's thread mode initial context on the user stack.
@@ -502,10 +515,17 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 		freeTCB->psp = usp; //probable bug
     
     // get kernel sp which should be initialized in freeTCB
-    ksp = freeTCB->msp;
-    if ( ksp == NULL ) {
-        return RTX_ERR;
-    }
+		if(freeTCB->initialized){
+			ksp = (U32*)freeTCB->msp_base;		
+		}
+		else{
+			ksp = k_alloc_k_stack(freeTCB->tid);
+			freeTCB->msp = ksp;
+			
+		}
+		if ( ksp == NULL ) {
+				return RTX_ERR;
+		}		
 
     /*---------------------------------------------------------------
      *  Step3: create task kernel initial context on kernel stack
@@ -514,28 +534,28 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
      *         <kLR, kR4-kR12, PSP, CONTROL>
      * -------------------------------------------------------------*/
     // a task never run before directly exit
-
-		// save control register with bit 0 since this task will always be unprivileged
-		*(++ksp) = __get_CONTROL() | BIT(0);
-		
-    // put user sp on to the kernel stack
-    *(++ksp) = (U32) usp;
-
-		// kernel stack R4 - R12, 9 registers
+    *(--ksp) = (U32) (&SVC_RTE);
+    // kernel stack R4 - R12, 9 registers
 #define NUM_REGS 9    // number of registers to push
-      for ( int j = NUM_REGS-1; j >=0; j--) {        
+      for ( int j = 0; j < NUM_REGS; j++) {        
 #ifdef DEBUG_0
-        *(++ksp) = 0xDEADCCC0 + j;
+        *(--ksp) = 0xDEADCCC0 + j;
 #else
-        *(++ksp) = 0x0;
+        *(--ksp) = 0x0;
 #endif
     }
+        
+    // put user sp on to the kernel stack
+    *(--ksp) = (U32) usp;
+    
+    // save control register so that we return with correct access level
+		*(--ksp) = __get_CONTROL() | BIT(0);
 		
-    *(++ksp) = (U32) (&SVC_RTE);
-		addTCBtoBack(readyQueuesArray,freeTCB->prio,*freeTCB); // TODO: should we be passing pointer instead of value of freeTCB?
+		addTCBtoBack(readyQueuesArray,freeTCB->prio,freeTCB); // TODO: should we be passing pointer instead of value of freeTCB?
+				    
+		freeTCB->msp = ksp;
 
-		k_tsk_run_new();
-	
+		freeTCB->initialized = 1;
     return RTX_OK;
 
 }
@@ -554,6 +574,10 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
     printf("k_tsk_set_prio: entering...\n\r");
     printf("task_id = %d, prio = %d.\n\r", task_id, prio);
 #endif /* DEBUG_0 */
+		U8 prioBefore = g_tcbs[(U32) task_id].prio;
+		g_tcbs[(U32) task_id].prio = prio;
+		addTCBtoBack(readyQueuesArray,prio,&g_tcbs[(U32) task_id]);
+		
     return RTX_OK;    
 }
 
@@ -577,7 +601,7 @@ int k_tsk_get(task_t tid, RTX_TASK_INFO *buffer)
     }
 
     // TODO: Check if task_id is empty in g_tcbs - unknown if it should be null or tid null
-		if (g_tcbs[tid].tid == NULL) {
+		if (g_tcbs[tid].initialized == FALSE) {
 				errno = EINVAL;
 				return RTX_ERR;
 		}
@@ -585,15 +609,17 @@ int k_tsk_get(task_t tid, RTX_TASK_INFO *buffer)
     
     buffer->tid           = g_tcbs[tid].tid;
     buffer->prio          = g_tcbs[tid].prio;
-    // buffer->u_stack_size  = g_tcbs[tid].????;
     buffer->priv          = g_tcbs[tid].priv;
-    // buffer->ptask         = g_tcbs[tid].????;
-    // buffer->k_sp          = ???;
-    // buffer->k_sp_base     = ???;
-    // buffer->k_stack_size  = ???;
     buffer->state         = g_tcbs[tid].state;
-    // buffer->u_sp          = ???;
-    // buffer->u_sp_base     = ???;
+    // buffer->ptask         = g_tcbs[tid].????;
+
+    buffer->k_sp          = g_tcbs[tid].msp;
+    buffer->k_sp_base     = g_tcbs[tid].msp_base;
+    buffer->k_stack_size  = g_tcbs[tid].msp_stack_size;
+
+    buffer->u_sp          = g_tcbs[tid].psp;
+    buffer->u_sp_base     = g_tcbs[tid].psp_base;
+    buffer->u_stack_size  = g_tcbs[tid].psp_stack_size;
 
     return RTX_OK;     
 }

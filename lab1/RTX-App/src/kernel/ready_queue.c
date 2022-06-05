@@ -7,45 +7,47 @@ U8 priorityLevelToIndex(U8 priorityLevel) {
 	if (priorityLevel >= 0x80 && priorityLevel <= 0x83) {
 		return (priorityLevel - 0x80);
 	} else {
-		return MAX_U8;
+		return 4; // for the null task
 	}
 }
 
 // readyQueuesArray: Array of Ready Queues
 void initializeArrayOfReadyQueues(readyQueue_t * readyQueuesArray) {
-	for (U8 i = 0; i<4; i++){
+	for (U8 i = 0; i<5; i++){
 		readyQueuesArray[i].head = NULL;
 		readyQueuesArray[i].tail = NULL;
 	}
 }
 	
 // readyQueuesArray: Array of Ready Queues, priorityLevel: 0 to 3, tcb: to add
-void addTCBtoBack(readyQueue_t * readyQueuesArray, U8 priorityLevel, TCB tcb) {
-	if(readyQueuesArray[priorityLevel].tail){
-		readyQueuesArray[priorityLevel].tail->next = &tcb;
-		tcb.prev = readyQueuesArray[priorityLevel].tail;
-		tcb.next = NULL;
-		readyQueuesArray[priorityLevel].tail = &tcb;
+void addTCBtoBack(readyQueue_t * readyQueuesArray, U8 priorityLevel, TCB *tcb) {
+	U8 arrayIndex = priorityLevelToIndex(priorityLevel);
+	if(readyQueuesArray[arrayIndex].tail){
+		readyQueuesArray[arrayIndex].tail->next = tcb;
+		tcb->prev = readyQueuesArray[arrayIndex].tail;
+		tcb->next = NULL;
+		readyQueuesArray[arrayIndex].tail = tcb;
 	} else { // if queue is empty
-		tcb.prev = NULL;
-		tcb.next = NULL;
-		readyQueuesArray[priorityLevel].tail = &tcb;
-		readyQueuesArray[priorityLevel].head = &tcb;
+		tcb->prev = NULL;
+		tcb->next = NULL;
+		readyQueuesArray[arrayIndex].tail = tcb;
+		readyQueuesArray[arrayIndex].head = tcb;
 	}
 }
 
 // readyQueuesArray: Array of Ready Queues, priorityLevel: 0 to 3, tcb: to add
-void addTCBtoFront(readyQueue_t * readyQueuesArray, U8 priorityLevel, TCB tcb) {
-	if(readyQueuesArray[priorityLevel].head){
-		readyQueuesArray[priorityLevel].head->prev = &tcb;
-		tcb.next = readyQueuesArray[priorityLevel].head;
-		tcb.prev = NULL;
-		readyQueuesArray[priorityLevel].head = &tcb;
+void addTCBtoFront(readyQueue_t * readyQueuesArray, U8 priorityLevel, TCB *tcb) {
+	U8 arrayIndex = priorityLevelToIndex(priorityLevel);
+	if(readyQueuesArray[arrayIndex].head){
+		readyQueuesArray[arrayIndex].head->prev = tcb;
+		tcb->next = readyQueuesArray[arrayIndex].head;
+		tcb->prev = NULL;
+		readyQueuesArray[arrayIndex].head = tcb;
 	} else { // if queue is empty
-		tcb.next = NULL;
-		tcb.prev = NULL;
-		readyQueuesArray[priorityLevel].tail = &tcb;
-		readyQueuesArray[priorityLevel].head = &tcb;
+		tcb->next = NULL;
+		tcb->prev = NULL;
+		readyQueuesArray[arrayIndex].tail = tcb;
+		readyQueuesArray[arrayIndex].head = tcb;
 	}
 }
 
@@ -54,14 +56,14 @@ void addTCBtoFront(readyQueue_t * readyQueuesArray, U8 priorityLevel, TCB tcb) {
  * returns pointer to TCB that was removed from the HEAD of the queue
  * this function does NOT check if the queue is empty
  */
-TCB *removeTCB(readyQueue_t * readyQueuesArray, U8 priorityLevel) {
-	TCB *returnTCB = readyQueuesArray[priorityLevel].head;
-	if (readyQueuesArray[priorityLevel].head == readyQueuesArray[priorityLevel].tail){
-		readyQueuesArray[priorityLevel].head = NULL;
-		readyQueuesArray[priorityLevel].tail = NULL;
+TCB *removeTCB(readyQueue_t * readyQueuesArray, U8 arrayIndex) {
+	TCB *returnTCB = readyQueuesArray[arrayIndex].head;
+	if (readyQueuesArray[arrayIndex].head == readyQueuesArray[arrayIndex].tail){
+		readyQueuesArray[arrayIndex].head = NULL;
+		readyQueuesArray[arrayIndex].tail = NULL;
 	} else {
-		readyQueuesArray[priorityLevel].head = returnTCB->next;
-		readyQueuesArray[priorityLevel].head->prev = NULL;
+		readyQueuesArray[arrayIndex].head = returnTCB->next;
+		readyQueuesArray[arrayIndex].head->prev = NULL;
 		returnTCB->next = NULL;
 	}
 	return returnTCB;

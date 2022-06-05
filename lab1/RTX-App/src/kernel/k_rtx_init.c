@@ -46,7 +46,7 @@
 
 int errno = 0;
 
-readyQueue_t readyQueuesArray[4];
+readyQueue_t readyQueuesArray[5];
 
 /**************************************************************************//**
  * @brief   	system set up before calling rtx_init() from thread mode  
@@ -61,8 +61,10 @@ int k_pre_rtx_init (void *args)
         return RTX_ERR;
     }
     
-    __set_PSP((U32) k_alloc_p_stack(TID_NULL));
-    
+		U32* psp = (U32*)k_mpool_alloc(MPID_IRAM2, PROC_STACK_SIZE);
+		psp += (PROC_STACK_SIZE/4);
+    __set_PSP((U32) psp);
+
     return RTX_OK;
 }
 
@@ -77,12 +79,12 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     
     /* add timer(s) initialization code */
     
+		initializeArrayOfReadyQueues(readyQueuesArray);
+
     if ( k_tsk_init(tasks, num_tasks) != RTX_OK ) {
         return RTX_ERR;
     }
 		
-		initializeArrayOfReadyQueues(readyQueuesArray);
-    k_mpool_create(BUDDY, RAM1_START, RAM1_END);
 		/* add message passing initialization code */
     
     k_tsk_start();        // start the first task
