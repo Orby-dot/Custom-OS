@@ -137,7 +137,10 @@ TCB *scheduler(void)
     //return &g_tcbs[(++tid)%g_num_active_tasks];
 	for (U8 i = 0; i < 5 ;i++) {
 		if (readyQueuesArray[i].head){
-			return removeTCB(readyQueuesArray, i);
+			
+			TCB * selectedTCB = removeTCB(readyQueuesArray, i);
+			selectedTCB->state = RUNNING;
+			return selectedTCB;
 		}
 	}
 	return &g_tcbs[0]; // null task
@@ -416,6 +419,7 @@ int k_tsk_run_new(void)
 int k_tsk_yield(void)
 {
 	addTCBtoBack(readyQueuesArray,gp_current_task->prio,gp_current_task); // TODO: should we be passing pointer instead of value of gp_current_task?
+	gp_current_task->state = READY;
 	return k_tsk_run_new();
 }
 
@@ -557,6 +561,7 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 
 		freeTCB->initialized = 1;
 		addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+		gp_current_task->state = READY;
     return k_tsk_run_new();
 
 }
@@ -578,11 +583,43 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
     printf("k_tsk_set_prio: entering...\n\r");
     printf("task_id = %d, prio = %d.\n\r", task_id, prio);
 #endif /* DEBUG_0 */
-		U8 prioBefore = g_tcbs[(U32) task_id].prio;
-		g_tcbs[(U32) task_id].prio = prio;
-		addTCBtoBack(readyQueuesArray,prio,&g_tcbs[(U32) task_id]);
-		
-    return RTX_OK;    
+	
+		if (task_id == gp_current_task->tid)
+		{
+			if(gp_current_task->prio > prio)
+			{
+				gp_current_task->prio = prio;
+				
+				addTCBtoBack(readyQueuesArray,prio,gp_current_task);
+				gp_current_task->state = READY;
+				return k_tsk_run_new();
+				
+			}
+			else
+			{
+				gp_current_task->prio = prio;
+			}
+			
+		}
+		else 
+		{
+			TCB * selectedTCB = &g_tcbs[(U32) task_id];
+			if(selectedTCB->prio == prio)
+			{
+				return RTX_OK;
+			}
+			else
+			{
+				removeSpecificTCB(readyQueuesArray,prio,task_id);
+				
+				addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+				addTCBtoBack(readyQueuesArray,prio,selectedTCB);
+				
+				gp_current_task->state = READY;
+				
+				return k_tsk_run_new();
+			}	
+		}
 }
 
 /**
