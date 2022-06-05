@@ -556,7 +556,8 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 		freeTCB->msp = ksp;
 
 		freeTCB->initialized = 1;
-    return RTX_OK;
+		addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+    return k_tsk_run_new();
 
 }
 
@@ -565,6 +566,9 @@ void k_tsk_exit(void)
 #ifdef DEBUG_0
     printf("k_tsk_exit: entering...\n\r");
 #endif /* DEBUG_0 */
+	k_mpool_dealloc(0,gp_current_task->psp);
+	gp_current_task->state = DORMANT;
+	k_tsk_run_new();
     return;
 }
 
