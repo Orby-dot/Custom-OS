@@ -601,7 +601,7 @@ int k_tsk_get(task_t tid, RTX_TASK_INFO *buffer)
     }
 
     // TODO: Check if task_id is empty in g_tcbs - unknown if it should be null or tid null
-		if (g_tcbs[tid].tid == NULL) {
+		if (g_tcbs[tid].initialized == FALSE) {
 				errno = EINVAL;
 				return RTX_ERR;
 		}
@@ -609,15 +609,17 @@ int k_tsk_get(task_t tid, RTX_TASK_INFO *buffer)
     
     buffer->tid           = g_tcbs[tid].tid;
     buffer->prio          = g_tcbs[tid].prio;
-    // buffer->u_stack_size  = g_tcbs[tid].????;
     buffer->priv          = g_tcbs[tid].priv;
-    // buffer->ptask         = g_tcbs[tid].????;
-    // buffer->k_sp          = ???;
-    // buffer->k_sp_base     = ???;
-    // buffer->k_stack_size  = ???;
     buffer->state         = g_tcbs[tid].state;
-    // buffer->u_sp          = ???;
-    // buffer->u_sp_base     = ???;
+    // buffer->ptask         = g_tcbs[tid].????;
+
+    buffer->k_sp          = g_tcbs[tid].msp;
+    buffer->k_sp_base     = g_tcbs[tid].msp_base;
+    buffer->k_stack_size  = g_tcbs[tid].msp_stack_size;
+
+    buffer->u_sp          = g_tcbs[tid].psp;
+    buffer->u_sp_base     = g_tcbs[tid].psp_base;
+    buffer->u_stack_size  = g_tcbs[tid].psp_stack_size;
 
     return RTX_OK;     
 }
