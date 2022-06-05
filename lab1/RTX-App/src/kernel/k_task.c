@@ -613,12 +613,12 @@ int k_tsk_get(task_t tid, RTX_TASK_INFO *buffer)
     buffer->state         = g_tcbs[tid].state;
     // buffer->ptask         = g_tcbs[tid].????;
 
-    buffer->k_sp          = g_tcbs[tid].msp;
-    buffer->k_sp_base     = g_tcbs[tid].msp_base;
+    buffer->k_sp          = *g_tcbs[tid].msp;
+    buffer->k_sp_base     = *g_tcbs[tid].msp_base;
     buffer->k_stack_size  = g_tcbs[tid].msp_stack_size;
 
-    buffer->u_sp          = g_tcbs[tid].psp;
-    buffer->u_sp_base     = g_tcbs[tid].psp_base;
+    buffer->u_sp          = *g_tcbs[tid].psp;
+    buffer->u_sp_base     = *g_tcbs[tid].psp_base;
     buffer->u_stack_size  = g_tcbs[tid].psp_stack_size;
 
     return RTX_OK;     
