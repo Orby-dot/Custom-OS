@@ -68,3 +68,33 @@ TCB *removeTCB(readyQueue_t * readyQueuesArray, U8 arrayIndex) {
 	}
 	return returnTCB;
 }
+
+void removeSpecificTCB(readyQueue_t * readyQueuesArray, U8 priorityLevel, task_t tid) {
+	TCB *taskToRemove = readyQueuesArray[priorityLevel].head;
+	
+	while(taskToRemove && taskToRemove->tid!=tid){
+		taskToRemove = taskToRemove->next;
+	}
+	
+	if(taskToRemove){
+		
+		if(taskToRemove->prev){
+			taskToRemove->prev->next = taskToRemove->next;
+		}
+		
+		if (taskToRemove->next){
+			taskToRemove->next->prev = taskToRemove->prev;
+		}
+		
+		if(taskToRemove == readyQueuesArray[priorityLevel].head){
+			readyQueuesArray[priorityLevel].head = taskToRemove->next;
+		}
+		
+		if(taskToRemove == readyQueuesArray[priorityLevel].tail){
+			readyQueuesArray[priorityLevel].tail = taskToRemove->prev;
+		}
+		
+		taskToRemove->next = NULL;
+		taskToRemove->prev = NULL;
+	}
+}
