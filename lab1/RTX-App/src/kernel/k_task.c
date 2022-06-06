@@ -586,7 +586,7 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
 	
 		if (task_id == gp_current_task->tid)
 		{
-			if(gp_current_task->prio > prio)
+			if(gp_current_task->prio < prio)
 			{
 				gp_current_task->prio = prio;
 				
@@ -598,6 +598,7 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
 			else
 			{
 				gp_current_task->prio = prio;
+				return RTX_OK;
 			}
 			
 		}
