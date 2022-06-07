@@ -78,6 +78,7 @@ typedef struct tcb {
     U8          prio;         /**< scheduling priority                        */
     U8          state;        /**< task state                                 */
 		U32					psp_stack_size;
+		void        (*entry_point)();
 		U32*					psp_base;
 		U32					msp_stack_size;
 		U32*					msp_base;

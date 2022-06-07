@@ -1,4 +1,5 @@
 #include "common.h"
+#include "printf.h"
 
 #define ERROR 4294967295 // max U32
 
