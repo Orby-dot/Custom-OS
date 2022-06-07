@@ -323,6 +323,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
     }
 
     p_tcb->msp = ksp;
+		p_tcb->psp = usp;
 		if(tid != TID_NULL) addTCBtoBack(readyQueuesArray,p_tcb->prio,p_tcb);
 		p_tcb->initialized = 1;
 
@@ -525,12 +526,11 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
     
     // get kernel sp which should be initialized in freeTCB
 		if(freeTCB->initialized){
-			ksp = (U32*)freeTCB->msp_base;		
+			ksp = freeTCB->msp_base;		
 		}
 		else{
 			ksp = k_alloc_k_stack(freeTCB->tid);
-			freeTCB->msp = ksp;
-			
+			freeTCB->msp_base = ksp;
 		}
 		if ( ksp == NULL ) {
 				return RTX_ERR;
@@ -661,12 +661,12 @@ int k_tsk_get(task_t tid, RTX_TASK_INFO *buffer)
     buffer->state         = g_tcbs[tid].state;
     // buffer->ptask         = g_tcbs[tid].????;
 
-    buffer->k_sp          = *g_tcbs[tid].msp;
-    buffer->k_sp_base     = *g_tcbs[tid].msp_base;
+    buffer->k_sp          = (U32)g_tcbs[tid].msp;
+    buffer->k_sp_base     = (U32)g_tcbs[tid].msp_base;
     buffer->k_stack_size  = g_tcbs[tid].msp_stack_size;
 
-    buffer->u_sp          = *g_tcbs[tid].psp;
-    buffer->u_sp_base     = *g_tcbs[tid].psp_base;
+    buffer->u_sp          = (U32)g_tcbs[tid].psp;
+    buffer->u_sp_base     = (U32)g_tcbs[tid].psp_base;
     buffer->u_stack_size  = g_tcbs[tid].psp_stack_size;
 
     return RTX_OK;     
