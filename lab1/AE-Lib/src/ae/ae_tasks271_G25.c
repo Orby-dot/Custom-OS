@@ -106,7 +106,7 @@ void update_ae_xtest(int test_id)
 
 void gen_req0(int test_id)
 {
-    g_tsk_cases[test_id].p_ae_case->num_bits = 8;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = 9;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
     g_tsk_cases[test_id].len = 16; // assign a value no greater than MAX_LEN_SEQ
@@ -206,6 +206,11 @@ int test0_start(int test_id)
     sub_result = (buffer.state == 1) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);    
 
+    //test 0-[8]
+    (*p_index)++;
+    strcpy(g_ae_xtest.msg, "Checking entry point/ptask of 3rd, unprivileged task (READY)");
+    sub_result = (buffer.ptask == &task3) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);    
 
     task_t *p_seq_expt = g_tsk_cases[test_id].seq_expt;
     for ( int i = 0; i < 6; i += 3 ) {
