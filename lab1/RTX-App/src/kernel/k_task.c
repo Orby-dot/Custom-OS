@@ -53,7 +53,7 @@
 #include "k_rtx.h"
 #include "ready_queue.h"
 #include "k_mem.h"
-#include "tester2.h"
+// #include "tester2.h"
 /*
  *==========================================================================
  *                            GLOBAL VARIABLES

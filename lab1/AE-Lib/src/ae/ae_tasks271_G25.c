@@ -49,7 +49,7 @@ void printRTXtaskInfo(RTX_TASK_INFO *buffer) {
     printf("----- TASK GET OUTPUT ----- \r\n");
     printf("TID: %u\r\n", buffer->tid);
     printf("PRIO: x%x -- PRIV: %u -- STATE: %u \r\n", buffer->prio, buffer->priv, buffer->state);
-    printf("ENTRY POINT (ptask): x%x\r\n", buffer->ptask);
+    // print ptask: TODO:
     printf("K stack_size: x%x -- sp: x%x -- sp_base: x%x\r\n", buffer->k_stack_size, buffer->k_sp, buffer->k_sp_base);
     printf("U stack_size: x%x -- sp: x%x -- sp_base: x%x\r\n", buffer->u_stack_size, buffer->u_sp, buffer->u_sp_base);
     printf("----- -----\r\n");
@@ -129,22 +129,24 @@ int test0_start(int test_id)
     int     sub_result  = 0;
 
 
-    // Checking null task information
-    RTX_TASK_INFO buffer;
-    tsk_get(0, &buffer);
-    printRTXtaskInfo(&buffer);
-
     // Checking first privileged task information
+    RTX_TASK_INFO buffer;
     tsk_get(1, &buffer);
     printRTXtaskInfo(&buffer);
-
+	
     //test 0-[0]
     *p_index = 0;
+    strcpy(g_ae_xtest.msg, "Checking pstate of first, privileged task");
+    sub_result = (buffer.ptask == &priv_task1) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);    
+
+    //test 0-[1]
+    (*p_index)++;
     strcpy(g_ae_xtest.msg, "Checking privilege level of initial privileged task");
     sub_result = (buffer.priv == 1) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);    
 
-    //test 0-[1]
+    //test 0-[2]
     (*p_index)++;
     strcpy(g_ae_xtest.msg, "Checking state of initial privileged task (RUNNING)");
     sub_result = (buffer.state == 2) ? 1 : 0;
@@ -160,19 +162,19 @@ int test0_start(int test_id)
     tsk_get(tid1, &buffer);
     printRTXtaskInfo(&buffer);
 
-    //test 0-[2]
+    //test 0-[3]
     (*p_index)++;
     strcpy(g_ae_xtest.msg, "Checking privilege level of 2nd, unprivileged task");
     sub_result = (buffer.priv == 0) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
 
-    //test 0-[3]
+    //test 0-[4]
     (*p_index)++;
     strcpy(g_ae_xtest.msg, "Checking user stack size of 2nd, unprivileged task");
     sub_result = (buffer.u_stack_size == 0x200) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
 
-    //test 0-[4]
+    //test 0-[5]
     (*p_index)++;
     strcpy(g_ae_xtest.msg, "Checking state of 2nd, unprivileged task (READY)");
     sub_result = (buffer.state == 1) ? 1 : 0;
@@ -188,29 +190,24 @@ int test0_start(int test_id)
     tsk_get(tid2, &buffer);
     printRTXtaskInfo(&buffer);
 
-    //test 0-[5]
+    //test 0-[6]
     (*p_index)++;
     strcpy(g_ae_xtest.msg, "Checking privilege level of 3nd, unprivileged task");
     sub_result = (buffer.priv == 0) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
 
-    //test 0-[6]
+    //test 0-[7]
     (*p_index)++;
     strcpy(g_ae_xtest.msg, "Checking user stack size of 3rd, unprivileged task");
     sub_result = (buffer.u_stack_size == 0x201) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
 
-    //test 0-[7]
+    //test 0-[8]
     (*p_index)++;
     strcpy(g_ae_xtest.msg, "Checking state of 3rd, unprivileged task (READY)");
     sub_result = (buffer.state == 1) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);    
 
-    //test 0-[8]
-    (*p_index)++;
-    strcpy(g_ae_xtest.msg, "Checking entry point/ptask of 3rd, unprivileged task (READY)");
-    sub_result = (buffer.ptask == &task3) ? 1 : 0;
-    process_sub_result(test_id, *p_index, sub_result);    
 
     task_t *p_seq_expt = g_tsk_cases[test_id].seq_expt;
     for ( int i = 0; i < 6; i += 3 ) {
@@ -307,7 +304,7 @@ void task2(void)
     printf("===== task2 begins =====\r\n");
     task_t tid = tsk_gettid();
     int    test_id = 0;
-    
+
     printf("%s: TID = %d, task2: entering\r\n", PREFIX_LOG2, tid);
     for ( int i = 0; i < 2; i++) {
         printf("%s: TID = %d, task2: yielding cpu \r\n", PREFIX_LOG2, tid);

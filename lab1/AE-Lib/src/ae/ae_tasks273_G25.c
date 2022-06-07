@@ -68,6 +68,13 @@ void printAllTaskStates(void) {
     printf("END\r\n");
 }
 
+void printLSbuffer(	task_t *buffer, int count) {
+    for (int i = 0; i  < count; i++) {
+        printf("%u -> ", buffer[i]);
+    }
+    printf("END ls\r\n");
+}
+
 
 void set_ae_init_tasks (TASK_INIT **pp_tasks, int *p_num)
 {
@@ -119,7 +126,7 @@ void update_ae_xtest(int test_id)
 
 void gen_req0(int test_id)
 {
-    g_tsk_cases[test_id].p_ae_case->num_bits = 9;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = 11;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
     g_tsk_cases[test_id].len = 16; // assign a value no greater than MAX_LEN_SEQ
@@ -261,6 +268,7 @@ void task1(void)
     int ret_val =tsk_create(&new_task_tid, &task3, HIGH, 0x200);
     sub_result = ( ret_val == RTX_OK ) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
+    (*p_index)++;
 
     tsk_yield();
 
@@ -270,9 +278,16 @@ void task1(void)
 
     printf("===== task1 calling test exit =====\r\n");
 
-		task_t buffer;
-		printf("TASK 1 EXIT: %d \r\n", tsk_ls(&buffer, 10));
-		
+    task_t buffer[10];
+
+    int ret = tsk_ls(buffer, 10);
+    printf("TASK 1 EXIT: %d \r\n", ret);
+    printLSbuffer(buffer, ret);
+
+    strcpy(g_ae_xtest.msg, "LS Test: At the end, only 1 running with tid9");
+    sub_result = ( ret == 1 && buffer[0] == 9) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);
+
     test_exit();
 
     // tsk_exit();
@@ -315,6 +330,8 @@ void task3(void)
     printf("===== task3 begins =====\r\n");
     task_t tid = tsk_gettid();
     int    test_id = 0;
+    U8     *p_index    = &(g_ae_xtest.index);
+    int    sub_result  = 0;
     
     printf("%s: TID = %d, task2: entering\r\n", PREFIX_LOG2, tid);
     for ( int i = 0; i < 2; i++) {
@@ -330,9 +347,18 @@ void task3(void)
 
     printAllTaskStates();
 
-		task_t buffer;
-		printf("TASK 3 EXIT: %d \r\n", tsk_ls(&buffer, 10));
-		
+    task_t buffer[10];
+
+    int ret = tsk_ls(buffer, 10);
+    printf("TASK 3 EXIT: %d \r\n", ret);
+    printLSbuffer(buffer, ret);
+
+    strcpy(g_ae_xtest.msg, "LS Test: Before task 3 death, 2 tasks running with tid 1 and 9");
+    sub_result = ( ret == 2 && buffer[0] == 1 && buffer[1] == 9) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);
+    (*p_index)++;
+
+
     printf("===== task3 calling exit =====\r\n");
     tsk_exit();
 }

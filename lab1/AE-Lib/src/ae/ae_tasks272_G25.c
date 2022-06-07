@@ -151,7 +151,7 @@ int test0_start(int test_id)
     // creating a HIGH prio task 8 times, that runs task2 function
     for (U8 i = 0; i < 8; i++) {
         strcpy(g_ae_xtest.msg, "Testing that each of 8 tasks are successfully created \r\n");
-        ret_val = tsk_create(&tid1, &task2, HIGH, 0x200);  /*create a user task */
+        ret_val = tsk_create(&tid1, &task2, HIGH, 0);  /*create a user task */
         sub_result = (ret_val == RTX_OK) ? 1 : 0;
         process_sub_result(test_id, *p_index, sub_result);
         if ( ret_val != RTX_OK ) {
@@ -159,7 +159,7 @@ int test0_start(int test_id)
             test_exit();
         }
         tsk_get(tid1, &buffer);
-        // printRTXtaskInfo(&buffer);
+        printRTXtaskInfo(&buffer);
         (*p_index)++;
     }
 
