@@ -114,6 +114,10 @@ The memory map of the OS image may look like the following:
     
 ---------------------------------------------------------------------------*/ 
 
+BOOL debugEntryPrint = TRUE;
+
+
+
 /*
  *===========================================================================
  *                            FUNCTIONS
@@ -418,6 +422,7 @@ int k_tsk_run_new(void)
  *****************************************************************************/
 int k_tsk_yield(void)
 {
+    if (debugEntryPrint) printf("===== k_tsk_yield is called =====\r\n");
 	addTCBtoBack(readyQueuesArray,gp_current_task->prio,gp_current_task); // TODO: should we be passing pointer instead of value of gp_current_task?
 	gp_current_task->state = READY;
 	return k_tsk_run_new();
@@ -571,6 +576,7 @@ void k_tsk_exit(void)
 #ifdef DEBUG_0
     printf("k_tsk_exit: entering...\n\r");
 #endif /* DEBUG_0 */
+    if (debugEntryPrint) printf("===== task exit =====\r\n");
 	k_mpool_dealloc(0,gp_current_task->psp);
 	gp_current_task->state = DORMANT;
 	k_tsk_run_new();
