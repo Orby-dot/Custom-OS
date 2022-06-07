@@ -3,7 +3,7 @@
  *
  *                        OVERFLOW TESTING (passes)
  * 
- *                     Copyright ʕ◕ᴥ◕ ʔ PuffyPanda#1588
+ *                     Copyright ???? ? PuffyPanda#1588
  *                          All rights (not) reserved.
  *
  ****************************************************************************
@@ -176,6 +176,7 @@ int test0_start(int test_id)
     printAllTaskStates();
     
     printf("===== task exit called in main test =====\r\n");
+		
     tsk_exit();
     
     printf("===== this should never be run =====\r\n");
@@ -224,6 +225,9 @@ void priv_task1(void)
     }
 
     printf("===== priv_task1 calling exit =====\r\n");
+		
+		task_t buffer;
+		printf("PRIV TASK: %d", tsk_ls(&buffer, 10));
     tsk_exit();
 }
 
@@ -266,6 +270,9 @@ void task1(void)
 
     printf("===== task1 calling test exit =====\r\n");
 
+		task_t buffer;
+		printf("TASK 1 EXIT: %d \r\n", tsk_ls(&buffer, 10));
+		
     test_exit();
 
     // tsk_exit();
@@ -292,7 +299,11 @@ void task2(void)
     // printf("%s: TID = %d, task2: I should not run \r\n", PREFIX_LOG2, tid);
     update_exec_seq(test_id, tid);
 
+
     printf("===== task2 calling exit =====\r\n");
+		
+		task_t buffer;
+		printf("TASK 2 EXIT: %d \r\n", tsk_ls(&buffer, 10));
     tsk_exit();
 }
 
@@ -319,6 +330,9 @@ void task3(void)
 
     printAllTaskStates();
 
+		task_t buffer;
+		printf("TASK 3 EXIT: %d \r\n", tsk_ls(&buffer, 10));
+		
     printf("===== task3 calling exit =====\r\n");
     tsk_exit();
 }
