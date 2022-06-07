@@ -134,7 +134,6 @@ int test0_start(int test_id)
 {
     int ret_val = 10;
     task_t tid1;
-    task_t tid2;
     
     gen_req0(test_id);
     
@@ -158,7 +157,7 @@ int test0_start(int test_id)
             sub_result = 0;
             test_exit();
         }
-        tsk_get(tid1, &buffer);
+        // tsk_get(tid1, &buffer);
         // printRTXtaskInfo(&buffer);
         (*p_index)++;
     }
@@ -172,6 +171,7 @@ int test0_start(int test_id)
         sub_result = 0;
         test_exit();
     }
+    (*p_index)++;
 
     printAllTaskStates();
     
@@ -236,6 +236,8 @@ void task1(void)
 {
     printf("===== task1 begins =====\r\n");
     int test_id = 0;
+    U8     *p_index    = &(g_ae_xtest.index);
+    int    sub_result  = 0;
     
     task_t tid = tsk_gettid();    
     
@@ -252,9 +254,10 @@ void task1(void)
     }
     
     task_t new_task_tid;
-    int ret_val=tsk_create(&new_task_tid, &task3, HIGH, 0x200);
-    printf("Was task created? %d \r\n", ret_val);
-    
+    int ret_val =tsk_create(&new_task_tid, &task3, HIGH, 0x200);
+    sub_result = ( ret_val == RTX_OK ) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);
+
     tsk_yield();
 
     printf("===== back to task 1 =====\r\n");
