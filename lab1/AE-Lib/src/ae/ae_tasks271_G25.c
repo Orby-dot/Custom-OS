@@ -1,6 +1,8 @@
 /*
  ****************************************************************************
  *
+ *                               TSK_GET TESTING
+ * 
  *                     Copyright ʕ◕ᴥ◕ ʔ PuffyPanda#1588
  *                          All rights (not) reserved.
  *
@@ -48,8 +50,8 @@ void printRTXtaskInfo(RTX_TASK_INFO *buffer) {
     printf("TID: %u\r\n", buffer->tid);
     printf("PRIO: x%x -- PRIV: %u -- STATE: %u \r\n", buffer->prio, buffer->priv, buffer->state);
     // print ptask: TODO:
-    printf("K stack_size: x%x -- sp: %u -- sp_base: %u\r\n", buffer->k_stack_size, buffer->k_sp, buffer->k_sp_base);
-    printf("U stack_size: x%x -- sp: %u -- sp_base: %u\r\n", buffer->u_stack_size, buffer->u_sp, buffer->u_sp_base);
+    printf("K stack_size: x%x -- sp: x%x -- sp_base: x%x\r\n", buffer->k_stack_size, buffer->k_sp, buffer->k_sp_base);
+    printf("U stack_size: x%x -- sp: x%x -- sp_base: x%x\r\n", buffer->u_stack_size, buffer->u_sp, buffer->u_sp_base);
     printf("----- -----\r\n");
 }
 
@@ -104,8 +106,7 @@ void update_ae_xtest(int test_id)
 
 void gen_req0(int test_id)
 {
-    // bits[0:1] for two tsk_create, [2:5] for 4 tsk_yield return value checks
-    g_tsk_cases[test_id].p_ae_case->num_bits = 6;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = 8;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
     g_tsk_cases[test_id].len = 16; // assign a value no greater than MAX_LEN_SEQ
@@ -118,12 +119,6 @@ void gen_req0(int test_id)
 
 int test0_start(int test_id)
 {
-
-    // Checking first privileged task information
-    RTX_TASK_INFO buffer;
-    tsk_get(1, &buffer);
-    printRTXtaskInfo(&buffer);
-
     int ret_val = 10;
     task_t tid1;
     task_t tid2;
@@ -132,35 +127,81 @@ int test0_start(int test_id)
     
     U8      *p_index    = &(g_ae_xtest.index);
     int     sub_result  = 0;
-    
+
+
+    // Checking first privileged task information
+    RTX_TASK_INFO buffer;
+    tsk_get(1, &buffer);
+    printRTXtaskInfo(&buffer);
+
     //test 0-[0]
     *p_index = 0;
-    strcpy(g_ae_xtest.msg, "creating a HIGH prio task that runs task2 function");
-    ret_val = tsk_create(&tid1, &task2, HIGH, 0x199);  /*create a user task */
-    sub_result = (ret_val == RTX_OK) ? 1 : 0;
+    strcpy(g_ae_xtest.msg, "Checking privilege level of initial privileged task");
+    sub_result = (buffer.priv == 1) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);    
+
+    //test 0-[1]
+    (*p_index)++;
+    strcpy(g_ae_xtest.msg, "Checking state of initial privileged task (RUNNING)");
+    sub_result = (buffer.state == 2) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);    
+    
+    // creating a HIGH prio task that runs task2 function
+    ret_val = tsk_create(&tid1, &task2, HIGH, 0x199);  /*create a user task */
     if ( ret_val != RTX_OK ) {
         sub_result = 0;
         test_exit();
     }
 
-    // Checking 2nd task (unpriv)
     tsk_get(tid1, &buffer);
     printRTXtaskInfo(&buffer);
 
-    //test 0-[1]
+    //test 0-[2]
     (*p_index)++;
-    strcpy(g_ae_xtest.msg, "creating a HIGH prio task that runs task3 function");
-    ret_val = tsk_create(&tid2, &task3, HIGH, 0x201);  /*create a user task */
-    sub_result = (ret_val == RTX_OK) ? 1 : 0;
+    strcpy(g_ae_xtest.msg, "Checking privilege level of 2nd, unprivileged task");
+    sub_result = (buffer.priv == 0) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
+
+    //test 0-[3]
+    (*p_index)++;
+    strcpy(g_ae_xtest.msg, "Checking user stack size of 2nd, unprivileged task");
+    sub_result = (buffer.u_stack_size == 0x199) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);
+
+    //test 0-[4]
+    (*p_index)++;
+    strcpy(g_ae_xtest.msg, "Checking state of 2nd, unprivileged task (READY)");
+    sub_result = (buffer.state == 1) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);    
+
+
+    // creating a HIGH prio task that runs task3 function
+    ret_val = tsk_create(&tid2, &task3, HIGH, 0x201);  /*create a user task */
     if ( ret_val != RTX_OK ) {
         test_exit();
     }
 
-    // Checking 3rd task (unpriv)
     tsk_get(tid2, &buffer);
     printRTXtaskInfo(&buffer);
+
+    //test 0-[5]
+    (*p_index)++;
+    strcpy(g_ae_xtest.msg, "Checking privilege level of 3nd, unprivileged task");
+    sub_result = (buffer.priv == 0) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);
+
+    //test 0-[6]
+    (*p_index)++;
+    strcpy(g_ae_xtest.msg, "Checking user stack size of 3rd, unprivileged task");
+    sub_result = (buffer.u_stack_size == 0x201) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);
+
+    //test 0-[7]
+    (*p_index)++;
+    strcpy(g_ae_xtest.msg, "Checking state of 3rd, unprivileged task (READY)");
+    sub_result = (buffer.state == 1) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);    
+
 
     task_t *p_seq_expt = g_tsk_cases[test_id].seq_expt;
     for ( int i = 0; i < 6; i += 3 ) {
@@ -200,7 +241,7 @@ void priv_task1(void)
     int     sub_result  = 0;
     
     printf("%s: TID = %d, priv_task1: starting test0\r\n", PREFIX_LOG2, tid);
-    strcpy(g_ae_xtest.msg, "Four same priority tasks yielding cpu test");
+    // strcpy(g_ae_xtest.msg, "Four same priority tasks yielding cpu test");
     test0_start(test_id);
     
     for ( int i = 0; i < 2; i++) {
@@ -212,11 +253,7 @@ void priv_task1(void)
         printf("%s: TID = %d, priv_task1: yielding cpu\r\n", PREFIX_LOG2, tid );
         update_exec_seq(test_id, tid);
         int ret = tsk_yield();
-        // 0-[2:3]
         sprintf(g_ae_xtest.msg, "priv_task1 calling tsk_yield - %d", i+1);
-        sub_result = ( ret == RTX_OK ) ? 1 : 0;
-        (*p_index)++;
-        process_sub_result(test_id, *p_index, sub_result);
     }
     tsk_yield();
     tsk_yield();
@@ -248,9 +285,6 @@ void task1(void)
         update_exec_seq(test_id, tid);
         int ret = tsk_yield();
         sprintf(g_ae_xtest.msg, "task1 calling tsk_yield - %d", i+1);
-        sub_result = ( ret == RTX_OK ) ? 1 : 0;
-        (*p_index)++;
-        process_sub_result(test_id, *p_index, sub_result);
     }
     
     tsk_set_prio(tid, MEDIUM);
@@ -277,11 +311,7 @@ void task2(void)
         update_exec_seq(test_id, tid);
         tsk_yield();
         int ret = tsk_yield();
-        // 0-[4]
         sprintf(g_ae_xtest.msg, "task2 calling tsk_yield - %d", i+1);
-        sub_result = ( ret == RTX_OK ) ? 1 : 0;
-        (*p_index)++;
-        process_sub_result(test_id, *p_index, sub_result);
     }
     tsk_set_prio(tid, LOW);
     printf("%s: TID = %d, task2: I should not run \r\n", PREFIX_LOG2, tid);
@@ -310,14 +340,10 @@ void task3(void)
         update_exec_seq(test_id, tid);
         tsk_yield();
         int ret = tsk_yield();
-        // 0-[5]
         sprintf(g_ae_xtest.msg, "task3 calling tsk_yield - %d", i+1);
-        sub_result = ( ret == RTX_OK ) ? 1 : 0;
-        (*p_index)++;
-        process_sub_result(test_id, *p_index, sub_result);
     }
     tsk_set_prio(tid, LOWEST);
-    printf("%s: TID = %d, task3: I should not run \r\n", PREFIX_LOG2, tid);
+    // printf("%s: TID = %d, task3: I should not run \r\n", PREFIX_LOG2, tid);
     update_exec_seq(test_id, tid);
     
 
