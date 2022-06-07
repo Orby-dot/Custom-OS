@@ -71,6 +71,11 @@ int k_pre_rtx_init (void *args)
 int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
 {
     errno = 0;
+		if (num_tasks < 0)
+		{
+			errno = EINVAL;
+			return RTX_ERR;
+		}
     
     /* interrupts are already disabled when we enter here */
     if ( uart_irq_init(0) != RTX_OK ) {

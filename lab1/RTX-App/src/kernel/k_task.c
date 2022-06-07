@@ -230,6 +230,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
 
     if (p_taskinfo == NULL || p_tcb == NULL)
     {
+				errno = EINVAL;
         return RTX_ERR;
     }
 
@@ -248,6 +249,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
 
     usp = (U32*)(k_mpool_alloc(MPID_IRAM2, p_taskinfo->u_stack_size));
     if (usp == NULL) {
+				errno = ENOMEM;
         return RTX_ERR;
     }
 		p_tcb->psp_base = usp;
@@ -285,6 +287,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
     // allocate kernel stack for the task
     ksp = k_alloc_k_stack(tid);
     if ( ksp == NULL ) {
+				errno = ENOMEM;
         return RTX_ERR;
     }
 		p_tcb->msp_base = ksp;
@@ -444,6 +447,11 @@ task_t k_tsk_gettid(void)
 */
 int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size)
 {
+	if (prio > LOWEST || prio < HIGH)
+	{
+		errno = EINVAL;
+		return RTX_ERR;
+	}
 #ifdef DEBUG_0
     printf("k_tsk_create: entering...\n\r");
     printf("task = 0x%x, task_entry = 0x%x, prio=%d, stack_size = %d\n\r", task, task_entry, prio, stack_size);
@@ -465,6 +473,7 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 			}
 		}
 		if (freeTCB->priv == 2){
+			errno = EAGAIN;
 			return RTX_ERR; // look into correct return
 		}
 		
@@ -482,6 +491,7 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
      * -------------------------------------------------------------*/
 		usp = (U32*)(k_mpool_alloc(MPID_IRAM2, stack_size));
     if (usp == NULL) {
+			errno = ENOMEM;
         return RTX_ERR;
     }
 		freeTCB->psp_base = usp;
@@ -528,6 +538,7 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 			
 		}
 		if ( ksp == NULL ) {
+				errno = ENOMEM;
 				return RTX_ERR;
 		}		
 
@@ -583,6 +594,12 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
     printf("k_tsk_set_prio: entering...\n\r");
     printf("task_id = %d, prio = %d.\n\r", task_id, prio);
 #endif /* DEBUG_0 */
+
+	if(prio > LOWEST || prio < HIGH)
+	{
+		errno = EINVAL;
+		return RTX_ERR;
+	}
 	
 		if (task_id == gp_current_task->tid)
 		{
@@ -605,7 +622,12 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
 		else 
 		{
 			TCB * selectedTCB = &g_tcbs[(U32) task_id];
-			if(selectedTCB->prio == prio)
+			if((selectedTCB->priv == 1 && gp_current_task == 0) ||selectedTCB->prio == PRIO_NULL)
+			{
+				errno = EPERM;
+				return RTX_ERR;
+			}
+			else if(selectedTCB->prio == prio)
 			{
 				return RTX_OK;
 			}
