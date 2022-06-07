@@ -49,7 +49,7 @@ void printRTXtaskInfo(RTX_TASK_INFO *buffer) {
     printf("----- TASK GET OUTPUT ----- \r\n");
     printf("TID: %u\r\n", buffer->tid);
     printf("PRIO: x%x -- PRIV: %u -- STATE: %u \r\n", buffer->prio, buffer->priv, buffer->state);
-    // print ptask: TODO:
+    printf("ENTRY POINT (ptask): x%x\r\n", buffer->ptask);
     printf("K stack_size: x%x -- sp: x%x -- sp_base: x%x\r\n", buffer->k_stack_size, buffer->k_sp, buffer->k_sp_base);
     printf("U stack_size: x%x -- sp: x%x -- sp_base: x%x\r\n", buffer->u_stack_size, buffer->u_sp, buffer->u_sp_base);
     printf("----- -----\r\n");
@@ -129,8 +129,12 @@ int test0_start(int test_id)
     int     sub_result  = 0;
 
 
-    // Checking first privileged task information
+    // Checking null task information
     RTX_TASK_INFO buffer;
+    tsk_get(0, &buffer);
+    printRTXtaskInfo(&buffer);
+
+    // Checking first privileged task information
     tsk_get(1, &buffer);
     printRTXtaskInfo(&buffer);
 
@@ -237,8 +241,6 @@ void priv_task1(void)
 
     task_t tid = tsk_gettid();
     int test_id = 0;
-    U8      *p_index    = &(g_ae_xtest.index);
-    int     sub_result  = 0;
     
     printf("%s: TID = %d, priv_task1: starting test0\r\n", PREFIX_LOG2, tid);
     // strcpy(g_ae_xtest.msg, "Four same priority tasks yielding cpu test");
@@ -270,8 +272,6 @@ void task1(void)
 {
     printf("===== task1 begins =====\r\n");
     int test_id = 0;
-    U8      *p_index    = &(g_ae_xtest.index);
-    int     sub_result  = 0;
     
     task_t tid = tsk_gettid();    
     
@@ -302,8 +302,6 @@ void task2(void)
     printf("===== task2 begins =====\r\n");
     task_t tid = tsk_gettid();
     int    test_id = 0;
-    U8     *p_index    = &(g_ae_xtest.index);
-    int    sub_result  = 0;
     
     printf("%s: TID = %d, task2: entering\r\n", PREFIX_LOG2, tid);
     for ( int i = 0; i < 2; i++) {
@@ -330,8 +328,7 @@ void task3(void)
 
     int    test_id = 0;
     task_t tid = tsk_gettid();
-    U8     *p_index    = &(g_ae_xtest.index);
-    int    sub_result  = 0;
+
     
     printf("%s: TID = %d, task3: entering \r\n", PREFIX_LOG2, tid);
     
