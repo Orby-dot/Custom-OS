@@ -249,13 +249,14 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
      *            so that you use your own dynamic memory allocator
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
-
-    usp = (U32*)(k_mpool_alloc(MPID_IRAM2, p_taskinfo->u_stack_size));
+		
+		U32 sizeToAllocate = p_taskinfo->u_stack_size>PROC_STACK_SIZE ? p_taskinfo->u_stack_size : PROC_STACK_SIZE;
+    usp = (U32*)(k_mpool_alloc(MPID_IRAM2, sizeToAllocate));
     if (usp == NULL) {
         return RTX_ERR;
     }
 		p_tcb->psp_base = usp;
-		p_tcb->psp_stack_size = p_taskinfo->u_stack_size;
+		p_tcb->psp_stack_size = sizeToAllocate;
 		p_tcb->entry_point = p_taskinfo->ptask;
 
     /*-------------------------------------------------------------------
@@ -486,12 +487,13 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
      *            so that you use your own dynamic memory allocator
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
-		usp = (U32*)(k_mpool_alloc(MPID_IRAM2, stack_size));
+		U32 sizeToAllocate = stack_size>PROC_STACK_SIZE ? stack_size : PROC_STACK_SIZE;
+		usp = (U32*)(k_mpool_alloc(MPID_IRAM2, sizeToAllocate));
     if (usp == NULL) {
         return RTX_ERR;
     }
 		freeTCB->psp_base = usp;
-		freeTCB->psp_stack_size = stack_size;
+		freeTCB->psp_stack_size = sizeToAllocate;
 
     /*-------------------------------------------------------------------
      *  Step2: create task's thread mode initial context on the user stack.

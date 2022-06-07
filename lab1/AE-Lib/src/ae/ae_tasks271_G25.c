@@ -169,7 +169,7 @@ int test0_start(int test_id)
     //test 0-[3]
     (*p_index)++;
     strcpy(g_ae_xtest.msg, "Checking user stack size of 2nd, unprivileged task");
-    sub_result = (buffer.u_stack_size == 0x199) ? 1 : 0;
+    sub_result = (buffer.u_stack_size == 0x200) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
 
     //test 0-[4]
