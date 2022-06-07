@@ -255,8 +255,8 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
         return RTX_ERR;
     }
 		p_tcb->psp_base = usp;
-		usp += p_taskinfo->u_stack_size/4;
 		p_tcb->psp_stack_size = p_taskinfo->u_stack_size;
+		p_tcb->entry_point = p_taskinfo->ptask;
 
     /*-------------------------------------------------------------------
      *  Step2: create task's thread mode initial context on the user stack.
@@ -492,7 +492,6 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
     }
 		freeTCB->psp_base = usp;
 		freeTCB->psp_stack_size = stack_size;
-		usp += stack_size/4;
 
     /*-------------------------------------------------------------------
      *  Step2: create task's thread mode initial context on the user stack.
@@ -535,6 +534,8 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 		if ( ksp == NULL ) {
 				return RTX_ERR;
 		}		
+		
+		freeTCB->entry_point = task_entry;
 
     /*---------------------------------------------------------------
      *  Step3: create task kernel initial context on kernel stack
