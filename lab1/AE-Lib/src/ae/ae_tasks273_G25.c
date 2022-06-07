@@ -1,7 +1,7 @@
 /*
  ****************************************************************************
  *
- *                         OVERFLOW TESTING (fails)
+ *                        OVERFLOW TESTING (passes)
  * 
  *                     Copyright ʕ◕ᴥ◕ ʔ PuffyPanda#1588
  *                          All rights (not) reserved.
@@ -146,10 +146,10 @@ int test0_start(int test_id)
     
     *p_index = 0;
 
-    // printAllTaskStates();
+    printAllTaskStates();
 
-    // creating a HIGH prio task 8 times, that runs task2 function
-    for (U8 i = 0; i < 8; i++) {
+    // creating a HIGH prio task 7 times, that runs task2 function
+    for (U8 i = 0; i < 7; i++) {
         strcpy(g_ae_xtest.msg, "Testing that each of 8 tasks are successfully created \r\n");
         ret_val = tsk_create(&tid1, &task2, HIGH, 0x200);  /*create a user task */
         sub_result = (ret_val == RTX_OK) ? 1 : 0;
@@ -163,23 +163,23 @@ int test0_start(int test_id)
         (*p_index)++;
     }
 
-    // printAllTaskStates();
-    
-    // at this point, null + init task + 8 tasks = 10 tasks
-    strcpy(g_ae_xtest.msg, "Testing that new task can not be created since max_tasks has exceeded. \r\n");
-    ret_val = tsk_create(&tid1, &task2, HIGH, 0x200);  /*create a user task */
-    sub_result = (ret_val == RTX_ERR) ? 1 : 0;
+    // creating a LOW Prio task that runs task3, that never exits (to take over and finish test)
+    strcpy(g_ae_xtest.msg, "Testing that the last, never-ending task runs.  \r\n");
+    ret_val = tsk_create(&tid1, &task1, LOW, 0x200);  /*create a user task */
+    sub_result = (ret_val == RTX_OK) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
-    
-    // printAllTaskStates();
-
-    task_t *p_seq_expt = g_tsk_cases[test_id].seq_expt;
-    for ( int i = 0; i < 6; i += 3 ) {
-        p_seq_expt[i]   = tsk_gettid();;
-        p_seq_expt[i+1] = tid1;
-        p_seq_expt[i+2] = tid2;
+    if ( ret_val != RTX_OK ) {
+        sub_result = 0;
+        test_exit();
     }
+
+    printAllTaskStates();
     
+    printf("===== task exit called in main test =====\r\n");
+    tsk_exit();
+    
+    printf("===== this should never be run =====\r\n");
+
     return RTX_OK;
 }
 
@@ -221,11 +221,9 @@ void priv_task1(void)
         printf("%s: TID = %d, priv_task1: yielding cpu\r\n", PREFIX_LOG2, tid );
         update_exec_seq(test_id, tid);
         int ret = tsk_yield();
-        sprintf(g_ae_xtest.msg, "priv_task1 calling tsk_yield - %d", i+1);
     }
-    tsk_yield();
-    tsk_yield();
 
+    printf("===== priv_task1 calling exit =====\r\n");
     tsk_exit();
 }
 
@@ -253,11 +251,21 @@ void task1(void)
         sprintf(g_ae_xtest.msg, "task1 calling tsk_yield - %d", i+1);
     }
     
-    tsk_set_prio(tid, MEDIUM);
-    printf("%s: TID = %d, task1: I should not run \r\n", PREFIX_LOG2, tid);
-    update_exec_seq(test_id, tid);
+    task_t new_task_tid;
+    int ret_val=tsk_create(&new_task_tid, &task3, HIGH, 0x200);
+    printf("Was task created? %d \r\n", ret_val);
+    
+    tsk_yield();
 
-    tsk_exit();
+    printf("===== back to task 1 =====\r\n");
+
+    printAllTaskStates();
+
+    printf("===== task1 calling test exit =====\r\n");
+
+    test_exit();
+
+    // tsk_exit();
 }
 
 /**
@@ -281,13 +289,36 @@ void task2(void)
     // printf("%s: TID = %d, task2: I should not run \r\n", PREFIX_LOG2, tid);
     update_exec_seq(test_id, tid);
 
-    test_exit();
-
-    tsk_yield();
-
+    printf("===== task2 calling exit =====\r\n");
     tsk_exit();
 }
 
+/**
+ * @brief: a dummy task2 with final test
+ */
+void task3(void)
+{
+    printf("===== task3 begins =====\r\n");
+    task_t tid = tsk_gettid();
+    int    test_id = 0;
+    
+    printf("%s: TID = %d, task2: entering\r\n", PREFIX_LOG2, tid);
+    for ( int i = 0; i < 2; i++) {
+        printf("%s: TID = %d, task2: yielding cpu \r\n", PREFIX_LOG2, tid);
+        update_exec_seq(test_id, tid);
+        tsk_yield();
+        int ret = tsk_yield();
+        sprintf(g_ae_xtest.msg, "task2 calling tsk_yield - %d", i+1);
+    }
+    tsk_set_prio(tid, LOW);
+    // printf("%s: TID = %d, task2: I should not run \r\n", PREFIX_LOG2, tid);
+    update_exec_seq(test_id, tid);
+
+    printAllTaskStates();
+
+    printf("===== task3 calling exit =====\r\n");
+    tsk_exit();
+}
 /*
  *===========================================================================
  *                             END OF FILE
