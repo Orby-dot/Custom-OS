@@ -650,10 +650,10 @@ int k_tsk_get(task_t tid, RTX_TASK_INFO *buffer)
     }
 
     // Check if task_id is empty in g_tcbs - unknown if it should be null or tid null
-		if (g_tcbs[tid].initialized == FALSE) {
-				errno = EINVAL;
-				return RTX_ERR;
-		}
+    if (g_tcbs[tid].initialized == FALSE) {
+            errno = EINVAL;
+            return RTX_ERR;
+    }
     
     buffer->tid           = g_tcbs[tid].tid;
     buffer->prio          = g_tcbs[tid].prio;
