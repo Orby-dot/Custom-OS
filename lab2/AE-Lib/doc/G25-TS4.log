@@ -113,4 +113,29 @@ G99-TS200-LOG2: TID = 1, task2: entering
 G99-TS200-LOG2: TID = 1, task2: yielding cpu 
 ===== k_tsk_yield is called =====
 ===== k_tsk_yield is called =====
-G9
+G99-TS200-LOG2: TID = 1, task2: yielding cpu 
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+G99-TS200-LOG: Test[0]-[8]: task2 calling tsk_yield - 2.
+G99-TS200-LOG: Test[0]-[8]: result = 1.
+===== k_tsk_yield is called =====
+1 -> 2 -> 0 -> 0 -> 0 -> 0 -> 0 -> 0 -> 0 -> 1 -> END
+TASK 3 EXIT: 2 
+1 -> 9 -> END ls
+G99-TS200-LOG: Test[0]-[9]: LS Test: Before task 3 death, 2 tasks running with tid 1 and 9.
+G99-TS200-LOG: Test[0]-[9]: result = 1.
+===== task3 calling exit =====
+===== task exit =====
+===== back to task 1 =====
+1 -> 0 -> 0 -> 0 -> 0 -> 0 -> 0 -> 0 -> 0 -> 2 -> END
+===== task1 calling test exit =====
+TASK 1 EXIT: 1 
+9 -> END ls
+G99-TS200-LOG: Test[0]-[10]: LS Test: At the end, only 1 running with tid9.
+G99-TS200-LOG: Test[0]-[10]: result = 1.
+G99-TS200: FINISHED
+G99-TS200-LOG: Test 0: 11/11 PASSED. Expected = 0x7FF, result = 0x7FF
+G99-TS200: 1/1 test function(s) COMPLETED.
+G99-TS200: 11/11 tests PASSED.
+G99-TS200: 0/11 tests FAILED.
+G99-TS200: END

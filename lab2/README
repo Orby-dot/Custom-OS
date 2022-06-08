@@ -11,3 +11,5 @@ lab2_report.csv: Lab1 report template file.
 rtx.uvmpw: the multi-project workspace profile that contains both the AE-Lib and RTX-App projects. 
 
 We have 4 test files. Relevant files are ready_queue.c/.h and k_task.c/.h, along with the test of the .c/.h files in the kernel from Lab 1
+
+**NOTE:** Our test logs on SIM, values may vary on RAM but the tests should still pass.
