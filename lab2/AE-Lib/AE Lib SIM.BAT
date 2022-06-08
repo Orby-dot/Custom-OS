@@ -8,5 +8,5 @@ SET CPU_CLOCK=0x00B71B00
 "C:\Software\Keil_v5\ARM\ARMCC\Bin\ArmCC" --Via ".\objects\sim\ae_timer.__i"
 "C:\Software\Keil_v5\ARM\ARMCC\Bin\ArmCC" --Via ".\objects\sim\ae_util.__i"
 "C:\Software\Keil_v5\ARM\ARMCC\Bin\ArmCC" --Via ".\objects\sim\main.__i"
-"C:\Software\Keil_v5\ARM\ARMCC\Bin\ArmCC" --Via ".\objects\sim\ae_tasks1_g25.__i"
+"C:\Software\Keil_v5\ARM\ARMCC\Bin\ArmCC" --Via ".\objects\sim\ae_tasks.__i"
 "C:\Software\Keil_v5\ARM\ARMCC\Bin\ArmAr" --Via ".\Objects\SIM\ArInp.Scr"
