@@ -1,4 +1,4 @@
-ECE350 P1 Skeleton Files
+ECE350 P2 Submission
 
 Group 25: Aryaman, Kevin, Jason, Nick
 
@@ -7,7 +7,7 @@ AE-Lib/  The automated testing framework library uVision project.
 include/ The RTX API, board support package, and automated testing suite header files folder. 
 RTX-APP/ The RTX application skelton project which includes the kernel.
 
-lab1_report.csv: Lab1 report template file.
+lab2_report.csv: Lab1 report template file.
 rtx.uvmpw: the multi-project workspace profile that contains both the AE-Lib and RTX-App projects. 
 
-We have 7 test suites under AE-Lib/src/ae. Relevant files for the project are free_list.c/.h, bit_array.c/.h, teser.c/.h, helper.c/.h
+We have 4 test files. Relevant files are reqady_queue.c/.h and k_task.c/.h
