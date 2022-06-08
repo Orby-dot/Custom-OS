@@ -1,0 +1,75 @@
+G99-TS200: START
+ 
+===== k_tsk_yield is called =====
+===== priv_task1 begins =====
+G99-TS200-LOG2: TID = 1, priv_task1: starting test0
+----- TASK GET OUTPUT ----- 
+TID: 1
+PRIO: x82 -- PRIV: 1 -- STATE: 2 
+K stack_size: x400 -- sp: x10000820 -- sp_base: x10000850
+U stack_size: x200 -- sp: x2007c3e0 -- sp_base: x2007c400
+----- -----
+G99-TS200-LOG: Test[0]-[0]: Checking pstate of first, privileged task.
+G99-TS200-LOG: Test[0]-[0]: result = 1.
+G99-TS200-LOG: Test[0]-[1]: Checking privilege level of initial privileged task.
+G99-TS200-LOG: Test[0]-[1]: result = 1.
+G99-TS200-LOG: Test[0]-[2]: Checking state of initial privileged task (RUNNING).
+G99-TS200-LOG: Test[0]-[2]: result = 1.
+===== task2 begins =====
+G99-TS200-LOG2: TID = 2, task2: entering
+G99-TS200-LOG2: TID = 2, task2: yielding cpu 
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+G99-TS200-LOG2: TID = 2, task2: yielding cpu 
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+----- TASK GET OUTPUT ----- 
+TID: 2
+PRIO: x82 -- PRIV: 0 -- STATE: 1 
+K stack_size: x0 -- sp: x10000bf0 -- sp_base: x10000c50
+U stack_size: x200 -- sp: x2007c5e0 -- sp_base: x2007c600
+----- -----
+G99-TS200-LOG: Test[0]-[3]: Checking privilege level of 2nd, unprivileged task.
+G99-TS200-LOG: Test[0]-[3]: result = 1.
+G99-TS200-LOG: Test[0]-[4]: Checking user stack size of 2nd, unprivileged task.
+G99-TS200-LOG: Test[0]-[4]: result = 1.
+G99-TS200-LOG: Test[0]-[5]: Checking state of 2nd, unprivileged task (READY).
+G99-TS200-LOG: Test[0]-[5]: result = 1.
+===== task3 begins =====
+G99-TS200-LOG2: TID = 3, task3: entering 
+G99-TS200-LOG2: TID = 3, task3: yielding cpu 
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+G99-TS200-LOG2: TID = 3, task3: yielding cpu 
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+----- TASK GET OUTPUT ----- 
+TID: 3
+PRIO: x83 -- PRIV: 0 -- STATE: 1 
+K stack_size: x0 -- sp: x10000ff0 -- sp_base: x10001050
+U stack_size: x201 -- sp: x2007c7e0 -- sp_base: x2007c800
+----- -----
+G99-TS200-LOG: Test[0]-[6]: Checking privilege level of 3nd, unprivileged task.
+G99-TS200-LOG: Test[0]-[6]: result = 1.
+G99-TS200-LOG: Test[0]-[7]: Checking user stack size of 3rd, unprivileged task.
+G99-TS200-LOG: Test[0]-[7]: result = 1.
+G99-TS200-LOG: Test[0]-[8]: Checking state of 3rd, unprivileged task (READY).
+G99-TS200-LOG: Test[0]-[8]: result = 1.
+AAAAA
+G99-TS200-LOG2: TID = 1, priv_task1: yielding cpu
+===== k_tsk_yield is called =====
+G99-TS200-LOG2: TID = 2, task2: I should not run 
+===== k_tsk_yield is called =====
+BBBBB
+G99-TS200-LOG2: TID = 1, priv_task1: yielding cpu
+===== k_tsk_yield is called =====
+===== task exit =====
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+===== task exit =====
+G99-TS200: FINISHED
+G99-TS200-LOG: Test 0: 9/9 PASSED. Expected = 0x1FF, result = 0x1FF
+G99-TS200: 1/1 test function(s) COMPLETED.
+G99-TS200: 9/9 tests PASSED.
+G99-TS200: 0/9 tests FAILED.
+G99-TS200: END
