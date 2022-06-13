@@ -1,0 +1,34 @@
+=======RAM Target LOG - Wed Jun  8 08:53:58 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS234
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2022.06.08 08:54:04 =~=~=~=~=~=~=~=~=~=~=~=
+G99-TS234: START
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+G99-TS234-LOG: Start Check 
+G99-TS234-LOG: Test[0]-[0]: Initialize enough tasks to exceed MAX_TASKS.
+G99-TS234-LOG: Test[0]-[0]: result = 0.
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+===== k_tsk_yield is called =====
+===== task exit =====
+===== task exit =====
+===== task exit =====
+===== task exit =====
+===== k_tsk_yield is called =====
+===== task exit =====
+===== task exit =====
+===== task exit =====
+===== task exit =====
+G99-TS234-LOG: Test[0]-[1]: Let all tasks except 1 exit and then check number of non-dormant tasks..
+G99-TS234-LOG: Test[0]-[1]: result = 0.
+G99-TS234: FINISHED
+G99-TS234-LOG: Test 0: 0/2 PASSED. Expected = 0x3, result = 0x0
+G99-TS234: 1/1 test function(s) COMPLETED.
+G99-TS234: 0/2 tests PASSED.
+G99-TS234: 2/2 tests FAILED.
+G99-TS234: END

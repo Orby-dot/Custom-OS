@@ -1,0 +1,62 @@
+=======SIM Target FLASH DOWNLOAD LOG - Wed Jun  8 08:57:09 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS260
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2022.06.08 08:57:15 =~=~=~=~=~=~=~=~=~=~=~=
+G99-TS260: START
+===== k_tsk_yield is called =====
+G99-TS260-LOG2: TID = 1, priv_task1: starting test0
+G99-TS260-LOG: Test[0]-[0]: checking IRAM1.
+G99-TS260-LOG: Test[0]-[0]: result = 1.
+G99-TS260-LOG: Test[0]-[1]: checking user stack in IRAM2.
+G99-TS260-LOG: Test[0]-[1]: result = 1.
+G99-TS260-LOG: Test[0]-[2]: trying to change NULL task priority to LOWEST.
+G99-TS260-LOG: Test[0]-[2]: result = 1.
+G99-TS260-LOG: Test[0]-[3]: checking errno.
+G99-TS260-LOG: Test[0]-[3]: result = 0.
+G99-TS260-LOG: Test[0]-[4]: creating a HIGH unpriv. task exectuing task1 function.
+G99-TS260-LOG: Test[0]-[4]: result = 1.
+G99-TS260-LOG: Test[0]-[5]: trying to change tid = 2 priority to 0x90.
+G99-TS260-LOG: Test[0]-[5]: result = 1.
+G99-TS260-LOG2: TID = 2, task1: entering 
+G99-TS260-LOG: Test[0]-[6]: unpriv. task1 (tid = 2) trying to change priv. priv_task1 (tid = 1) priority to HIGH.
+G99-TS260-LOG: Test[0]-[6]: result = 0.
+G99-TS260-LOG: Test[0]-[7]: checking errno is EPERM or not .
+G99-TS260-LOG: Test[0]-[7]: result = 0.
+G99-TS260-LOG: Test[0]-[8]: checking errno is EPERM or not .
+G99-TS260-LOG: Test[0]-[8]: result = 1.
+AAAAA
+G99-TS260-LOG2: TID = 1, priv_task1: yielding cpu
+===== k_tsk_yield is called =====
+G99-TS260-LOG: Test[0]-[9]: priv_task1 calling tsk_yield - 1.
+G99-TS260-LOG: Test[0]-[9]: result = 1.
+BBBBB
+G99-TS260-LOG2: TID = 1, priv_task1: yielding cpu
+===== k_tsk_yield is called =====
+G99-TS260-LOG: Test[0]-[10]: priv_task1 calling tsk_yield - 2.
+G99-TS260-LOG: Test[0]-[10]: result = 1.
+G99-TS260-LOG: real exec order: 1 -> 2 -> 2 -> 1 -> 1 -> NIL
+G99-TS260-LOG: expt exec order: 1 -> 2 -> 2 -> 1 -> 1 -> NIL
+G99-TS260-LOG: Test[1]-[0]: checking execution shortfalls.
+G99-TS260-LOG: Test[1]-[0]: result = 1.
+G99-TS260-LOG: Test[1]-[1]: checking unexpected execution once.
+G99-TS260-LOG: Test[1]-[1]: result = 1.
+G99-TS260-LOG: Test[1]-[2]: checking unexpected execution twice.
+G99-TS260-LOG: Test[1]-[2]: result = 1.
+G99-TS260-LOG: Test[1]-[3]: checking correct number of executions.
+G99-TS260-LOG: Test[1]-[3]: result = 1.
+G99-TS260-LOG: Test[1]-[4]: checking execution sequence @ 0.
+G99-TS260-LOG: Test[1]-[4]: result = 1.
+G99-TS260-LOG: Test[1]-[5]: checking execution sequence @ 1.
+G99-TS260-LOG: Test[1]-[5]: result = 1.
+G99-TS260-LOG: Test[1]-[6]: checking execution sequence @ 2.
+G99-TS260-LOG: Test[1]-[6]: result = 1.
+G99-TS260-LOG: Test[1]-[7]: checking execution sequence @ 3.
+G99-TS260-LOG: Test[1]-[7]: result = 1.
+G99-TS260-LOG: Test[1]-[8]: checking execution sequence @ 4.
+G99-TS260-LOG: Test[1]-[8]: result = 1.
+G99-TS260: FINISHED
+G99-TS260-LOG: Test 0: 8/11 PASSED. Expected = 0x7FF, result = 0x737
+G99-TS260-LOG: Test 1: 9/9 PASSED. Expected = 0x1FF, result = 0x1FF
+G99-TS260: 2/2 test function(s) COMPLETED.
+G99-TS260: 17/20 tests PASSED.
+G99-TS260: 3/20 tests FAILED.
+G99-TS260: END

@@ -1,0 +1,23 @@
+Weight,,Weight/sub,GID,25
+,,,Comment,210 and 250 fail
+,,,Discount factor,1
+,,,Grade,86
+,# sub_result,,Raw points,86
+5,5,1,Build,5
+5,1,5,Report,1
+4,1,4,TS210-TF0,1
+5,1,5,TS210-TF1,1
+4,1,4,TS210-TF2,1
+2,1,2,TS210-TF3,1
+5,10,0.5,TS220-TF0,10
+6.5,13,0.5,TS220-TF1,13
+6,6,1,TS231-TF0,6
+5,10,0.5,TS232-TF0,10
+8,4,2,TS233-TF0,4
+4,2,2,TS234-TF0,0
+6,6,1,TS240-TF0,6
+7,14,0.5,TS240-TF1,8
+9,9,1,TS250-TF0,9
+8.5,17,0.5,TS250-TF1,6
+5.5,11,0.5,TS260-TF0,8
+4.5,9,0.5,TS260-TF1,9

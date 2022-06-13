@@ -1,0 +1,23 @@
+=======SIM Target FLASH DOWNLOAD LOG - Wed Jun  8 08:53:26 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS233
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2022.06.08 08:53:32 =~=~=~=~=~=~=~=~=~=~=~=
+G99-TS233: START
+===== k_tsk_yield is called =====
+===== task exit =====
+===== task exit =====
+===== task exit =====
+G99-TS233-LOG: start check seq
+G99-TS233-LOG: Test[0]-[0]: .
+G99-TS233-LOG: Test[0]-[0]: result = 1.
+G99-TS233-LOG: Test[0]-[1]: .
+G99-TS233-LOG: Test[0]-[1]: result = 1.
+G99-TS233-LOG: Test[0]-[2]: .
+G99-TS233-LOG: Test[0]-[2]: result = 1.
+G99-TS233-LOG: Test[0]-[3]: .
+G99-TS233-LOG: Test[0]-[3]: result = 1.
+G99-TS233: FINISHED
+G99-TS233-LOG: Test 0: 4/4 PASSED. Expected = 0xF, result = 0xF
+G99-TS233: 1/1 test function(s) COMPLETED.
+G99-TS233: 4/4 tests PASSED.
+G99-TS233: 0/4 tests FAILED.
+G99-TS233: END

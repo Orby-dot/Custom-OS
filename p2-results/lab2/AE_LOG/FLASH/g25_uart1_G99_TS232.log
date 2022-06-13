@@ -1,0 +1,37 @@
+=======SIM Target FLASH DOWNLOAD LOG - Wed Jun  8 08:52:30 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS232
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2022.06.08 08:52:36 =~=~=~=~=~=~=~=~=~=~=~=
+G99-TS232: START
+===== k_tsk_yield is called =====
+G99-TS232-LOG: TID = 1, task_med: starting
+G99-TS232-LOG: Test[0]-[0]: task_med: creating new task with prio LOW.
+G99-TS232-LOG: Test[0]-[0]: result = 1.
+G99-TS232-LOG: Test[0]-[1]: task_med: creating new task with prio LOWEST.
+G99-TS232-LOG: Test[0]-[1]: result = 1.
+===== task exit =====
+G99-TS232-LOG: Test[0]-[2]: task_med: set prio of task_low to HIGH.
+G99-TS232-LOG: Test[0]-[2]: result = 1.
+G99-TS232-LOG: task_med: after set prio 
+===== task exit =====
+G99-TS232-LOG: Test[0]-[3]: task_med: set prio of task_low to HIGH.
+G99-TS232-LOG: Test[0]-[3]: result = 1.
+G99-TS232-LOG: task_med: after set prio 
+G99-TS232-LOG: start check seq
+G99-TS232-LOG: Test[0]-[4]: task_med: after set prio .
+G99-TS232-LOG: Test[0]-[4]: result = 1.
+G99-TS232-LOG: Test[0]-[5]: task_med: after set prio .
+G99-TS232-LOG: Test[0]-[5]: result = 1.
+G99-TS232-LOG: Test[0]-[6]: task_med: after set prio .
+G99-TS232-LOG: Test[0]-[6]: result = 1.
+G99-TS232-LOG: Test[0]-[7]: task_med: after set prio .
+G99-TS232-LOG: Test[0]-[7]: result = 1.
+G99-TS232-LOG: Test[0]-[8]: task_med: after set prio .
+G99-TS232-LOG: Test[0]-[8]: result = 1.
+G99-TS232-LOG: Test[0]-[9]: task_med: after set prio .
+G99-TS232-LOG: Test[0]-[9]: result = 1.
+G99-TS232: FINISHED
+G99-TS232-LOG: Test 0: 10/10 PASSED. Expected = 0x3FF, result = 0x3FF
+G99-TS232: 1/1 test function(s) COMPLETED.
+G99-TS232: 10/10 tests PASSED.
+G99-TS232: 0/10 tests FAILED.
+G99-TS232: END
