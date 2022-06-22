@@ -706,7 +706,7 @@ int k_tsk_ls(task_t *buf, size_t count){
         return RTX_ERR;
     }
 
-    int buf_i = 0;
+    int buf_i = 1; // Accounting for Null Tasks
     for (int i = 1; i < MAX_TASKS; i++) { // skipping null task
         if (g_tcbs[i].state != DORMANT) {
             buf[buf_i] = g_tcbs[i].tid;
