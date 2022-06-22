@@ -87,11 +87,11 @@ void removeSpecificTCB(readyQueue_t * readyQueuesArray, U8 priorityLevel, task_t
 			taskToRemove->next->prev = taskToRemove->prev;
 		}
 		
-		if(taskToRemove == readyQueuesArray[priorityLevel].head){
+		if(taskToRemove == readyQueuesArray[arrayIndex].head){
 			readyQueuesArray[arrayIndex].head = taskToRemove->next;
 		}
 		
-		if(taskToRemove == readyQueuesArray[priorityLevel].tail){
+		if(taskToRemove == readyQueuesArray[arrayIndex].tail){
 			readyQueuesArray[arrayIndex].tail = taskToRemove->prev;
 		}
 		
