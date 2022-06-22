@@ -642,7 +642,7 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
 			}
 			else
 			{
-				removeSpecificTCB(readyQueuesArray,prio,task_id);
+				removeSpecificTCB(readyQueuesArray,selectedTCB->prio,task_id);
 				
 				addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
 				addTCBtoBack(readyQueuesArray,prio,selectedTCB);

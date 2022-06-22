@@ -54,7 +54,7 @@ This testcase execute the following steps:
 * Initialize the kernel with 4 tasks with priorities: HIGH, MEDIUM, LOW and LOWEST.
 * Let the tasks exit and at the last task, check the execution sequence.
 
-### T234
+### T234 -- Failing, Fixed (null task + 1 in tsk_ls)
 * Description: This test initializes the kernel with maximum number of tasks possible and checks if the number of tasks is as it should be.
 
 This testcase execute the following steps:
@@ -64,7 +64,7 @@ This testcase execute the following steps:
 * Let all the tasks exit except one.
 * Check the number of non-dormant tasks in the system.
 
-### T240
+### T240 -- FAILING, Fixed (fix in removeSpecific TCB, set_prio)
 * Description: This test checks the execution sequence of tasks when the task priorities are getting changed.
 
 This testcase execute the following steps:
@@ -73,7 +73,7 @@ This testcase execute the following steps:
 * Change the priorities of the tasks.
 * Check the execution sequence of the tasks on priority change and task yield.
 
-### T250
+### T250 -- FAILING
 * Description: This test checks the execution sequence of tasks when the task priorities are getting changed.
 
 This testcase execute the following steps:
@@ -91,7 +91,7 @@ This testcase execute the following steps:
 * Change the priorities of the tasks.
 * Check the execution sequence of the tasks on priority change and task yield.
 
-### T260
+### T260 -- FAILING
 * Description: This test checks the error handling of the kernel.
 
 This testcase does the following checks:

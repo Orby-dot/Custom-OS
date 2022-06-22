@@ -70,7 +70,8 @@ TCB *removeTCB(readyQueue_t * readyQueuesArray, U8 arrayIndex) {
 }
 
 void removeSpecificTCB(readyQueue_t * readyQueuesArray, U8 priorityLevel, task_t tid) {
-	TCB *taskToRemove = readyQueuesArray[priorityLevel].head;
+	U8 arrayIndex = priorityLevelToIndex(priorityLevel);
+	TCB *taskToRemove = readyQueuesArray[arrayIndex].head;
 	
 	while(taskToRemove && taskToRemove->tid!=tid){
 		taskToRemove = taskToRemove->next;
@@ -87,11 +88,11 @@ void removeSpecificTCB(readyQueue_t * readyQueuesArray, U8 priorityLevel, task_t
 		}
 		
 		if(taskToRemove == readyQueuesArray[priorityLevel].head){
-			readyQueuesArray[priorityLevel].head = taskToRemove->next;
+			readyQueuesArray[arrayIndex].head = taskToRemove->next;
 		}
 		
 		if(taskToRemove == readyQueuesArray[priorityLevel].tail){
-			readyQueuesArray[priorityLevel].tail = taskToRemove->prev;
+			readyQueuesArray[arrayIndex].tail = taskToRemove->prev;
 		}
 		
 		taskToRemove->next = NULL;
