@@ -49,6 +49,8 @@ int k_recv_msg_nb   (void *buf, size_t len);
 int k_mbx_ls        (task_t *buf, size_t count);
 int k_mbx_get       (task_t tid);
 
+void sendAll();
+
 #endif // ! K_MSG_H_
 
 /*

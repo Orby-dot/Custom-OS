@@ -46,7 +46,9 @@
 
 int errno = 0;
 
-readyQueue_t readyQueuesArray[5];
+readyQueue_t readyQueuesArray[7];
+//level 6 is receive queue
+//level 7 is send queue
 
 /**************************************************************************//**
  * @brief   	system set up before calling rtx_init() from thread mode  
