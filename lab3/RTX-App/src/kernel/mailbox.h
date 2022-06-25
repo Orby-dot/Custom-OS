@@ -13,6 +13,10 @@ typedef struct mailbox {
 
 void addMessage(mailbox_t *mailbox, message_node *message);
 
-void removeMessage(mailbox_t *mailbox, message_node *message);
+int removeMessage(mailbox_t *mailbox, message_node *message);
+
+void initializeMailbox(mailbox_t *mailbox, U8 id);
+
+void deallocateMailbox(mailbox_t *mailbox);
 
 #endif
