@@ -631,9 +631,13 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
 		else 
 		{
 			TCB * selectedTCB = &g_tcbs[(U32) task_id];
-			if((selectedTCB->priv == 1 && gp_current_task == 0) ||selectedTCB->prio == PRIO_NULL)
+			if((selectedTCB->priv == 1 && gp_current_task->priv == 0))
 			{
 				errno = EPERM;
+				return RTX_ERR;
+			}
+			else if(selectedTCB->prio == PRIO_NULL){
+				errno = EINVAL;
 				return RTX_ERR;
 			}
 			else if(selectedTCB->prio == prio)
