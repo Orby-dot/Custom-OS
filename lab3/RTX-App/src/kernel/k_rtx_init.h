@@ -51,7 +51,7 @@
  *===========================================================================
  */
  
-extern readyQueue_t readyQueuesArray[5];
+extern readyQueue_t readyQueuesArray[7];
 
  
 int  k_pre_pre_init(void *args);

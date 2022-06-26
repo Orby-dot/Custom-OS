@@ -13,7 +13,7 @@ U8 priorityLevelToIndex(U8 priorityLevel) {
 
 // readyQueuesArray: Array of Ready Queues
 void initializeArrayOfReadyQueues(readyQueue_t * readyQueuesArray) {
-	for (U8 i = 0; i<5; i++){
+	for (U8 i = 0; i<7; i++){
 		readyQueuesArray[i].head = NULL;
 		readyQueuesArray[i].tail = NULL;
 	}
@@ -97,4 +97,48 @@ void removeSpecificTCB(readyQueue_t * readyQueuesArray, U8 priorityLevel, task_t
 		taskToRemove->next = NULL;
 		taskToRemove->prev = NULL;
 	}
+}
+	
+void addTCBtoRecvBLK(readyQueue_t * readyQueuesArray, TCB *tcb)
+	{
+		U8 arrayIndex = priorityLevelToIndex(RECV_PRIO);
+		if(readyQueuesArray[arrayIndex].tail){
+			readyQueuesArray[arrayIndex].tail->next = tcb;
+			tcb->prev = readyQueuesArray[arrayIndex].tail;
+			tcb->next = NULL;
+			readyQueuesArray[arrayIndex].tail = tcb;
+		} else { // if queue is empty
+			tcb->prev = NULL;
+			tcb->next = NULL;
+			readyQueuesArray[arrayIndex].tail = tcb;
+			readyQueuesArray[arrayIndex].head = tcb;
+	}
+}
+void addTCBtoSentBLK(readyQueue_t * readyQueuesArray, TCB *tcb)
+	{
+		U8 arrayIndex = priorityLevelToIndex(SEND_PRIO);
+		if(readyQueuesArray[arrayIndex].tail){
+			readyQueuesArray[arrayIndex].tail->next = tcb;
+			tcb->prev = readyQueuesArray[arrayIndex].tail;
+			tcb->next = NULL;
+			readyQueuesArray[arrayIndex].tail = tcb;
+		} else { // if queue is empty
+			tcb->prev = NULL;
+			tcb->next = NULL;
+			readyQueuesArray[arrayIndex].tail = tcb;
+			readyQueuesArray[arrayIndex].head = tcb;
+	}
+}
+	
+TCB *canSendMsg(readyQueue_t * readyQueuesArray, task_t *target,U32 size)
+{
+	U8 arrayIndex = priorityLevelToIndex(SEND_PRIO);
+	TCB *current= readyQueuesArray->head;
+	while(current != NULL)
+	{
+		//search thru queue and return a tcb if there is any that will be able to send a msg with givin size
+		//please pop TCB as well.
+	}
+	
+	
 }

@@ -84,6 +84,9 @@ typedef struct tcb {
 		U32*					msp_base;
 		BOOL				initialized;
     U32        *psp;          /**< user sp  */
+		void*				msg;
+		task_t			destination;
+		//insert ring buffer data type here
 } TCB;
 
 /*

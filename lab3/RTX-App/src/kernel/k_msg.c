@@ -36,7 +36,7 @@
 
 #include "k_inc.h"
 #include "k_rtx.h"
-//#include "k_msg.h"
+#include "k_msg.h"
 
 
 int k_mbx_create(size_t size) {
@@ -50,6 +50,27 @@ int k_send_msg(task_t receiver_tid, const void *buf) {
 #ifdef DEBUG_0
     printf("k_send_msg: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 #endif /* DEBUG_0 */
+	if(full)
+		{
+			gp_current_task->msg = (void*)buf;
+			gp_current_task->state = BLK_SEND;
+			gp_current_task->destination = receiver_tid;
+			addTCBtoSentBLK(readyQueuesArray, gp_current_task);
+			//call scheduler
+			
+		}
+		else{
+			TCB * selectedTCB = &g_tcbs[(U32) receiver_tid];
+			sendMsg(selectedTCB,buf);
+			if(selectedTCB->state == BLK_RECV)
+			{
+				selectedTCB->state = READY;
+				removeSpecificTCB(readyQueuesArray,RECV_PRIO,receiver_tid);
+				addTCBtoBack(readyQueuesArray,selectedTCB->prio,selectedTCB);
+				addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+				//call scheduler
+			}
+		}
     return 0;
 }
 
@@ -57,6 +78,25 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 #ifdef DEBUG_0
     printf("k_send_msg_nb: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 #endif /* DEBUG_0 */
+	
+	if(full)
+		{
+			return ERROR;
+			
+		}
+		else{
+			TCB * selectedTCB = &g_tcbs[(U32) receiver_tid];
+			sendMsg(selectedTCB,buf);
+			if(selectedTCB->state == BLK_RECV)
+			{
+				selectedTCB->state = READY;
+				removeSpecificTCB(readyQueuesArray,RECV_PRIO,receiver_tid);
+				addTCBtoBack(readyQueuesArray,selectedTCB->prio,selectedTCB);
+				addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+				//call scheduler
+			}
+		}
+		
     return 0;
 }
 
@@ -64,6 +104,21 @@ int k_recv_msg(void *buf, size_t len) {
 #ifdef DEBUG_0
     printf("k_recv_msg: buf=0x%x, len=%d\r\n", buf, len);
 #endif /* DEBUG_0 */
+	if(notempty)
+	{
+		buf = getmsg(gp_current_task->ringbuff,len);
+		sendAll(gp_current_task->tid);
+		addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+		//call scheduler
+		
+	}
+	else{
+		gp_current_task->state = BLK_RECV;
+		addTCBtoRecvBLK(readyQueuesArray, gp_current_task);
+		//call scheduler
+	}
+	
+	
     return 0;
 }
 
@@ -71,6 +126,18 @@ int k_recv_msg_nb(void *buf, size_t len) {
 #ifdef DEBUG_0
     printf("k_recv_msg_nb: buf=0x%x, len=%d\r\n", buf, len);
 #endif /* DEBUG_0 */
+	if(notempty)
+	{
+		buf = getmsg(gp_current_task->ringbuff,len);
+		sendAll(gp_current_task->tid);
+		addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+		//call scheduler
+		
+	}
+	else{
+		return -1;
+	}
+	
     return 0;
 }
 
@@ -87,6 +154,22 @@ int k_mbx_get(task_t tid)
     printf("k_mbx_get: tid=%u\r\n", tid);
 #endif /* DEBUG_0 */
     return 0;
+}
+void sendAll()
+{
+	//loops thru the send queue and checks if we can send anything
+	TCB * selectedTCB = canSendMsg(readyQueuesArray,tid,getLeftoverSize(gp_current_task->ringbuff));
+	
+	while(selectedTCB != NULL)
+	{
+		addToRingBuffer(gp_current_task->ringbuff,selectedTCB->msg);
+		selectedTCB->state = READY;
+		//dealloc msg here
+		addTCBtoBack(readyQueuesArray,selectedTCB->prio,selectedTCB);
+		
+		selectedTCB = canSendMsg(readyQueuesArray,tid,getLeftoverSize(gp_current_task->ringbuff));
+	}
+	
 }
 /*
  *===========================================================================
