@@ -11,9 +11,9 @@ typedef struct mailbox {
 	U32 size;
 } mailbox_t;
 
-void addMessage(mailbox_t *mailbox, message_node *message);
+void addMessage(mailbox_t *mailbox, void *message_pointer);
 
-int removeMessage(mailbox_t *mailbox, message_node *message);
+void getMessage(mailbox_t *mailbox);
 
 void initializeMailbox(mailbox_t *mailbox, U8 id);
 
