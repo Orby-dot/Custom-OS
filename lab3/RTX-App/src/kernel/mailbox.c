@@ -49,5 +49,5 @@ void initializeMailbox(mailbox_t *mailbox, U8 id, U32 size) {
 
 //Keep removing messages until mailbox empty
 void deallocateMailbox(mailbox_t *mailbox){
-	k_mpool_
+	k_mpool_dealloc(MPID_IRAM1, mailbox->ring_buffer);
 }
