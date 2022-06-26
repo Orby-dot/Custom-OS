@@ -37,9 +37,13 @@ int isMailboxFull(mailbox_t *mailbox, U32 size){
 	return mailbox->size <= size ? 1 : 0;
 }
 
-void initializeMailbox(mailbox_t *mailbox, U8 id) {
-	mailbox->id = id;
-	mailbox->size = 0;
+void initializeMailbox(mailbox_t *mailbox, U8 id, U32 size) {
+	mailbox->id = id;	
+	mailbox->size = size;
+	mailbox->ring_buffer = k_mpool_alloc(MPID_IRAM2, size);
+	if(mailbox->ring_buffer == NULL){
+		//SET AN ERROR
+	}
 }
 
 //Keep removing messages until mailbox empty
