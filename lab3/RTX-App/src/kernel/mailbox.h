@@ -1,13 +1,14 @@
 #include "common.h"
 #include "message_node.h"
-#include "ready_queue.h"
+#include "k_mem.h"
 
 #ifndef _MAILBOX
 #define _MAILBOX
 
 typedef struct mailbox {
 	U8 id;
-	U32 size;
+	U32 max_size; // total bytes available for the ring_buffer - defined in initialize function
+	U32 current_size; //number of bytes occupied
 	char* ring_buffer;
 } mailbox_t;
 
