@@ -3,11 +3,14 @@
 #ifndef _MESSAGE_NODE
 #define _MESSAGE_NODE
 
-typedef __packed struct rtx_msg_buf {
+/** 
+* taken from lab3 manual - changed name due to definition error
+*/
+typedef __packed struct msg_header {
 	U32 length;
 	task_t sender_tid;
 	U8 type;
-} RTX_MSG_BUF;
+} MSG_HEADER;
 
 /*Message Types*/
 #define DEFAULT 0
@@ -16,10 +19,9 @@ typedef __packed struct rtx_msg_buf {
 #define DISPLAY 3
 #define KEY_IN 4
 
-typedef struct message_node {
-	struct message_node *prev;
-	struct message_node *next;
-	struct rtx_msg_buf *message;
-} message_node;
+typedef __packed struct message_node {
+	struct msg_header *header;
+	char*data;
+} msg_node;
 
 #endif

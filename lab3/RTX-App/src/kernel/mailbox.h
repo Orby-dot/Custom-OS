@@ -9,7 +9,10 @@ typedef struct mailbox {
 	U8 id;
 	U32 max_size; // total bytes available for the ring_buffer - defined in initialize function
 	U32 current_size; //number of bytes occupied
-	char* ring_buffer;
+	char* ring_buffer;	
+	char* head;
+	char* tail;
+	
 } mailbox_t;
 
 void addMessage(mailbox_t *mailbox, void *message_pointer);
