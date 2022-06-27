@@ -409,7 +409,7 @@ int k_tsk_run_new(void)
     if (gp_current_task != p_tcb_old) {
         gp_current_task->state = RUNNING;   // change state of the to-be-switched-in  tcb
         if (p_tcb_old->state != DORMANT) p_tcb_old->state = READY;           // change state of the to-be-switched-out tcb
-        k_tsk_switch(p_tcb_old);            // switch kernel stacks       
+				k_tsk_switch(p_tcb_old);            // switch kernel stacks       
     }
 
     return RTX_OK;
@@ -631,9 +631,13 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
 		else 
 		{
 			TCB * selectedTCB = &g_tcbs[(U32) task_id];
-			if((selectedTCB->priv == 1 && gp_current_task == 0) ||selectedTCB->prio == PRIO_NULL)
+			if((selectedTCB->priv == 1 && gp_current_task->priv == 0))
 			{
 				errno = EPERM;
+				return RTX_ERR;
+			}
+			else if(selectedTCB->prio == PRIO_NULL){
+				errno = EINVAL;
 				return RTX_ERR;
 			}
 			else if(selectedTCB->prio == prio)
@@ -642,7 +646,7 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
 			}
 			else
 			{
-				removeSpecificTCB(readyQueuesArray,prio,task_id);
+				removeSpecificTCB(readyQueuesArray,selectedTCB->prio,task_id);
 				
 				addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
 				addTCBtoBack(readyQueuesArray,prio,selectedTCB);
@@ -706,7 +710,7 @@ int k_tsk_ls(task_t *buf, size_t count){
         return RTX_ERR;
     }
 
-    int buf_i = 0;
+    int buf_i = 1; // Accounting for Null Tasks
     for (int i = 1; i < MAX_TASKS; i++) { // skipping null task
         if (g_tcbs[i].state != DORMANT) {
             buf[buf_i] = g_tcbs[i].tid;
