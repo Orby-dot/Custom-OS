@@ -34,20 +34,22 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	}	
 }
 
-void getMessage(mailbox_t *mailbox) {
-	message_node *returnNode = mailbox->head;
-	if(mailbox->tail && mailbox->tail->prev == NULL) {
-		mailbox->tail = NULL;
+void *getMessage(mailbox_t *mailbox) {
+	
+	MSG_HEADER *header = (MSG_HEADER *)(mailbox->head);
+	void *return_message = (void *)(mailbox->head);
+	U8 length = header->length;
+	
+	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
+	
+	if(((mailbox->tail)+ (length+6)) > endAddress) {
+		U32 overflow = (mailbox->head)+ (length+6) - endAddress;
+		mailbox->head = mailbox->ring_buffer+overflow;
+	} 
+	else {
+		mailbox->head = mailbox->head+(length+6);
 	}
-	if(mailbox->head){
-		message_node *nextMessageNode = mailbox->head->next;
-		nextMessageNode->prev = NULL;
-		mailbox->head->next = NULL;
-		mailbox->head->prev = NULL;
-		mailbox->size -= mailbox->head->message->length;
-		mailbox->head = nextMessageNode;
-	}
-	return returnNode;
+	return return_message;
 }
 
 //Using size as input for now, will need to change to max size later on
