@@ -131,7 +131,7 @@ void addTCBtoSentBLK(readyQueue_t * readyQueuesArray, TCB *tcb)
 	}
 }
 	
-TCB *canSendMsg(readyQueue_t * readyQueuesArray, task_t *target,U32 size)
+TCB *canSendMsg(readyQueue_t * readyQueuesArray, U8 target,U32 size)
 {
 	U8 arrayIndex = priorityLevelToIndex(SEND_PRIO);
 	TCB *current= readyQueuesArray->head;
@@ -139,7 +139,17 @@ TCB *canSendMsg(readyQueue_t * readyQueuesArray, task_t *target,U32 size)
 	{
 		//search thru queue and return a tcb if there is any that will be able to send a msg with givin size
 		//please pop TCB as well.
+		
+		if(current->destination == target)
+		{
+			RTX_MSG_HDR * msg = current->msg;
+			if(msg->length <= size)
+			{
+				removeSpecificTCB(readyQueuesArray, SEND_PRIO, current->tid);
+				return current;
+			}
+		}
+		
+		current = current->next;
 	}
-	
-	
 }

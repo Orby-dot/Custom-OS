@@ -47,7 +47,7 @@
 #include "rtx_errno.h"
 #include "uart_polling.h"
 #include "printf.h"
-
+#include "mailbox.h"
 /*
  *===========================================================================
  *                             MACROS
@@ -86,7 +86,7 @@ typedef struct tcb {
     U32        *psp;          /**< user sp  */
 		void*				msg;
 		task_t			destination;
-		//insert ring buffer data type here
+		mailbox_t		mailbox; 		
 } TCB;
 
 /*

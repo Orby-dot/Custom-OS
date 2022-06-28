@@ -35,12 +35,17 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	mailbox->current_size+=(length+6);
 }
 
-void *getMessage(mailbox_t *mailbox) {
+void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 	
 	//need to add check for invalid edge case
 	MSG_HEADER *header = (MSG_HEADER *)(mailbox->head);
 	void *return_message = (void *)(mailbox->head);
 	U8 length = header->length;
+	
+	if(length != reqSize)
+	{
+		return NULL;
+	}
 	
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
 	char *return_message = (char*)k_mpool_alloc(MPID_IRAM1, length);

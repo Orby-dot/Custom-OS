@@ -17,7 +17,7 @@ typedef struct mailbox {
 
 void addMessage(mailbox_t *mailbox, void *message_pointer);
 
-void *getMessage(mailbox_t *mailbox);
+void *getMessage(mailbox_t *mailbox,U8 reqSize);
 
 void initializeMailbox(mailbox_t *mailbox, U8 id, U32 size);
 
