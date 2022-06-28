@@ -37,13 +37,13 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 
 // helper function for getMessage
 // shift to startAddress to exclude header
-char* getStartAddress(mailbox_t* mailbox){
+char* getDataAddress(mailbox_t* mailbox){
 
-	U32 startAddressPosition = (mailbox->head - mailbox->ring_buffer); //get relative head position
-	startAddressPosition += 6; //shift to data	
-	startAddressPosition %= mailbox->max_size;
+	U32 dataAddressPosition = (mailbox->head - mailbox->ring_buffer); //get relative head position
+	dataAddressPosition += 6; //shift to data	
+	dataAddressPosition %= mailbox->max_size;
 	
-	return mailbox->ring_buffer + startAddressPosition;
+	return mailbox->ring_buffer + dataAddressPosition;
 }
 
 void *getMessage(mailbox_t *mailbox,U8 reqSize) {
@@ -61,14 +61,14 @@ void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
 	return_message = (char*)k_mpool_alloc(MPID_IRAM1, length);
 
-	char* startAddress = getStartAddress(mailbox);
+	char* dataAddress = getDataAddress(mailbox);
 	
-	if(( startAddress+ length ) > endAddress) {
+	if(( dataAddress+ length ) > endAddress) {
 		
-		U32 overflow = startAddress + length - endAddress;
+		U32 overflow = dataAddress + length - endAddress;
 
 		for(U32 i = 0;i<(length - overflow);i++){
-			return_message[i] = *(startAddress+i);
+			return_message[i] = *(dataAddress+i);
 		}
 		for(U32 i = 0;i<(overflow);i++){
 			return_message[i] = *(mailbox->ring_buffer+i);
@@ -86,7 +86,7 @@ void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 	}
 	
 	mailbox->current_size-=(length+6);
-	return ((void *)startAddress);
+	return ((void *)dataAddress);
 }
 
 //Using size as input for now, will need to change to max size later on
