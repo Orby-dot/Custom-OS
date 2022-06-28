@@ -4,7 +4,7 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	
 	msg_node *message_node = (msg_node *)message_pointer;
 	
-	MSG_HEADER* header = message_node->header;
+	RTX_MSG_HDR* header = message_node->header;
 	U8 length = header->length;
 	
 	if( (length+6) > (mailbox->max_size - mailbox->current_size)){ //length larger than available size in mailbox
@@ -38,8 +38,8 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 	
 	//need to add check for invalid edge case
-	MSG_HEADER *header = (MSG_HEADER *)(mailbox->head);
-	void *return_message = (void *)(mailbox->head);
+	RTX_MSG_HDR *header = (RTX_MSG_HDR *)(mailbox->head);
+	char *return_message = (void *)(mailbox->head);
 	U8 length = header->length;
 	
 	if(length != reqSize)
@@ -48,7 +48,7 @@ void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 	}
 	
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
-	char *return_message = (char*)k_mpool_alloc(MPID_IRAM1, length);
+	return_message = (char*)k_mpool_alloc(MPID_IRAM1, length);
 	
 	if(((mailbox->tail)+ (length+6)) > endAddress) {
 		U32 overflow = (mailbox->head)+ (length+6) - endAddress;
@@ -72,12 +72,12 @@ void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 	}
 	
 	mailbox->current_size-=(length+6);
-	return ((void *)return_message;
+	return ((void *)return_message);
 }
 
 //Using size as input for now, will need to change to max size later on
-int isMailboxFull(mailbox_t *mailbox, U32 size){
-	return mailbox->size <= size ? 1 : 0;
+BOOL isMailboxFull(mailbox_t *mailbox, U32 size){
+	return mailbox->current_size == mailbox->max_size;
 }
 
 void initializeMailbox(mailbox_t *mailbox, U8 id, U32 size) {

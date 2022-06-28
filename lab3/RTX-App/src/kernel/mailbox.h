@@ -12,15 +12,12 @@ typedef struct mailbox {
 	char* ring_buffer;	
 	char* head;
 	char* tail;
-	
 } mailbox_t;
 
 void addMessage(mailbox_t *mailbox, void *message_pointer);
-
 void *getMessage(mailbox_t *mailbox,U8 reqSize);
-
 void initializeMailbox(mailbox_t *mailbox, U8 id, U32 size);
-
 void deallocateMailbox(mailbox_t *mailbox);
+BOOL isMailboxFull(mailbox_t *mailbox, U32 size);
 
 #endif
