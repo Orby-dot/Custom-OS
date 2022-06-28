@@ -47,12 +47,12 @@ void *getMessage(mailbox_t *mailbox) {
 	
 	if(((mailbox->tail)+ (length+6)) > endAddress) {
 		U32 overflow = (mailbox->head)+ (length+6) - endAddress;
-		U32 i;
-		while(i<(length-overflow)){
+
+		for(U32 i = 0;i<(length - overflow);i++){
 			return_message[i] = *(mailbox->head+i);
 			i+=1;
 		}
-		while (i<length){
+		for(U32 i = 0;i<(overflow);i++){
 			return_message[i] = *(mailbox->ring_buffer+i);
 			i+=1;
 		}
