@@ -23,7 +23,6 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 		for(U32 i = 0;i<(overflow);i++){ //from the beginning and cover the remaining overflowed length
 			*(mailbox->ring_buffer+i) = ((char*) message_node)[i];
 		}
-		mailbox->current_size+=length;
 		mailbox->tail = mailbox->ring_buffer+overflow;
 	}
 	else{
