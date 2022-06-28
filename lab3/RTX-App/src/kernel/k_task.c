@@ -242,6 +242,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
     p_tcb->state = READY;
     p_tcb->prio  = p_taskinfo->prio;
     p_tcb->priv  = p_taskinfo->priv;
+		p_tcb->mailbox.head = NULL;
     
     /*---------------------------------------------------------------
      *  Step1: allocate user stack for the task
@@ -488,6 +489,7 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 		freeTCB->state = READY;
 		freeTCB->prio = prio;
 		freeTCB->priv = 0;
+		freeTCB->mailbox.head = NULL;
 
     /*---------------------------------------------------------------
      *  Step1: allocate user stack for the task

@@ -152,4 +152,5 @@ TCB *canSendMsg(readyQueue_t * readyQueuesArray, U8 target,U32 size)
 		
 		current = current->next;
 	}
+	return NULL;
 }

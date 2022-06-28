@@ -43,7 +43,13 @@ int k_mbx_create(size_t size) {
 #ifdef DEBUG_0
     printf("k_mbx_create: size = %u\r\n", size);
 #endif /* DEBUG_0 */
-    return 0;
+	//i set the head of the mailbox to null when we first create the task
+	if(gp_current_task->mailbox.head != NULL)
+	{
+		return ERROR;
+	}
+	initializeMailbox(&gp_current_task->mailbox, gp_current_task->tid,size);
+	return 0;
 }
 
 int k_send_msg(task_t receiver_tid, const void *buf) {
@@ -167,7 +173,24 @@ int k_mbx_ls(task_t *buf, size_t count) {
 #ifdef DEBUG_0
     printf("k_mbx_ls: buf=0x%x, count=%u\r\n", buf, count);
 #endif /* DEBUG_0 */
-    return 0;
+	U8 currentNumTCB =0;
+	for(U8 i =0; i < MAX_TASKS; i++)
+	{
+		if(g_tcbs[i].state != DORMANT)
+		{
+			if(g_tcbs[i].mailbox.head != NULL)
+			{
+				buf[currentNumTCB] = g_tcbs[i].tid;
+				currentNumTCB ++;
+				if(currentNumTCB == count)
+				{
+					return 0;
+				}
+			}
+		}
+	}
+   
+	return 0;
 }
 
 int k_mbx_get(task_t tid)
@@ -175,7 +198,7 @@ int k_mbx_get(task_t tid)
 #ifdef DEBUG_0
     printf("k_mbx_get: tid=%u\r\n", tid);
 #endif /* DEBUG_0 */
-    return 0;
+    return gp_current_task->mailbox.current_size;
 }
 void sendAll()
 {
