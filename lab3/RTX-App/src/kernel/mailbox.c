@@ -17,7 +17,7 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 		//we need to wrap around the ring buffer
 		
 		U32 overflow = (mailbox->tail)+ (length+6) - endAddress;
-		for(U32 i = 0;i<(length - overflow);i++){ // from the tail to the end
+		for(U32 i = 0;i< ( (length+6) - overflow ) ;i++){ // from the tail to the end
 			*(mailbox->tail+i) = ((char*) message_node)[i];
 		}
 		for(U32 i = 0;i<(overflow);i++){ //from the beginning and cover the remaining overflowed length
@@ -27,12 +27,23 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	}
 	else{
 		// we can allocate a contiguous chunk of memory
-		for(U32 i = 0;i<length;i++){ // from the tail to the end
+		for(U32 i = 0;i<length+6;i++){ // from the tail to the end
 			*(mailbox->tail+i) = ((char*) message_node)[i];
 		}
 		mailbox->tail = mailbox->tail+(length+6);
 	}	
 	mailbox->current_size+=(length+6);
+}
+
+// helper function for getMessage
+// shift to startAddress to exclude header
+char* getStartAddress(mailbox_t* mailbox){
+
+	U32 startAddressPosition = (mailbox->head - mailbox->ring_buffer); //get relative head position
+	startAddressPosition += 6; //shift to data	
+	startAddressPosition %= mailbox->max_size;
+	
+	return mailbox->ring_buffer + startAddressPosition;
 }
 
 void *getMessage(mailbox_t *mailbox,U8 reqSize) {
@@ -46,15 +57,18 @@ void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 	{
 		return NULL;
 	}
-	
+		
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
 	return_message = (char*)k_mpool_alloc(MPID_IRAM1, length);
+
+	char* startAddress = getStartAddress(mailbox);
 	
-	if(((mailbox->tail)+ (length+6)) > endAddress) {
-		U32 overflow = (mailbox->head)+ (length+6) - endAddress;
+	if(( startAddress+ length ) > endAddress) {
+		
+		U32 overflow = startAddress + length - endAddress;
 
 		for(U32 i = 0;i<(length - overflow);i++){
-			return_message[i] = *(mailbox->head+i);
+			return_message[i] = *(startAddress+i);
 		}
 		for(U32 i = 0;i<(overflow);i++){
 			return_message[i] = *(mailbox->ring_buffer+i);
@@ -68,11 +82,11 @@ void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 			return_message[i] = *(mailbox->head+i);
 			i+=1;
 		}
-		mailbox->head = mailbox->head+(length+6);
+		mailbox->head = mailbox->head+length;
 	}
 	
 	mailbox->current_size-=(length+6);
-	return ((void *)return_message);
+	return ((void *)startAddress);
 }
 
 //Using size as input for now, will need to change to max size later on
