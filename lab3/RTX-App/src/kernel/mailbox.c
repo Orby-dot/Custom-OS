@@ -23,7 +23,7 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 		for(U32 i = 0;i<(overflow);i++){ //from the beginning and cover the remaining overflowed length
 			*(mailbox->ring_buffer+i) = ((char*) message_node)[i];
 		}
-		mailbox->current_size-=length;
+		mailbox->current_size+=length;
 		mailbox->tail = mailbox->ring_buffer+overflow;
 	}
 	else{
@@ -31,13 +31,14 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 		for(U32 i = 0;i<length;i++){ // from the tail to the end
 			*(mailbox->tail+i) = ((char*) message_node)[i];
 		}
+		mailbox->tail = mailbox->tail+(length+6);
 	}	
+	mailbox->current_size+=(length+6);
 }
 
 void *getMessage(mailbox_t *mailbox) {
 	
 	//need to add check for invalid edge case
-	
 	MSG_HEADER *header = (MSG_HEADER *)(mailbox->head);
 	void *return_message = (void *)(mailbox->head);
 	U8 length = header->length;
@@ -67,6 +68,8 @@ void *getMessage(mailbox_t *mailbox) {
 		}
 		mailbox->head = mailbox->head+(length+6);
 	}
+	
+	mailbox->current_size-=(length+6);
 	return ((void *)return_message;
 }
 
