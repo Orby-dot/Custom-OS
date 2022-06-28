@@ -36,20 +36,38 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 
 void *getMessage(mailbox_t *mailbox) {
 	
+	//need to add check for invalid edge case
+	
 	MSG_HEADER *header = (MSG_HEADER *)(mailbox->head);
 	void *return_message = (void *)(mailbox->head);
 	U8 length = header->length;
 	
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
+	char *return_message = (char*)k_mpool_alloc(MPID_IRAM1, length);
 	
 	if(((mailbox->tail)+ (length+6)) > endAddress) {
 		U32 overflow = (mailbox->head)+ (length+6) - endAddress;
+		U32 i;
+		while(i<(length-overflow)){
+			return_message[i] = *(mailbox->head+i);
+			i+=1;
+		}
+		while (i<length){
+			return_message[i] = *(mailbox->ring_buffer+i);
+			i+=1;
+		}
+	
 		mailbox->head = mailbox->ring_buffer+overflow;
 	} 
 	else {
+		U32 i;
+		while(i<length){
+			return_message[i] = *(mailbox->head+i);
+			i+=1;
+		}
 		mailbox->head = mailbox->head+(length+6);
 	}
-	return return_message;
+	return ((void *)return_message;
 }
 
 //Using size as input for now, will need to change to max size later on
