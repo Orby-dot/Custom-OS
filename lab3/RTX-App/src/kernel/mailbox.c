@@ -50,11 +50,9 @@ void *getMessage(mailbox_t *mailbox) {
 
 		for(U32 i = 0;i<(length - overflow);i++){
 			return_message[i] = *(mailbox->head+i);
-			i+=1;
 		}
 		for(U32 i = 0;i<(overflow);i++){
 			return_message[i] = *(mailbox->ring_buffer+i);
-			i+=1;
 		}
 	
 		mailbox->head = mailbox->ring_buffer+overflow;
