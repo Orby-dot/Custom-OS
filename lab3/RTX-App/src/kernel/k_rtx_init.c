@@ -49,6 +49,7 @@ int errno = 0;
 readyQueue_t readyQueuesArray[7];
 //level 6 is receive queue
 //level 7 is send queue
+readyQueue_t sendQueuesArray[5];
 
 /**************************************************************************//**
  * @brief   	system set up before calling rtx_init() from thread mode  
@@ -86,7 +87,8 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     
     /* add timer(s) initialization code */
     
-		initializeArrayOfReadyQueues(readyQueuesArray);
+		initializeArrayOfReadyQueues(readyQueuesArray,7);
+		initializeArrayOfReadyQueues(sendQueuesArray,5);
 
     if ( k_tsk_init(tasks, num_tasks) != RTX_OK ) {
         return RTX_ERR;

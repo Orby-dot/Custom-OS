@@ -64,7 +64,7 @@ int k_send_msg(task_t receiver_tid, const void *buf) {
 			gp_current_task->msg = (void*)buf;
 			gp_current_task->state = BLK_SEND;
 			gp_current_task->destination = receiver_tid;
-			addTCBtoSentBLK(readyQueuesArray, gp_current_task);
+			addTCBtoBack(sendQueuesArray, gp_current_task->prio,gp_current_task);
 			//call scheduler
 			return k_tsk_run_new();
 			
@@ -123,7 +123,7 @@ int k_recv_msg(void *buf, size_t len) {
 	{
 		if(getMessage(&gp_current_task->mailbox,buf,len))
 		{
-			sendAll(gp_current_task->tid);
+			sendAll();
 			addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
 			//call scheduler
 			return k_tsk_run_new();
@@ -137,6 +137,7 @@ int k_recv_msg(void *buf, size_t len) {
 		gp_current_task->state = BLK_RECV;
 		addTCBtoRecvBLK(readyQueuesArray, gp_current_task);
 		//call scheduler
+		return k_tsk_run_new();
 	}
 	
 	
@@ -150,12 +151,12 @@ int k_recv_msg_nb(void *buf, size_t len) {
 	void* tempMsg;
 	if(gp_current_task->mailbox.current_size != 0)
 	{
-		tempMsg = getMessage(&gp_current_task->mailbox,len);
-		if(tempMsg != NULL)
+		
+		if(getMessage(&gp_current_task->mailbox,tempMsg,len))
 		{
 			copyToBuf((U8*)buf,(U8*)tempMsg,len);
 			k_mpool_dealloc(MPID_IRAM1,tempMsg);
-			sendAll(gp_current_task->tid);
+			sendAll();
 			addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
 			//call scheduler
 			return k_tsk_run_new();
@@ -197,10 +198,10 @@ int k_mbx_get(task_t tid)
 #endif /* DEBUG_0 */
     return gp_current_task->mailbox.current_size;
 }
-void sendAll()
+void sendAll(void)
 {
 	//loops thru the send queue and checks if we can send anything
-	TCB * selectedTCB = canSendMsg(readyQueuesArray,gp_current_task->tid,gp_current_task->mailbox.current_size);
+	TCB * selectedTCB = sendQScheduler();
 	
 	while(selectedTCB != NULL)
 	{
@@ -209,7 +210,7 @@ void sendAll()
 		//dealloc msg here if needed
 		addTCBtoBack(readyQueuesArray,selectedTCB->prio,selectedTCB);
 		
-		selectedTCB = canSendMsg(readyQueuesArray,gp_current_task->tid,gp_current_task->mailbox.current_size);
+		selectedTCB = sendQScheduler();
 	}
 	
 }
@@ -220,6 +221,27 @@ void copyToBuf(U8 * buf, U8 * input, U32 length)
 		buf[i]= input[i];
 	}
 }
+TCB *sendQScheduler(void)
+{
+    //task_t tid = gp_current_task->tid;
+    //return &g_tcbs[(++tid)%g_num_active_tasks];
+	task_t target = gp_current_task->tid;
+	U32 availableSize = gp_current_task->mailbox.max_size-gp_current_task->mailbox.current_size;
+	U8 prio = gp_current_task->prio;
+	for (U8 i = 0; i < 5 ;i++) {
+		if (sendQueuesArray[i].head){
+			
+			TCB * selectedTCB = canSendMsg(sendQueuesArray,target,availableSize,i );
+			if(selectedTCB != NULL)
+			{
+				return selectedTCB;
+			}
+				
+		}
+	}
+	return NULL;
+}
+
 /*
  *===========================================================================
  *                             END OF FILE

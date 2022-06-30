@@ -49,8 +49,9 @@ int k_recv_msg_nb   (void *buf, size_t len);
 int k_mbx_ls        (task_t *buf, size_t count);
 int k_mbx_get       (task_t tid);
 
-void sendAll();
+void sendAll(void);
 void copyToBuf(U8 * buf, U8 * input, U32 length);
+TCB *sendQScheduler(void);
 
 #endif // ! K_MSG_H_
 

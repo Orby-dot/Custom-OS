@@ -12,8 +12,8 @@ U8 priorityLevelToIndex(U8 priorityLevel) {
 }
 
 // readyQueuesArray: Array of Ready Queues
-void initializeArrayOfReadyQueues(readyQueue_t * readyQueuesArray) {
-	for (U8 i = 0; i<7; i++){
+void initializeArrayOfReadyQueues(readyQueue_t * readyQueuesArray, U8 size) {
+	for (U8 i = 0; i<size; i++){
 		readyQueuesArray[i].head = NULL;
 		readyQueuesArray[i].tail = NULL;
 	}
@@ -131,10 +131,9 @@ void addTCBtoSentBLK(readyQueue_t * readyQueuesArray, TCB *tcb)
 	}
 }
 	
-TCB *canSendMsg(readyQueue_t * readyQueuesArray, U8 target,U32 size)
+TCB *canSendMsg(readyQueue_t * readyQueuesArray, U8 target,U32 size, U8 arrayIndex)
 {
-	U8 arrayIndex = priorityLevelToIndex(SEND_PRIO);
-	TCB *current= readyQueuesArray->head;
+	TCB *current= readyQueuesArray[arrayIndex].head;
 	while(current != NULL)
 	{
 		//search thru queue and return a tcb if there is any that will be able to send a msg with givin size
@@ -145,7 +144,7 @@ TCB *canSendMsg(readyQueue_t * readyQueuesArray, U8 target,U32 size)
 			RTX_MSG_HDR * msg = current->msg;
 			if(msg->length <= size)
 			{
-				removeSpecificTCB(readyQueuesArray, SEND_PRIO, current->tid);
+				removeSpecificTCB(readyQueuesArray, current->prio, current->tid);
 				return current;
 			}
 		}

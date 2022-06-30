@@ -52,7 +52,8 @@
  */
  
 extern readyQueue_t readyQueuesArray[7];
-
+extern readyQueue_t sendQueuesArray[5];
+//note to self please change rdyQ to size 6 when u have some time
  
 int  k_pre_pre_init(void *args);
 int  k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *task, int num_tasks);

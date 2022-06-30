@@ -1,5 +1,6 @@
 #include "mailbox.h"
 
+
 void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	
 	msg_node *message_node = (msg_node *)message_pointer;
