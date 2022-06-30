@@ -35,7 +35,7 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	mailbox->current_size+=(length+6);
 }
 
-void *getMessage(mailbox_t *mailbox,U8 reqSize) {
+int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 	
 	//need to add check for invalid edge case
 	RTX_MSG_HDR *header = (RTX_MSG_HDR *)(mailbox->head);
@@ -45,11 +45,11 @@ void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 	if(length != reqSize)
 	{
 		//SET ERRNO
-		return NULL;
+		return RTX_ERR;
 	}
 		
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
-	return_message = (char*)k_mpool_alloc(MPID_IRAM1, length);
+	return_message = buf;
 
 	char* headAddress = mailbox->head;
 	
@@ -67,14 +67,16 @@ void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 		mailbox->head = mailbox->ring_buffer+overflow;
 	} 
 	else {
-		for(U32 i = 0; i<length; i++){
+		U32 i;
+		while(i<length){
 			return_message[i] = *(mailbox->head+i);
+			i+=1;
 		}
 		mailbox->head = mailbox->head+length;
 	}
 	
 	mailbox->current_size-=(length+6);
-	return ((void *)return_message);
+	return RTX_OK;
 }
 
 //Using size as input for now, will need to change to max size later on
