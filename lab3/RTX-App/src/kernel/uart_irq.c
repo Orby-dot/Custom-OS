@@ -220,7 +220,7 @@ void UART0_IRQHandler(void)
 					
 						sendBuf[6] = g_char_in;
 					//nonBlocking send
-						k_send_msg_nb(TID_UART,sendBuf);
+						k_send_msg_nb(TID_KCD,sendBuf);
 #ifdef DEBUG_0
             printf("char %c gets processed\r\n", g_char_in);
 #endif /* DEBUG_0 */ 
