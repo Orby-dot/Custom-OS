@@ -67,10 +67,8 @@ void *getMessage(mailbox_t *mailbox,U8 reqSize) {
 		mailbox->head = mailbox->ring_buffer+overflow;
 	} 
 	else {
-		U32 i;
-		while(i<length){
+		for(U32 i = 0; i<length; i++){
 			return_message[i] = *(mailbox->head+i);
-			i+=1;
 		}
 		mailbox->head = mailbox->head+length;
 	}
