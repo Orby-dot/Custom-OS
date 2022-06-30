@@ -229,12 +229,14 @@ void UART0_IRQHandler(void)
     } else if (IIR_IntId & IIR_THRE) { //transit data
         uint8_t char_out;
         /* THRE Interrupt, transmit holding register becomes empty */
-						k_recv_msg_nb(recvBuf,7);
-            char_out = recvBuf[6];
+						if(k_recv_msg_nb(recvBuf,7)){
+							
+							char_out = recvBuf[6];
 #ifdef DEBUG_1
             printf("Writing a char = %c \r\n", char_out);
 #endif /* DEBUG_1 */
-            pUart->THR = char_out;
+							pUart->THR = char_out;
+						}
         // end of the string
 #ifdef DEBUG_1
             uart1_put_string("Finish writing. Turning off IER_THRE\r\n");
