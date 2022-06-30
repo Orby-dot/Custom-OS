@@ -595,6 +595,7 @@ void k_tsk_exit(void)
     if (debugEntryPrint) printf("===== task exit =====\r\n");
 	k_mpool_dealloc(0,gp_current_task->psp);
 	gp_current_task->state = DORMANT;
+	deallocateMailbox(&gp_current_task->mailbox);
 	k_tsk_run_new();
     return;
 }
