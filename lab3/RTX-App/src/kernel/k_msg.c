@@ -121,11 +121,8 @@ int k_recv_msg(void *buf, size_t len) {
 	void* tempMsg;
 	if(gp_current_task->mailbox.current_size != 0)
 	{
-		tempMsg = getMessage(&gp_current_task->mailbox,len);
-		if(tempMsg != NULL)
+		if(getMessage(&gp_current_task->mailbox,buf,len))
 		{
-			copyToBuf((U8*)buf,(U8*)tempMsg,len);
-			k_mpool_dealloc(MPID_IRAM1,tempMsg);
 			sendAll(gp_current_task->tid);
 			addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
 			//call scheduler
