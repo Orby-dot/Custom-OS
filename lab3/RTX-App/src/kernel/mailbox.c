@@ -43,7 +43,7 @@ int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 	char *return_message = (void *)(mailbox->head);
 	U8 length = header->length;
 	
-	if(length != reqSize)
+	if(length > (reqSize+6))
 	{
 		//SET ERRNO
 		return RTX_ERR;

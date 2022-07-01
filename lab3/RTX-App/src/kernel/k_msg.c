@@ -161,6 +161,9 @@ int k_recv_msg_nb(void *buf, size_t len) {
 			//call scheduler
 			return k_tsk_run_new();
 		}
+		else{
+			return ERROR;
+		}	
 	}
 	else{
 		return -1;
