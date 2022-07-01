@@ -57,9 +57,8 @@ int k_send_msg(task_t receiver_tid, const void *buf) {
     printf("k_send_msg: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 #endif /* DEBUG_0 */
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;
-	
 	//if msg can fit in mailbox
-	if((g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >=g_tcbs[(U32)receiver_tid].mailbox.max_size)
+	if((g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >g_tcbs[(U32)receiver_tid].mailbox.max_size)
 		{
 			gp_current_task->msg = (void*)buf;
 			gp_current_task->state = BLK_SEND;

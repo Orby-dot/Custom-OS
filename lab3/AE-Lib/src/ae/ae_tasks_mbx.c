@@ -99,7 +99,7 @@ void priv_task1(void) {
     
     buf = mem_alloc(BUF_LEN);
     mbx_id = mbx_create(BUF_LEN);  // create a mailbox for itself
-    
+    /*
     if ( mbx_id >= 0 ) {
         dump_mbx_info(tid);
     }
@@ -114,7 +114,7 @@ void priv_task1(void) {
     {
         dump_mailboxes(g_tasks, ret_val);
     }
-    
+    */
     
     if ( mbx_id >= 0 && buf != NULL ) {
         ret_val = recv_msg_nb(&g_buf1, BUF_LEN);  // non-blocking receive
@@ -135,13 +135,15 @@ void priv_task1(void) {
     tsk_set_prio(tid, MEDIUM);
     
     if ( ret_val == RTX_OK ) {
-        RTX_MSG_HDR *buf1 = mem_alloc(sizeof(RTX_MSG_HDR) + 1);   
-        buf1->length = sizeof(RTX_MSG_HDR) + 1;
+        RTX_MSG_HDR *buf1 = mem_alloc(sizeof(RTX_MSG_HDR));   
+        buf1->length = sizeof(RTX_MSG_HDR);
         buf1->type = MY_MSG_TYPE;
         buf1->sender_tid = tid;
-				((char*)buf1)[6] = 'a';
-        ret_val = send_msg_nb(tid1, buf1);      // no-blocking send a mesage with no data field
+				//((char*)buf1)[6] = 'a';
+				printf("I'm going to try to sent task 2 a msg\r\n");
+        ret_val = send_msg(tid1, buf1);    // no-blocking send a mesage with no data field
     }
+		tsk_yield();
     
     
 }
@@ -163,7 +165,7 @@ void task1(void)
     int ret_val = 10;
     int i = 0;
     int j = 0;
-    task_t tid = tsk_gettid();;
+    task_t tid = tsk_gettid();
     
     size_t msg_hdr_size = sizeof(struct rtx_msg_hdr);
     U8  *buf = &g_buf1[0];                  // buffer is allocated by the caller */
@@ -219,18 +221,13 @@ void task2(void)
     uart1_put_string("task2: entering \n\r");
     
     ret_val = mbx_create(BUF_LEN);
+		printf("CREATED MAILBOX\r\n");
     if ( ret_val == RTX_OK ) {
         ret_val = recv_msg(buf, BUF_LEN);  // blocking receive    
     }
-		
-		char msg[((RTX_MSG_HDR*)buf)->length];
-		for(int i = 6 ; i < ((RTX_MSG_HDR*)buf)->length;i++)
-		{
-			msg[i-6] = buf[i];
-		}
-		printf("%s",msg);
+		printf("TASK2: I got it!\r\n");
     mem_dealloc(buf);   // free the buffer space
-    
+    printf("TASK 2 DED\r\n");
     tsk_exit();         // terminating the task
 }
 
