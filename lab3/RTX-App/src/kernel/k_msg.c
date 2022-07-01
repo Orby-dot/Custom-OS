@@ -46,7 +46,7 @@ int k_mbx_create(size_t size) {
 	//i set the head of the mailbox to null when we first create the task
 	if(gp_current_task->mailbox.head != NULL)
 	{
-		return ERROR;
+		return -1;
 	}
 	initializeMailbox(&gp_current_task->mailbox, gp_current_task->tid,size);
 	return 0;
@@ -95,7 +95,7 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 	
 	if((g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >=g_tcbs[(U32)receiver_tid].mailbox.max_size)
 		{
-			return ERROR;
+			return -1;
 			
 		}
 		else{
@@ -118,7 +118,6 @@ int k_recv_msg(void *buf, size_t len) {
 #ifdef DEBUG_0
     printf("k_recv_msg: buf=0x%x, len=%d\r\n", buf, len);
 #endif /* DEBUG_0 */
-	void* tempMsg;
 	if(gp_current_task->mailbox.current_size != 0)
 	{
 		if(getMessage(&gp_current_task->mailbox,buf,len))
@@ -129,7 +128,7 @@ int k_recv_msg(void *buf, size_t len) {
 			return k_tsk_run_new();
 		}
 		else{
-			return ERROR;
+			return -1;
 		}
 		
 	}
@@ -139,9 +138,6 @@ int k_recv_msg(void *buf, size_t len) {
 		//call scheduler
 		return k_tsk_run_new();
 	}
-	
-	
-    return 0;
 }
 
 int k_recv_msg_nb(void *buf, size_t len) {
@@ -160,6 +156,10 @@ int k_recv_msg_nb(void *buf, size_t len) {
 			addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
 			//call scheduler
 			return k_tsk_run_new();
+		}
+		else
+		{
+			return -1;
 		}
 	}
 	else{
@@ -196,7 +196,7 @@ int k_mbx_get(task_t tid)
 #ifdef DEBUG_0
     printf("k_mbx_get: tid=%u\r\n", tid);
 #endif /* DEBUG_0 */
-    return gp_current_task->mailbox.current_size;
+    return gp_current_task->mailbox.max_size - gp_current_task->mailbox.current_size;
 }
 void sendAll(void)
 {
@@ -227,7 +227,6 @@ TCB *sendQScheduler(void)
     //return &g_tcbs[(++tid)%g_num_active_tasks];
 	task_t target = gp_current_task->tid;
 	U32 availableSize = gp_current_task->mailbox.max_size-gp_current_task->mailbox.current_size;
-	U8 prio = gp_current_task->prio;
 	for (U8 i = 0; i < 5 ;i++) {
 		if (sendQueuesArray[i].head){
 			

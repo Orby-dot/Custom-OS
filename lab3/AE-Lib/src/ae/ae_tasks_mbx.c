@@ -135,10 +135,11 @@ void priv_task1(void) {
     tsk_set_prio(tid, MEDIUM);
     
     if ( ret_val == RTX_OK ) {
-        RTX_MSG_HDR *buf1 = mem_alloc(sizeof(RTX_MSG_HDR));   
-        buf1->length = sizeof(RTX_MSG_HDR);
+        RTX_MSG_HDR *buf1 = mem_alloc(sizeof(RTX_MSG_HDR) + 1);   
+        buf1->length = sizeof(RTX_MSG_HDR) + 1;
         buf1->type = MY_MSG_TYPE;
         buf1->sender_tid = tid;
+				((char*)buf1)[6] = 'a';
         ret_val = send_msg_nb(tid1, buf1);      // no-blocking send a mesage with no data field
     }
     
@@ -221,6 +222,13 @@ void task2(void)
     if ( ret_val == RTX_OK ) {
         ret_val = recv_msg(buf, BUF_LEN);  // blocking receive    
     }
+		
+		char msg[((RTX_MSG_HDR*)buf)->length];
+		for(int i = 6 ; i < ((RTX_MSG_HDR*)buf)->length;i++)
+		{
+			msg[i-6] = buf[i];
+		}
+		printf("%s",msg);
     mem_dealloc(buf);   // free the buffer space
     
     tsk_exit();         // terminating the task
