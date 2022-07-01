@@ -90,7 +90,7 @@ void task_kcd(void)
     {
 
         // infinite call recv_msg
-        k_recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
+        k_recv_msg_nb(msg_buf, KCD_CMD_BUF_SIZE);
         tmp_msg = (msg_node *)msg_buf;
 
         if (tmp_msg->header->type == KCD_REG)
@@ -128,8 +128,11 @@ void task_kcd(void)
                         }
                     }
 
+                } 
+                else {
+                    printToConsole("Invalid Command", 15);
                 }
-                
+									
                 // Enter on Console
                 printToConsole("\r", 1);
 
