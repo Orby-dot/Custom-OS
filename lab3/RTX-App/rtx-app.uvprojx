@@ -508,6 +508,21 @@
               <FileType>5</FileType>
               <FilePath>.\src\kernel\ready_queue.h</FilePath>
             </File>
+            <File>
+              <FileName>mailbox.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\mailbox.c</FilePath>
+            </File>
+            <File>
+              <FileName>mailbox.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\mailbox.h</FilePath>
+            </File>
+            <File>
+              <FileName>message_node.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\message_node.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1088,6 +1103,21 @@
               <FileName>ready_queue.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\src\kernel\ready_queue.h</FilePath>
+            </File>
+            <File>
+              <FileName>mailbox.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kernel\mailbox.c</FilePath>
+            </File>
+            <File>
+              <FileName>mailbox.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\mailbox.h</FilePath>
+            </File>
+            <File>
+              <FileName>message_node.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\kernel\message_node.h</FilePath>
             </File>
           </Files>
         </Group>

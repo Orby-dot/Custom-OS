@@ -89,7 +89,7 @@ void initializeMailbox(mailbox_t *mailbox, U8 id, U32 size) {
 	mailbox->id = id;	
 	mailbox->max_size = size;
 	mailbox->current_size = 0;
-	mailbox->ring_buffer = k_mpool_alloc(MPID_IRAM1, size);
+	mailbox->ring_buffer = k_mpool_alloc(MPID_IRAM2, size);
 	if(mailbox->ring_buffer == NULL){
 		//SET AN ERROR
 	}

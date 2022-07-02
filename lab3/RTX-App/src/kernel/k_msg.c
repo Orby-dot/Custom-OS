@@ -57,7 +57,7 @@ int k_send_msg(task_t receiver_tid, const void *buf) {
     printf("k_send_msg: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 #endif /* DEBUG_0 */
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;
-	
+
 	//if msg can fit in mailbox
 	if((g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >=g_tcbs[(U32)receiver_tid].mailbox.max_size)
 		{
@@ -95,12 +95,12 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 	
 	if((g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >=g_tcbs[(U32)receiver_tid].mailbox.max_size)
 		{
-			return ERROR;
+			return RTX_ERR;
 			
 		}
 		else{
 			TCB * selectedTCB = &g_tcbs[(U32) receiver_tid];
-			addMessage(&selectedTCB->mailbox,(void*)buf);
+			addMessage(&(selectedTCB->mailbox),(void*)buf);
 			if(selectedTCB->state == BLK_RECV)
 			{
 				selectedTCB->state = READY;
@@ -129,7 +129,7 @@ int k_recv_msg(void *buf, size_t len) {
 			return k_tsk_run_new();
 		}
 		else{
-			return ERROR;
+			return RTX_ERR;
 		}
 		
 	}
@@ -162,11 +162,11 @@ int k_recv_msg_nb(void *buf, size_t len) {
 			return k_tsk_run_new();
 		}
 		else{
-			return ERROR;
+			return RTX_ERR;
 		}	
 	}
 	else{
-		return -1;
+		return RTX_ERR;
 	}
 }
 

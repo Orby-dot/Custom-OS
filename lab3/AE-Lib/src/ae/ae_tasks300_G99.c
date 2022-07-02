@@ -311,15 +311,18 @@ void task0(void)
         tsk_yield();    // let task2 run to create its mailbox
         update_exec_seq(test_id, tid);
         
-        RTX_MSG_HDR *buf1 = mem_alloc(sizeof(RTX_MSG_HDR));   
+        void *buf1 = mem_alloc(sizeof(RTX_MSG_HDR)+1);   
         if ( buf1 == NULL ) {
             printf("task0, mem_alloc failed, terminating test\r\n");
             test_exit();
         }
-        buf1->length = sizeof(RTX_MSG_HDR);
-        buf1->type = MY_MSG_TYPE;
-        buf1->sender_tid = tid;
-        
+				
+				RTX_MSG_HDR *h = buf1;
+        h->length = sizeof(RTX_MSG_HDR)+1;
+        h->type = MY_MSG_TYPE;
+        h->sender_tid = tid;
+        char* tmp = (char*)buf1+6; 
+				*tmp = 'A';
         (*p_index)++;
         sprintf(g_ae_xtest.msg, "task0: send_msg_nb to tid(%u)", g_tids[2]);
         ret_val = send_msg_nb(g_tids[2], buf1);      // no-blocking send to task2, a mesage with no data field 

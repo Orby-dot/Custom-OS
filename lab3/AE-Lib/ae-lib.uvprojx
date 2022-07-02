@@ -518,6 +518,11 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>ae_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+            </File>
+            <File>
               <FileName>ae_tasks100_G99.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks100_G99.c</FilePath>
@@ -528,9 +533,9 @@
           <GroupName>AE-active</GroupName>
           <Files>
             <File>
-              <FileName>ae_tasks.c</FileName>
+              <FileName>ae_tasks300_G99.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1142,6 +1147,11 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>ae_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+            </File>
+            <File>
               <FileName>ae_tasks100_G99.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks100_G99.c</FilePath>
@@ -1152,9 +1162,9 @@
           <GroupName>AE-active</GroupName>
           <Files>
             <File>
-              <FileName>ae_tasks.c</FileName>
+              <FileName>ae_tasks300_G99.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
             </File>
           </Files>
         </Group>
