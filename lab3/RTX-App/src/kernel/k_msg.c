@@ -114,7 +114,7 @@ int k_recv_msg(void *buf, size_t len) {
 	sendAll();
 	if(gp_current_task->mailbox.current_size != 0)
 	{
-		if(getMessage(&gp_current_task->mailbox,buf,len))
+		if(getMessage(&gp_current_task->mailbox,buf,len) == RTX_OK)
 		{
 			sendAll();
 			addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
