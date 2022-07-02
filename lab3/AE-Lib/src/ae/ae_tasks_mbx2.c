@@ -44,7 +44,7 @@
 #include "ae_util.h"
 #include "ae_tasks_util.h"
 
-#define     BUF_LEN         13
+#define     BUF_LEN         8
 #define     MY_MSG_TYPE     100     // some customized message type, better move it to common_ext.h
 
 #define     NUM_INIT_TASKS  2       // number of tasks during initialization
@@ -136,7 +136,7 @@ void priv_task1(void) {
     
     if ( ret_val == RTX_OK ) {
         U8 *buf1 = mem_alloc(sizeof(RTX_MSG_HDR) +1);   
-        ((RTX_MSG_HDR*)buf1)->length = sizeof(RTX_MSG_HDR) +1 ;
+        ((RTX_MSG_HDR*)buf1)->length = sizeof(RTX_MSG_HDR) +1;
         ((RTX_MSG_HDR*)buf1)->type = MY_MSG_TYPE;
         ((RTX_MSG_HDR*)buf1)->sender_tid = tid;
 				((char*)buf1)[sizeof(RTX_MSG_HDR)] = 'a';

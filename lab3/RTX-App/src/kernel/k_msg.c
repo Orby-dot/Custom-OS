@@ -133,7 +133,8 @@ int k_recv_msg(void *buf, size_t len) {
 		k_tsk_run_new();
 		getMessage(&gp_current_task->mailbox,buf,len);
 		sendAll();
-		return 0;
+		addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+		return k_tsk_run_new();;
 	}
 }
 

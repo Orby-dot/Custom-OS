@@ -18,7 +18,6 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 		//we need to wrap around the ring buffer
 		
 		U32 overflow = mailbox->tail+ length-1 - endAddress;
-		printf("OVERFLOW : %u\r\n",overflow);
 		for(U32 i = 0;i< ( length - overflow ) ;i++){ // from the tail to the end
 			*(mailbox->tail+i) = ((char*) message_pointer)[i];
 		}
@@ -66,12 +65,11 @@ int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 	if( ( headAddress+ length -1 ) > endAddress ) {
 		
 		U32 overflow = headAddress + length -1 - endAddress;
-		printf("OVERFLOW = %u \r\n",overflow);
 		for(U32 i = 0;i<(length - overflow);i++){
 			return_message[i] = *(headAddress+i);
 		}
 		for(U32 i = 0;i<(overflow);i++){
-			return_message[i] = *(mailbox->ring_buffer+i);
+			return_message[i+(length - overflow)] = *(mailbox->ring_buffer+i);
 		}
 	
 		mailbox->head = mailbox->ring_buffer+(overflow);
