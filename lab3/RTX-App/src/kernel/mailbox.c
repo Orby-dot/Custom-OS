@@ -3,9 +3,7 @@
 
 void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	
-	msg_node *message_node = (msg_node *)message_pointer;
-	
-	RTX_MSG_HDR* header = message_node->header;
+	RTX_MSG_HDR* header = message_pointer;
 	U8 length = header->length;
 	
 	if( (length) > (mailbox->max_size - mailbox->current_size)){ //length larger than available size in mailbox
@@ -19,17 +17,17 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 		
 		U32 overflow = mailbox->tail+ length - endAddress;
 		for(U32 i = 0;i< ( length - overflow ) ;i++){ // from the tail to the end
-			*(mailbox->tail+i) = ((char*) message_node)[i];
+			*(mailbox->tail+i) = ((char*) message_pointer)[i];
 		}
 		for(U32 i = 0;i<(overflow);i++){ //from the beginning and cover the remaining overflowed length
-			*(mailbox->ring_buffer+i) = ((char*) message_node)[i];
+			*(mailbox->ring_buffer+i) = ((char*) message_pointer)[i];
 		}
 		mailbox->tail = mailbox->ring_buffer+overflow;
 	}
 	else{
 		// we can allocate a contiguous chunk of memory
 		for(U32 i = 0;i<length;i++){ // from the tail to the end
-			*(mailbox->tail+i) = ((char*) message_node)[i];
+			*(mailbox->tail+i) = ((char*) message_pointer)[i];
 		}
 		mailbox->tail = mailbox->tail+length;
 	}	
@@ -90,6 +88,8 @@ void initializeMailbox(mailbox_t *mailbox, U8 id, U32 size) {
 	mailbox->max_size = size;
 	mailbox->current_size = 0;
 	mailbox->ring_buffer = k_mpool_alloc(MPID_IRAM2, size);
+	mailbox->head = mailbox->ring_buffer;
+	mailbox->tail = mailbox->ring_buffer; 
 	if(mailbox->ring_buffer == NULL){
 		//SET AN ERROR
 	}

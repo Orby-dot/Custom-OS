@@ -53,9 +53,7 @@ int k_mbx_create(size_t size) {
 }
 
 int k_send_msg(task_t receiver_tid, const void *buf) {
-#ifdef DEBUG_0
     printf("k_send_msg: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
-#endif /* DEBUG_0 */
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;
 
 	//if msg can fit in mailbox
@@ -88,9 +86,7 @@ int k_send_msg(task_t receiver_tid, const void *buf) {
 }
 
 int k_send_msg_nb(task_t receiver_tid, const void *buf) {
-#ifdef DEBUG_0
-    printf("k_send_msg_nb: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
-#endif /* DEBUG_0 */
+    printf("SSSS k_send_msg_nb: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;
 	
 	if((g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >=g_tcbs[(U32)receiver_tid].mailbox.max_size)
@@ -115,9 +111,7 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 }
 
 int k_recv_msg(void *buf, size_t len) {
-#ifdef DEBUG_0
     printf("k_recv_msg: buf=0x%x, len=%d\r\n", buf, len);
-#endif /* DEBUG_0 */
 	void* tempMsg;
 	if(gp_current_task->mailbox.current_size != 0)
 	{
@@ -145,9 +139,7 @@ int k_recv_msg(void *buf, size_t len) {
 }
 
 int k_recv_msg_nb(void *buf, size_t len) {
-#ifdef DEBUG_0
-    printf("k_recv_msg_nb: buf=0x%x, len=%d\r\n", buf, len);
-#endif /* DEBUG_0 */
+    printf("RRRRR k_recv_msg_nb: buf=0x%x, len=%d\r\n", buf, len);
 	void* tempMsg;
 	if(gp_current_task->mailbox.current_size != 0)
 	{
@@ -171,9 +163,7 @@ int k_recv_msg_nb(void *buf, size_t len) {
 }
 
 int k_mbx_ls(task_t *buf, size_t count) {
-#ifdef DEBUG_0
     printf("k_mbx_ls: buf=0x%x, count=%u\r\n", buf, count);
-#endif /* DEBUG_0 */
 	U8 currentNumTCB =0;
 	for(U8 i =0; i < MAX_TASKS; i++)
 	{

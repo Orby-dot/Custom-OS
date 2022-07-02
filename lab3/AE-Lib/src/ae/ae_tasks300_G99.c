@@ -381,7 +381,7 @@ void task1(void)
     
     size_t msg_hdr_size = sizeof(struct rtx_msg_hdr);
     U8  *buf = &g_buf1[0];                  // buffer is allocated by the caller */
-    struct rtx_msg_hdr *ptr = (void *)buf;
+    struct rtx_msg_hdr *ptr = (void *)buf;  
    
     printf("%s: TID = %u, task1: entering\r\n", PREFIX_LOG2, tid);   
     update_exec_seq(test_id, tid);
