@@ -84,6 +84,13 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     if ( uart_irq_init(0) != RTX_OK ) {
         return RTX_ERR;
     }
+
+		// taken from https://github.com/yqh/ece350/blob/master/manual_code/lab3/UART0_IRQ/src/main_uart_irq.c
+    __disable_irq();   
+    uart_irq_init(0); // uart0 interrupt driven, for RTX console 
+    uart_init(1);     // uart1 polling, for debugging
+    init_printf(NULL, putc);    // printf uses the polling terminal
+    __enable_irq();
     
     /* add timer(s) initialization code */
     
