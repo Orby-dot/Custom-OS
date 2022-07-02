@@ -5,13 +5,14 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	
 	RTX_MSG_HDR* header = message_pointer;
 	U8 length = header->length;
+	U32 available_space = 0;
 	
 	if( (length) > (mailbox->max_size - mailbox->current_size)){ //length larger than available size in mailbox
 		// NOT ENOUGH MEM;
 	}
 	
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1); // get the last available address in ring buffer before looping around
-	
+
 	if( ( mailbox->tail+ length-1 ) > endAddress){
 		//we need to wrap around the ring buffer
 		
@@ -36,23 +37,30 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 
 int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 	
-	//need to add check for invalid edge case
-	RTX_MSG_HDR *header = (RTX_MSG_HDR *)(mailbox->head);
-	U8 length = header->length;
+	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
 	
-	if(length > (reqSize+6))
-	{
-		//SET ERRNO
-		return RTX_ERR;
+	char tmp_header[6];
+	char * tmp_ptr = mailbox->head;
+	U32 i = 0;
+	while(i<6){
+		if( (tmp_ptr+i)>endAddress ){
+			tmp_ptr = mailbox->ring_buffer-i;
+		}
+		tmp_header[i] = *(tmp_ptr+i);
+		i++;
 	}
 	
-	// TODO: highly probable error in calculating end address that might put head in front of tail
-	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
+	RTX_MSG_HDR *header = (RTX_MSG_HDR *)tmp_header;
+	
+	U8 length = header->length;
+	
+	// This is the only error we need to read the header
+	if(length > (reqSize+6)) return RTX_ERR;
+	
 	char *return_message = buf;
-
 	char* headAddress = mailbox->head;
 	
-	if(( headAddress+ length ) > endAddress) {
+	if( ( headAddress+ length ) > endAddress ) {
 		
 		U32 overflow = headAddress + length - endAddress;
 

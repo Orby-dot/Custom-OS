@@ -139,23 +139,32 @@ int k_recv_msg(void *buf, size_t len) {
 
 int k_recv_msg_nb(void *buf, size_t len) {
     printf("RRRRR k_recv_msg_nb: buf=0x%x, len=%d\r\n", buf, len);
-	if(gp_current_task->mailbox.current_size != 0)
-	{
-		
-		if(getMessage(&gp_current_task->mailbox,buf,len) == RTX_OK)
-		{
-			sendAll();
-			addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
-			//call scheduler
-			return k_tsk_run_new();
-		}
-		else{
-			return RTX_ERR;
-		}	
-	}
-	else{
+	if (buf == NULL ){ // buf is null
+		errno = EFAULT;
 		return RTX_ERR;
 	}
+	else if(gp_current_task->mailbox.ring_buffer == NULL){ // no mailbox
+		errno = ENOENT;		
+		return RTX_ERR;
+	}
+	else if(gp_current_task->mailbox.current_size == 0){ // mailbox has no message
+		errno = ENOMSG;
+		return RTX_ERR;
+	}
+	
+
+	if(getMessage(&gp_current_task->mailbox,buf,len) == RTX_OK)
+	{
+		sendAll();
+		addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+		//call scheduler
+		return k_tsk_run_new();
+	}
+	else{
+		errno = ENOSPC;
+		return RTX_ERR;
+	}
+
 }
 
 int k_mbx_ls(task_t *buf, size_t count) {
