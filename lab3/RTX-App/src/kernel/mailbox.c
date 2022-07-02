@@ -3,33 +3,32 @@
 
 void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	
-	msg_node *message_node = (msg_node *)message_pointer;
-	
-	RTX_MSG_HDR* header = message_node->header;
+	RTX_MSG_HDR* header = message_pointer;
 	U8 length = header->length;
+	U32 available_space = 0;
 	
 	if( (length) > (mailbox->max_size - mailbox->current_size)){ //length larger than available size in mailbox
 		// NOT ENOUGH MEM;
 	}
 	
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1); // get the last available address in ring buffer before looping around
-	
-	if( ( mailbox->tail+ length ) > endAddress){
+
+	if( ( mailbox->tail+ length-1 ) > endAddress){
 		//we need to wrap around the ring buffer
 		
-		U32 overflow = mailbox->tail+ length - endAddress;
+		U32 overflow = mailbox->tail+ length-1 - endAddress;
 		for(U32 i = 0;i< ( length - overflow ) ;i++){ // from the tail to the end
-			*(mailbox->tail+i) = ((char*) message_node)[i];
+			*(mailbox->tail+i) = ((char*) message_pointer)[i];
 		}
 		for(U32 i = 0;i<(overflow);i++){ //from the beginning and cover the remaining overflowed length
-			*(mailbox->ring_buffer+i) = ((char*) message_node)[i];
+			*(mailbox->ring_buffer+i) = ((char*) message_pointer)[i];
 		}
 		mailbox->tail = mailbox->ring_buffer+overflow;
 	}
 	else{
 		// we can allocate a contiguous chunk of memory
 		for(U32 i = 0;i<length;i++){ // from the tail to the end
-			*(mailbox->tail+i) = ((char*) message_node)[i];
+			*(mailbox->tail+i) = ((char*) message_pointer)[i];
 		}
 		mailbox->tail = mailbox->tail+length;
 	}	
@@ -38,26 +37,34 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 
 int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 	
-	//need to add check for invalid edge case
-	RTX_MSG_HDR *header = (RTX_MSG_HDR *)(mailbox->head);
-	char *return_message = (void *)(mailbox->head);
-	U8 length = header->length;
-	
-	if(length != reqSize)
-	{
-		//SET ERRNO
-		return RTX_ERR;
-	}
-		
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
-	return_message = buf;
-
-	char* headAddress = mailbox->head;
 	
-	if(( headAddress+ length ) > endAddress) {
+	char tmp_header[6];
+	char * tmp_ptr = mailbox->head;
+	U32 i = 0;
+	while(i<6){
+		if( (tmp_ptr+i)>endAddress ){
+			tmp_ptr = mailbox->ring_buffer-i;
+		}
+		tmp_header[i] = *(tmp_ptr+i);
+		i++;
+	}
+	
+	RTX_MSG_HDR *header = (RTX_MSG_HDR *)tmp_header;
+	
+	U8 length = header->length;//
+	
+	// This is the only error we need to read the header
+	if(length > (reqSize)) return RTX_ERR;//
+	
+	char *return_message = buf;
+	char* headAddress = mailbox->head;
+	//printf("Head: %x\r\n",headAddress);
+	
+	if( ( headAddress+ length ) > endAddress ) {
 		
-		U32 overflow = headAddress + length - endAddress;
-
+		U32 overflow = headAddress + length -1 - endAddress;
+		printf("OVERFLOW = %u \r\n",overflow);
 		for(U32 i = 0;i<(length - overflow);i++){
 			return_message[i] = *(headAddress+i);
 		}
@@ -68,10 +75,9 @@ int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 		mailbox->head = mailbox->ring_buffer+overflow;
 	} 
 	else {
-		U32 i;
-		while(i<length){
+		for( i = 0 ; i < length; i++)
+		{
 			return_message[i] = *(mailbox->head+i);
-			i+=1;
 		}
 		mailbox->head = mailbox->head+length;
 	}
@@ -89,7 +95,9 @@ void initializeMailbox(mailbox_t *mailbox, U8 id, U32 size) {
 	mailbox->id = id;	
 	mailbox->max_size = size;
 	mailbox->current_size = 0;
-	mailbox->ring_buffer = k_mpool_alloc(MPID_IRAM1, size);
+	mailbox->ring_buffer = k_mpool_alloc(MPID_IRAM2, size);
+	mailbox->head = mailbox->ring_buffer;
+	mailbox->tail = mailbox->ring_buffer; 
 	if(mailbox->ring_buffer == NULL){
 		//SET AN ERROR
 	}

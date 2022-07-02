@@ -53,6 +53,7 @@ U8 assignTaskId(char cmd, U8 sender_tid)
     return UNDEF;
 }
 
+// TODO: make it utility class function?
 void printToConsole(char *data, U32 data_len) {
     msg_node *to_send = k_mpool_alloc(MPID_IRAM2, 6 + data_len); // 1 for character to echo
     to_send->header->length = data_len + 6;
@@ -80,8 +81,8 @@ void task_kcd(void)
     // request a mailbox of size KCD_MBX_SIZE
     k_mbx_create(KCD_MBX_SIZE);
 
+    U8 *msg_buf = k_mpool_alloc(MPID_IRAM2, KCD_CMD_BUF_SIZE); // is repeatedly overwritten
     msg_node *tmp_msg;
-    U8 *msg_buf;
 
     char cmd[KCD_CMD_BUF_SIZE]; // TODO:  
     int len = 0;
@@ -128,8 +129,11 @@ void task_kcd(void)
                         }
                     }
 
+                } 
+                else {
+                    printToConsole("Invalid Command", 15);
                 }
-                
+									
                 // Enter on Console
                 printToConsole("\r", 1);
 
@@ -138,7 +142,7 @@ void task_kcd(void)
             {
                 cmd[len] = *(tmp_msg->data);
 
-                printToConsole(cmd + len, 1);
+                printToConsole(&cmd[len], 1);
 
                 len++;
             }
@@ -149,6 +153,9 @@ void task_kcd(void)
         }
 
     }
+
+    k_mpool_dealloc(MPID_IRAM2, msg_buf); // will probably never run
+
 }
 
 /*

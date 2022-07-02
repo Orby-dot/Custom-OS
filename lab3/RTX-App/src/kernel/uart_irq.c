@@ -229,7 +229,7 @@ void UART0_IRQHandler(void)
     } else if (IIR_IntId & IIR_THRE) { //transit data
         uint8_t char_out;
         /* THRE Interrupt, transmit holding register becomes empty */
-						if(k_recv_msg_nb(recvBuf,7)){
+						if(k_recv_msg_nb(recvBuf,7)){ // TODO: should be while?
 							
 							char_out = recvBuf[6];
 #ifdef DEBUG_1

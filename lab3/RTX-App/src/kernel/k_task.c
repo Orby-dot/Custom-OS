@@ -114,7 +114,7 @@ The memory map of the OS image may look like the following:
     
 ---------------------------------------------------------------------------*/ 
 
-BOOL debugEntryPrint = TRUE;
+BOOL debugEntryPrint = FALSE;
 
 
 
