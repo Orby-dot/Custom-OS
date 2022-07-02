@@ -38,7 +38,6 @@ int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 	
 	//need to add check for invalid edge case
 	RTX_MSG_HDR *header = (RTX_MSG_HDR *)(mailbox->head);
-	char *return_message = (void *)(mailbox->head);
 	U8 length = header->length;
 	
 	if(length > (reqSize+6))
@@ -46,9 +45,10 @@ int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 		//SET ERRNO
 		return RTX_ERR;
 	}
-		
+	
+	// TODO: highly probable error in calculating end address that might put head in front of tail
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1);
-	return_message = buf;
+	char *return_message = buf;
 
 	char* headAddress = mailbox->head;
 	
@@ -66,7 +66,7 @@ int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 		mailbox->head = mailbox->ring_buffer+overflow;
 	} 
 	else {
-		U32 i;
+		U32 i=0;
 		while(i<length){
 			return_message[i] = *(mailbox->head+i);
 			i+=1;
