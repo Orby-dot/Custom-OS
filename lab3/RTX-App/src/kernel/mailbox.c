@@ -12,7 +12,7 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1); // get the last available address in ring buffer before looping around
 	
-	if( ( mailbox->tail+ length ) > endAddress){
+	if( ( mailbox->tail+ length-1 ) > endAddress){
 		//we need to wrap around the ring buffer
 		
 		U32 overflow = mailbox->tail+ length - endAddress;
