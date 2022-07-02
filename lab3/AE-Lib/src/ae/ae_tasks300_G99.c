@@ -311,18 +311,15 @@ void task0(void)
         tsk_yield();    // let task2 run to create its mailbox
         update_exec_seq(test_id, tid);
         
-        void *buf1 = mem_alloc(sizeof(RTX_MSG_HDR)+1);   
+        RTX_MSG_HDR *buf1 = mem_alloc(sizeof(RTX_MSG_HDR));   
         if ( buf1 == NULL ) {
             printf("task0, mem_alloc failed, terminating test\r\n");
             test_exit();
         }
-				
-				RTX_MSG_HDR *h = buf1;
-        h->length = sizeof(RTX_MSG_HDR)+1;
-        h->type = MY_MSG_TYPE;
-        h->sender_tid = tid;
-        char* tmp = (char*)buf1+6; 
-				*tmp = 'A';
+        buf1->length = sizeof(RTX_MSG_HDR);
+        buf1->type = MY_MSG_TYPE;
+        buf1->sender_tid = tid;
+        
         (*p_index)++;
         sprintf(g_ae_xtest.msg, "task0: send_msg_nb to tid(%u)", g_tids[2]);
         ret_val = send_msg_nb(g_tids[2], buf1);      // no-blocking send to task2, a mesage with no data field 
@@ -381,7 +378,7 @@ void task1(void)
     
     size_t msg_hdr_size = sizeof(struct rtx_msg_hdr);
     U8  *buf = &g_buf1[0];                  // buffer is allocated by the caller */
-    struct rtx_msg_hdr *ptr = (void *)buf;  
+    struct rtx_msg_hdr *ptr = (void *)buf;
    
     printf("%s: TID = %u, task1: entering\r\n", PREFIX_LOG2, tid);   
     update_exec_seq(test_id, tid);
