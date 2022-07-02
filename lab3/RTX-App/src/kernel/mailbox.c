@@ -9,6 +9,7 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	
 	if( (length) > (mailbox->max_size - mailbox->current_size)){ //length larger than available size in mailbox
 		// NOT ENOUGH MEM;
+		return;
 	}
 	
 	char * endAddress = (char*) ((mailbox->ring_buffer ) + mailbox->max_size-1); // get the last available address in ring buffer before looping around
@@ -17,13 +18,14 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 		//we need to wrap around the ring buffer
 		
 		U32 overflow = mailbox->tail+ length-1 - endAddress;
+		printf("OVERFLOW : %u\r\n",overflow);
 		for(U32 i = 0;i< ( length - overflow ) ;i++){ // from the tail to the end
 			*(mailbox->tail+i) = ((char*) message_pointer)[i];
 		}
 		for(U32 i = 0;i<(overflow);i++){ //from the beginning and cover the remaining overflowed length
-			*(mailbox->ring_buffer+i) = ((char*) message_pointer)[i];
+			*(mailbox->ring_buffer+i) = ((char*) message_pointer)[i + (length - overflow) ];
 		}
-		mailbox->tail = mailbox->ring_buffer+overflow;
+		mailbox->tail = mailbox->ring_buffer+(overflow);
 	}
 	else{
 		// we can allocate a contiguous chunk of memory
@@ -61,7 +63,7 @@ int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 	char* headAddress = mailbox->head;
 	//printf("Head: %x\r\n",headAddress);
 	
-	if( ( headAddress+ length ) > endAddress ) {
+	if( ( headAddress+ length -1 ) > endAddress ) {
 		
 		U32 overflow = headAddress + length -1 - endAddress;
 		printf("OVERFLOW = %u \r\n",overflow);
@@ -72,7 +74,7 @@ int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 			return_message[i] = *(mailbox->ring_buffer+i);
 		}
 	
-		mailbox->head = mailbox->ring_buffer+overflow;
+		mailbox->head = mailbox->ring_buffer+(overflow);
 	} 
 	else {
 		for( i = 0 ; i < length; i++)

@@ -44,7 +44,7 @@
 #include "ae_util.h"
 #include "ae_tasks_util.h"
 
-#define     BUF_LEN         20
+#define     BUF_LEN         13
 #define     MY_MSG_TYPE     100     // some customized message type, better move it to common_ext.h
 
 #define     NUM_INIT_TASKS  2       // number of tasks during initialization
@@ -143,8 +143,8 @@ void priv_task1(void) {
 				printf("I'm going to try to sent task 2 msgs with data\r\n");
 			for(int i = 0 ; i < 10; i++)
 			{
-        ret_val = send_msg(tid1, buf1);
 				printf("Sending msg\r\n");
+        ret_val = send_msg(tid1, buf1);
 				((char*)buf1)[sizeof(RTX_MSG_HDR)] =((char*)buf1)[sizeof(RTX_MSG_HDR)]+1 ;			
 			}
     }
