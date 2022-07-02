@@ -53,19 +53,18 @@ Section Cross References
     k_msg.o(i.k_mbx_create) refers to k_task.o(.data) for gp_current_task
     k_msg.o(i.k_mbx_get) refers to k_task.o(.data) for gp_current_task
     k_msg.o(i.k_mbx_ls) refers to k_task.o(.bss) for g_tcbs
-    k_msg.o(i.k_recv_msg) refers to mailbox.o(i.getMessage) for getMessage
     k_msg.o(i.k_recv_msg) refers to k_msg.o(i.sendAll) for sendAll
+    k_msg.o(i.k_recv_msg) refers to mailbox.o(i.getMessage) for getMessage
     k_msg.o(i.k_recv_msg) refers to ready_queue.o(i.addTCBtoFront) for addTCBtoFront
     k_msg.o(i.k_recv_msg) refers to k_task.o(i.k_tsk_run_new) for k_tsk_run_new
     k_msg.o(i.k_recv_msg) refers to ready_queue.o(i.addTCBtoRecvBLK) for addTCBtoRecvBLK
     k_msg.o(i.k_recv_msg) refers to k_task.o(.data) for gp_current_task
     k_msg.o(i.k_recv_msg) refers to k_rtx_init.o(.bss) for readyQueuesArray
     k_msg.o(i.k_recv_msg_nb) refers to mailbox.o(i.getMessage) for getMessage
-    k_msg.o(i.k_recv_msg_nb) refers to k_msg.o(i.copyToBuf) for copyToBuf
-    k_msg.o(i.k_recv_msg_nb) refers to k_mem.o(i.k_mpool_dealloc) for k_mpool_dealloc
     k_msg.o(i.k_recv_msg_nb) refers to k_msg.o(i.sendAll) for sendAll
     k_msg.o(i.k_recv_msg_nb) refers to ready_queue.o(i.addTCBtoFront) for addTCBtoFront
     k_msg.o(i.k_recv_msg_nb) refers to k_task.o(i.k_tsk_run_new) for k_tsk_run_new
+    k_msg.o(i.k_recv_msg_nb) refers to k_rtx_init.o(.data) for errno
     k_msg.o(i.k_recv_msg_nb) refers to k_task.o(.data) for gp_current_task
     k_msg.o(i.k_recv_msg_nb) refers to k_rtx_init.o(.bss) for readyQueuesArray
     k_msg.o(i.k_send_msg) refers to ready_queue.o(i.addTCBtoBack) for addTCBtoBack
@@ -483,6 +482,7 @@ Removing Unused input sections from the image.
     Removing k_msg.o(.rev16_text), (4 bytes).
     Removing k_msg.o(.revsh_text), (4 bytes).
     Removing k_msg.o(.rrx_text), (6 bytes).
+    Removing k_msg.o(i.copyToBuf), (20 bytes).
     Removing k_rtx_init.o(.rev16_text), (4 bytes).
     Removing k_rtx_init.o(.revsh_text), (4 bytes).
     Removing k_rtx_init.o(.rrx_text), (6 bytes).
@@ -515,15 +515,15 @@ Removing Unused input sections from the image.
     Removing cdisp_task.o(.rev16_text), (4 bytes).
     Removing cdisp_task.o(.revsh_text), (4 bytes).
     Removing cdisp_task.o(.rrx_text), (6 bytes).
-    Removing cdisp_task.o(i.printToUART), (70 bytes).
-    Removing cdisp_task.o(i.task_cdisp), (64 bytes).
+    Removing cdisp_task.o(i.printToUART), (72 bytes).
+    Removing cdisp_task.o(i.task_cdisp), (68 bytes).
     Removing kcd_task.o(.rev16_text), (4 bytes).
     Removing kcd_task.o(.revsh_text), (4 bytes).
     Removing kcd_task.o(.rrx_text), (6 bytes).
     Removing kcd_task.o(i.assignTaskId), (72 bytes).
     Removing kcd_task.o(i.getTaskId), (72 bytes).
-    Removing kcd_task.o(i.printToConsole), (54 bytes).
-    Removing kcd_task.o(i.task_kcd), (304 bytes).
+    Removing kcd_task.o(i.printToConsole), (60 bytes).
+    Removing kcd_task.o(i.task_kcd), (316 bytes).
     Removing kcd_task.o(.bss), (62 bytes).
     Removing null_task.o(.rev16_text), (4 bytes).
     Removing null_task.o(.revsh_text), (4 bytes).
@@ -537,4 +537,4 @@ Removing Unused input sections from the image.
     Removing main.o(.rev16_text), (4 bytes).
     Removing main.o(.revsh_text), (4 bytes).
 
-76 unused section(s) (total 2314 bytes) removed from the image.
+77 unused section(s) (total 2358 bytes) removed from the image.

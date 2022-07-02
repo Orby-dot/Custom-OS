@@ -8,7 +8,6 @@
 #include "free_list.h"
 #include "k_msg.h"
 #include "common.h"
-#include "message_node.h"
 
 #define UNDEF 20
 
@@ -55,12 +54,16 @@ U8 assignTaskId(char cmd, U8 sender_tid)
 
 // TODO: make it utility class function?
 void printToConsole(char *data, U32 data_len) {
-    msg_node *to_send = k_mpool_alloc(MPID_IRAM2, 6 + data_len); // 1 for character to echo
-    to_send->header->length = data_len + 6;
-    to_send->header->sender_tid = TID_KCD;
-    to_send->header->type = DISPLAY;
+    char *to_send = k_mpool_alloc(MPID_IRAM2, 6 + data_len);
+    RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
+    char *data_ts = (char *)(to_send);
+    data_ts += 6;
 
-    to_send->data = data;
+    header_ts->length = data_len + 6;
+    header_ts->sender_tid = TID_KCD;
+    header_ts->type = DISPLAY;
+
+    data_ts = data;
 
     k_send_msg(TID_CON, to_send);
 
@@ -81,8 +84,7 @@ void task_kcd(void)
     // request a mailbox of size KCD_MBX_SIZE
     k_mbx_create(KCD_MBX_SIZE);
 
-    U8 *msg_buf = k_mpool_alloc(MPID_IRAM2, KCD_CMD_BUF_SIZE); // is repeatedly overwritten
-    msg_node *tmp_msg;
+    char *msg_buf = k_mpool_alloc(MPID_IRAM2, KCD_CMD_BUF_SIZE); // is repeatedly overwritten
 
     char cmd[KCD_CMD_BUF_SIZE]; // TODO:  
     int len = 0;
@@ -92,15 +94,17 @@ void task_kcd(void)
 
         // infinite call recv_msg
         k_recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
-        tmp_msg = (msg_node *)msg_buf;
+        RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
+        char *data = (char *)(msg_buf);
+        data += 6;
 
-        if (tmp_msg->header->type == KCD_REG)
+        if (header->type == KCD_REG)
         {
-            assignTaskId(tmp_msg->data[0], tmp_msg->header->sender_tid);
+            assignTaskId(data[0], header->sender_tid);
         }
-        else if (tmp_msg->header->type == KEY_IN)
+        else if (header->type == KEY_IN)
         {
-            if (*(tmp_msg->data) == '\r') // TODO: Is enter check correct?
+            if (*(data) == '\r') // TODO: Is enter check correct?
             { 
                 if (cmd[0] == '%')
                 {
@@ -110,13 +114,17 @@ void task_kcd(void)
                         U8 taskId = getTaskId(cmd[1]);
 
                         if (taskId != UNDEF) {
-                            msg_node *to_send = k_mpool_alloc(MPID_IRAM2, 6 + len);
-                            to_send->header->length = len + 6;
-                            to_send->header->sender_tid = TID_KCD;
-                            to_send->header->type = KCD_CMD;
+                            char *to_send = k_mpool_alloc(MPID_IRAM2, 6 + len);
+                            RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
+                            char *data_ts = (char *)(to_send);
+                            data_ts += 6;
+
+                            header_ts->length = len + 6;
+                            header_ts->sender_tid = TID_KCD;
+                            header_ts->type = KCD_CMD;
 
                             for (int i = 0; i < len - 1; i++) {
-                                to_send->data[i] = cmd[i + 1];
+                                data_ts[i] = cmd[i + 1];
                             }
 
                             k_send_msg(taskId, to_send);
@@ -140,7 +148,7 @@ void task_kcd(void)
             }
             else
             {
-                cmd[len] = *(tmp_msg->data);
+                cmd[len] = *(data);
 
                 printToConsole(&cmd[len], 1);
 
