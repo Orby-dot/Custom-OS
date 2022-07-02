@@ -34,6 +34,9 @@ void task_cdisp(void)
     msg_node *tmp_msg;
 
     
+    LPC_UART_TypeDef *pUart;
+    pUart = (LPC_UART_TypeDef *) LPC_UART0;    
+
     while(1) {
 
         // CALLED when something to output (character)
