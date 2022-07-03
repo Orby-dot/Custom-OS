@@ -291,7 +291,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
     }
     
     // allocate kernel stack for the task
-    ksp = k_alloc_k_stack(tid);
+    ksp = (U32*)(k_mpool_alloc(MPID_IRAM2, KERN_STACK_SIZE));
     if ( ksp == NULL ) {
 				errno = ENOMEM;
         return RTX_ERR;
@@ -542,7 +542,7 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 			ksp = freeTCB->msp_base;		
 		}
 		else{
-			ksp = k_alloc_k_stack(freeTCB->tid);
+			ksp = (U32*)(k_mpool_alloc(MPID_IRAM2, KERN_STACK_SIZE));
 			freeTCB->msp_base = ksp;
 		}
 		if ( ksp == NULL ) {

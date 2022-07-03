@@ -274,25 +274,6 @@ int k_mem_init(int algo)
     return RTX_OK;
 }
 
-/**
- * @brief allocate kernel stack statically
- */
-U32* k_alloc_k_stack(task_t tid)
-{
-    
-    if ( tid >= MAX_TASKS) {
-        errno = EAGAIN;
-        return NULL;
-    }
-    U32 *sp = g_k_stacks[tid+1];
-    
-    // 8B stack alignment adjustment
-    if ((U32)sp & 0x04) {   // if sp not 8B aligned, then it must be 4B aligned
-        sp--;               // adjust it to 8B aligned
-    }
-    return sp;
-}
-
 /*
  *===========================================================================
  *                             END OF FILE
