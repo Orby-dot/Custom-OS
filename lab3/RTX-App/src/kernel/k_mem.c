@@ -107,7 +107,7 @@ const U32 g_k_stack_size = KERN_STACK_SIZE;
 const U32 g_p_stack_size = PROC_STACK_SIZE;
 
 // task kernel stacks
-U32 g_k_stacks[MAX_TASKS][KERN_STACK_SIZE >> 2] __attribute__((aligned(8)));
+//U32 g_k_stacks[MAX_TASKS][KERN_STACK_SIZE >> 2] __attribute__((aligned(8)));
 
 // task process stack (i.e. user stack) for tasks in thread mode
 // remove this bug array in your lab2 code

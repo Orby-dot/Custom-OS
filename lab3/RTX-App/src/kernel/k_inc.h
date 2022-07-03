@@ -102,7 +102,7 @@ extern const U32 g_k_stack_size;    // kernel stack size
 extern const U32 g_p_stack_size;    // process stack size
 
 // task kernel stacks are statically allocated inside the OS image
-extern U32 g_k_stacks[MAX_TASKS][KERN_STACK_SIZE >> 2] __attribute__((aligned(8)));
+//extern U32 g_k_stacks[MAX_TASKS][KERN_STACK_SIZE >> 2] __attribute__((aligned(8)));
 
 // process stack for tasks, statically allocated inside the OS image  */
 // extern U32 g_p_stacks[MAX_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
