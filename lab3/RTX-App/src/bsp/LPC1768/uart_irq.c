@@ -32,29 +32,42 @@
  *              
  * @version     V1.2022.05
  * @authors     Yiqing Huang and NXP Semiconductors
- * @date        2022 May
+ * @date        2022 FEB 
  *****************************************************************************/
+#include <LPC17xx.h>
+#include "uart_irq.h"
+#include "uart_polling.h"
+#include "k_msg.h"
+#ifdef DEBUG_0
+#include "printf.h"
+#endif
 
-#include "k_inc.h"
-#include "k_rtx.h"
-
-
-uint8_t g_buffer[]= "You Typed a Q\n\r";
+uint8_t g_buffer[] = "";    // g_buffer[12] = 'Q'
 static uint8_t *gp_buffer = g_buffer;       // TX IRQ read/write this var      
 uint8_t g_send_char = 0;                    // main() read/write this flag
 uint8_t g_char_in;                          // main() read this var
 uint8_t g_tx_irq = 0;                       // initial TX irq is off
-uint8_t g_switch_flag = FALSE;
+
+RTX_MSG_HDR SEND_MSG_HDR = {.length =1 ,.sender_tid = TID_UART, .type = 0};
+static RTX_MSG_HDR *msg_Send_Buf;
+
+U8 sendBuf[7];
+U8 recvBuf[7];
 
 /**************************************************************************//**
- * @brief   initializes the n_uart interrupts
- * @note    it only supports UART0. It can be easily extended to support UART1 IRQ.
+ * @brief: initialize the n_uart
+ * NOTES: It only supports UART0. It can be easily extended to support UART1 IRQ.
  * The step number in the comments matches the item number in Section 14.1 on pg 298
  * of LPC17xx_UM
  *****************************************************************************/
 int uart_irq_init(int n_uart) {
-
+		k_mbx_create(UART_MBX_SIZE);
     LPC_UART_TypeDef *pUart;
+		*msg_Send_Buf = SEND_MSG_HDR;
+		for(U8 i = 0 ; i < 6; i++)
+		{
+			sendBuf[i] = ((U8*)msg_Send_Buf)[i];
+		}
 
     if ( n_uart ==0 ) {
         /*
@@ -164,21 +177,21 @@ int uart_irq_init(int n_uart) {
     /* enable RBR and RLS interrupts */
     pUart->IER = IER_RBR | IER_RLS; 
     
-    /* Step 6b: set up UART0 IRQ priority */    
-    NVIC_SetPriority(UART0_IRQn, 0x10);
-    
-    /* Step 6c: enable the UART interrupt from the system level */
-    
+    /* Step 6b: set UART interrupt priority and enable the UART interrupt from the system level */   
     if ( n_uart == 0 ) {
-        NVIC_EnableIRQ(UART0_IRQn); /* CMSIS function */
+        /* UART0 IRQ priority setting */
+        NVIC_SetPriority(UART0_IRQn, 0x08);
+        NVIC_EnableIRQ(UART0_IRQn); 
     } else if ( n_uart == 1 ) {
-        NVIC_EnableIRQ(UART1_IRQn); /* CMSIS function */
+        NVIC_SetPriority(UART1_IRQn, 0x08);
+        NVIC_EnableIRQ(UART1_IRQn);
     } else {
         return 1; /* not supported yet */
     }
-    pUart->THR = '\0';
+    
     return 0;
 }
+
 
 /**
  * @brief: CMSIS ISR for UART0 IRQ Handler
@@ -204,51 +217,38 @@ void UART0_IRQHandler(void)
 #endif /* DEBUG_0 */ 
         if (g_send_char == 0 && !g_tx_irq) {
             g_char_in = char_in;
+					
+						sendBuf[6] = g_char_in;
+					//nonBlocking send
+						k_send_msg_nb(TID_KCD,sendBuf);
 #ifdef DEBUG_0
             printf("char %c gets processed\r\n", g_char_in);
 #endif /* DEBUG_0 */ 
             g_send_char = 1;
         }
-#ifdef ECE350_P3       
-        /* setting the g_continue_flag */
-        if ( g_char_in == 's' ) {
-            g_switch_flag = 1; 
-        } else {
-            g_switch_flag = 0;
-        }
-#endif
-    } else if (IIR_IntId & IIR_THRE) {
+    } else if (IIR_IntId & IIR_THRE) { //transit data
         uint8_t char_out;
         /* THRE Interrupt, transmit holding register becomes empty */
-        if (*gp_buffer != '\0' ) {  // not end of the string yet
-            char_out = *gp_buffer;
+						if(k_recv_msg_nb(recvBuf,7)){ // TODO: should be while?
+							
+							char_out = recvBuf[6];
 #ifdef DEBUG_1
             printf("Writing a char = %c \r\n", char_out);
-#endif /* DEBUG_1 */            
-            pUart->THR = char_out;
-            gp_buffer++;
-        } else { // end of the string
+#endif /* DEBUG_1 */
+							pUart->THR = char_out;
+						}
+        // end of the string
 #ifdef DEBUG_1
             uart1_put_string("Finish writing. Turning off IER_THRE\r\n");
 #endif /* DEBUG_1 */
             pUart->IER &= ~IER_THRE; // clear the IER_THRE bit 
             g_tx_irq = 0;
-            gp_buffer = g_buffer;    // reset the buffer  
-        }          
-    } else {  /* not implemented yet */
+    } else {  /* not implemented yet *///no data
 #ifdef DEBUG_0
             uart1_put_string("Should not get here!\r\n");
 #endif /* DEBUG_0 */
         return;
     }    
-    
-    // when interrupt handling is done, if new scheduling decision is made
-    // then do context switching to the newly selected task
-#ifdef ECE350_P3
-    if ( g_switch_flag == 1 ) {
-        k_tsk_yield();
-    }
-#endif // ECE350_P3
 }
 /*
  *===========================================================================

@@ -1,7 +1,7 @@
 /**
  * @brief The KCD Task Template File
  * @note  The file name and the function name can be changed
- * @see   k_tasks.h
+ * @see   tasks.h
  */
 
 #include "rtx.h"
@@ -54,7 +54,7 @@ U8 assignTaskId(char cmd, U8 sender_tid)
 
 // TODO: make it utility class function?
 void printToConsole(char *data, U32 data_len) {
-    char *to_send = k_mpool_alloc(MPID_IRAM2, 6 + data_len);
+    char *to_send = mem_alloc(6 + data_len);
     RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
     char *data_ts = (char *)(to_send);
     data_ts += 6;
@@ -65,9 +65,9 @@ void printToConsole(char *data, U32 data_len) {
 
     data_ts = data;
 
-    k_send_msg(TID_CON, to_send);
+    send_msg(TID_CON, to_send);
 
-    k_mpool_dealloc(MPID_IRAM2, to_send);
+    mem_dealloc(to_send);
 }
 
 
@@ -82,9 +82,9 @@ void task_kcd(void)
     }
 
     // request a mailbox of size KCD_MBX_SIZE
-    k_mbx_create(KCD_MBX_SIZE);
+    mbx_create(KCD_MBX_SIZE);
 
-    char *msg_buf = k_mpool_alloc(MPID_IRAM2, KCD_CMD_BUF_SIZE); // is repeatedly overwritten
+    char *msg_buf = mem_alloc(KCD_CMD_BUF_SIZE); // is repeatedly overwritten
 
     char cmd[KCD_CMD_BUF_SIZE]; // TODO:  
     int len = 0;
@@ -93,7 +93,7 @@ void task_kcd(void)
     {
 
         // infinite call recv_msg
-        k_recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
+        recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
         RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
         char *data = (char *)(msg_buf);
         data += 6;
@@ -114,7 +114,7 @@ void task_kcd(void)
                         U8 taskId = getTaskId(cmd[1]);
 
                         if (taskId != UNDEF) {
-                            char *to_send = k_mpool_alloc(MPID_IRAM2, 6 + len);
+                            char *to_send = mem_alloc(6 + len);
                             RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
                             char *data_ts = (char *)(to_send);
                             data_ts += 6;
@@ -127,9 +127,9 @@ void task_kcd(void)
                                 data_ts[i] = cmd[i + 1];
                             }
 
-                            k_send_msg(taskId, to_send);
+                            send_msg(taskId, to_send);
 
-                            k_mpool_dealloc(MPID_IRAM2, to_send);
+                            mem_dealloc(to_send);
 
                             len = 0;
                         } else {
@@ -162,7 +162,7 @@ void task_kcd(void)
 
     }
 
-    k_mpool_dealloc(MPID_IRAM2, msg_buf); // will probably never run
+    mem_dealloc(msg_buf); // will probably never run
 
 }
 

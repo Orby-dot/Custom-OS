@@ -43,6 +43,8 @@
 #include "k_rtx.h"
 #include "k_inc.h"
 #include "ready_queue.h"
+#include "k_task.h"
+#include "uart_irq.h"
 
 int errno = 0;
 
@@ -84,13 +86,6 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     if ( uart_irq_init(0) != RTX_OK ) {
         return RTX_ERR;
     }
-
-		// taken from https://github.com/yqh/ece350/blob/master/manual_code/lab3/UART0_IRQ/src/main_uart_irq.c
-    //__disable_irq();   
-    //uart_irq_init(0); // uart0 interrupt driven, for RTX console 
-    //uart_init(1);     // uart1 polling, for debugging
-    //init_printf(NULL, putc);    // printf uses the polling terminal
-    //__enable_irq();
     
     /* add timer(s) initialization code */
     
@@ -100,7 +95,24 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     if ( k_tsk_init(tasks, num_tasks) != RTX_OK ) {
         return RTX_ERR;
     }
-		
+
+		TASK_INIT taskinfo;
+    // KCD
+    taskinfo.ptask = task_kcd;
+    taskinfo.u_stack_size = PROC_STACK_SIZE;
+    taskinfo.tid = TID_KCD;
+    taskinfo.prio = HIGH;
+    taskinfo.priv = 0; // unprivileged
+    k_tsk_create_new(&taskinfo, &g_tcbs[TID_KCD], TID_KCD);
+
+    // CONSOLE 
+    taskinfo.ptask = task_cdisp;
+    taskinfo.u_stack_size = PROC_STACK_SIZE;
+    taskinfo.tid = TID_CON;
+    taskinfo.prio = HIGH;
+    taskinfo.priv = 1; //privileged
+    k_tsk_create_new(&taskinfo, &g_tcbs[TID_CON], TID_CON);
+    
 		/* add message passing initialization code */
     
     k_tsk_start();        // start the first task

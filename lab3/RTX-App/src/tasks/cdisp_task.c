@@ -14,28 +14,28 @@ void printToUART(char *data, U32 data_len)
 {
     for (int i = 0; i < data_len; i++)
     {
-        char *to_send = k_mpool_alloc(MPID_IRAM2, 6 + 1);
+        char *to_send = mem_alloc(6 + 1);
         RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
         char *data_ts = (char *)(to_send);
         data_ts += 6;
 
         header_ts->length = data_len + 6;
-        header_ts->sender_tid = TID_KCD;
+        header_ts->sender_tid = TID_CON;
         header_ts->type = DISPLAY;
 
         data_ts = &(data[i]);
 
-        k_send_msg(TID_CON, to_send);
+        send_msg(TID_UART, to_send);
 
-        k_mpool_dealloc(MPID_IRAM2, to_send);
+        mem_dealloc(to_send);
     }
 }
 
 void task_cdisp(void)
 {
-    k_mbx_create(CON_MBX_SIZE);
+    mbx_create(CON_MBX_SIZE);
 
-    U8 *msg_buf = k_mpool_alloc(MPID_IRAM2, KCD_CMD_BUF_SIZE); // is repeatedly overwritten
+    U8 *msg_buf = mem_alloc(KCD_CMD_BUF_SIZE); // is repeatedly overwritten
 
     LPC_UART_TypeDef *pUart;
     pUart = (LPC_UART_TypeDef *)LPC_UART0;
@@ -44,7 +44,7 @@ void task_cdisp(void)
     {
 
         // CALLED when something to output (character)
-        k_recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
+        recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
         RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
         char *data = (char *)(msg_buf);
         data += 6;
@@ -63,7 +63,7 @@ void task_cdisp(void)
         }
     }
 
-    k_mpool_dealloc(MPID_IRAM2, msg_buf); // will probably never run
+    mem_dealloc(msg_buf); // will probably never run
 }
 
 /*
