@@ -8,8 +8,10 @@
 #include "k_msg.h"
 #include "common.h"
 #include "uart_irq.h"
+#include "uart_polling.h"
 
 // uint8_t g_send_char;
+extern uint8_t g_tx_irq;
 
 // TODO: make it utility class function?
 void printToUART(char *data, U32 data_len)
@@ -27,7 +29,7 @@ void printToUART(char *data, U32 data_len)
 
         *data_ts = data[i];
 
-        send_msg(TID_UART, to_send);
+        send_msg_nb(TID_UART, to_send);
 
         mem_dealloc(to_send);
     }
@@ -47,7 +49,7 @@ void task_cdisp(void)
 
         // CALLED when something to output (character)
         recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
-				printf("CONSOLE DISPLAY HAS GOT A MESSAGE!");
+				printf("CONSOLE DISPLAY HAS GOT A MESSAGE!\r\n");
         RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
         char *data = (char *)(msg_buf);
         data += 6;
@@ -58,11 +60,12 @@ void task_cdisp(void)
         // sends messsage to UART0_IRQ_Handler to output
         if (header->type == DISPLAY)
         {
-
-            // g_send_char = 0;
+						pUart->THR = *data;
+            g_send_char = 0;
             printToUART(data, header->length - 6);
             // enable TX Interrupt
             pUart->IER |= IER_THRE;
+						g_tx_irq = 1;
         }
         else
         {

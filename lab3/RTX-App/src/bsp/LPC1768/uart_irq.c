@@ -47,6 +47,7 @@ static uint8_t *gp_buffer = g_buffer; // TX IRQ read/write this var
 uint8_t g_send_char = 0;              // main() read/write this flag
 uint8_t g_char_in;                    // main() read this var
 uint8_t g_tx_irq = 0;                 // initial TX irq is off
+mailbox_t * uart_mailbox;
 
 /**************************************************************************/ /**
  * @brief: initialize the n_uart
@@ -56,8 +57,8 @@ uint8_t g_tx_irq = 0;                 // initial TX irq is off
  *****************************************************************************/
 int uart_irq_init(int n_uart)
 {
-
-    k_mbx_create(UART_MBX_SIZE);
+		uart_mailbox = k_mpool_alloc(MPID_IRAM2, UART_MBX_SIZE);
+		initializeMailbox(uart_mailbox, TID_UART, UART_MBX_SIZE);
     LPC_UART_TypeDef *pUart;
 
     if (n_uart == 0)
@@ -245,7 +246,7 @@ void UART0_IRQHandler(void)
         
         
         char *msg_buf = k_mpool_alloc(MPID_IRAM2, 6 + 1);
-        if (k_recv_msg_nb(msg_buf, 7))
+        if (k_recv_msg_nb_uart(msg_buf, 7))
         { // TODO: should be while?
 
             char_out = msg_buf[6];

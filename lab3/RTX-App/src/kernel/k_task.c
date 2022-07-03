@@ -139,7 +139,7 @@ TCB *scheduler(void)
     /* *****MODIFY THIS FUNCTION ***** */
     //task_t tid = gp_current_task->tid;
     //return &g_tcbs[(++tid)%g_num_active_tasks];
-	for (U8 i = 0; i < 7 ;i++) {
+	for (U8 i = 0; i < 5 ;i++) {
 		if (readyQueuesArray[i].head){
 			
 			TCB * selectedTCB = removeTCB(readyQueuesArray, i);

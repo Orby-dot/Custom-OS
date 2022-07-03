@@ -40,6 +40,7 @@
 
 #include <stdint.h>	
 #include "uart_def.h"
+#include "k_msg.h"
 
 /*
  *===========================================================================
@@ -48,7 +49,7 @@
  */
  
 extern uint8_t g_send_char;
-
+extern mailbox_t * uart_mailbox;
 /*
  *===========================================================================
  *                            FUNCTION PROTOTYPES

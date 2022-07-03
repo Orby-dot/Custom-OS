@@ -149,7 +149,7 @@ void priv_task1(void) {
 			}
     }
 		tsk_yield();
-    
+    tsk_exit();
     
 }
 
@@ -213,6 +213,8 @@ void task1(void)
 #endif /* DEBUG_0 */
         }
     }
+		tsk_exit();         // terminating the task
+
 }
 
 /**
@@ -234,7 +236,7 @@ void task2(void)
 		}
     mem_dealloc(buf);   // free the buffer space
     printf("TASK 2 DED\r\n");
-    tsk_exit();         // terminating the task
+    tsk_exit();
 }
 
 /**
