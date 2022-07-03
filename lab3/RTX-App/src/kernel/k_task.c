@@ -649,12 +649,24 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
 			}
 			else
 			{
-				removeSpecificTCB(readyQueuesArray,selectedTCB->prio,task_id);
-				
-				addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
-				addTCBtoBack(readyQueuesArray,prio,selectedTCB);
-				
-				gp_current_task->state = READY;
+				if(selectedTCB->state != BLK_RECV && selectedTCB->state != BLK_SEND)
+				{
+					removeSpecificTCB(readyQueuesArray,selectedTCB->prio,task_id);
+					
+					addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+					addTCBtoBack(readyQueuesArray,prio,selectedTCB);
+					
+					
+					gp_current_task->state = READY;
+				}
+				else if(selectedTCB->state != BLK_SEND)
+				{
+					removeSpecificTCB(sendQueuesArray,selectedTCB->prio,task_id);
+					
+					addTCBtoBack(sendQueuesArray,prio,selectedTCB);
+				}
+				selectedTCB->prio = prio;
+
 				
 				return k_tsk_run_new();
 			}	
