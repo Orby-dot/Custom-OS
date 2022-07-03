@@ -24,7 +24,7 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*/
-/**************************************************************************//**
+/**************************************************************************/ /**
  * @file        uart_irq.c
  * @brief       UART IRQ handler. It receives input char through RX interrupt
  *              and then writes a string containing the input char through
@@ -42,34 +42,26 @@
 #include "printf.h"
 #endif
 
-uint8_t g_buffer[] = "";    // g_buffer[12] = 'Q'
-static uint8_t *gp_buffer = g_buffer;       // TX IRQ read/write this var      
-uint8_t g_send_char = 0;                    // main() read/write this flag
-uint8_t g_char_in;                          // main() read this var
-uint8_t g_tx_irq = 0;                       // initial TX irq is off
+uint8_t g_buffer[] = "";              // g_buffer[12] = 'Q'
+static uint8_t *gp_buffer = g_buffer; // TX IRQ read/write this var
+uint8_t g_send_char = 0;              // main() read/write this flag
+uint8_t g_char_in;                    // main() read this var
+uint8_t g_tx_irq = 0;                 // initial TX irq is off
 
-RTX_MSG_HDR SEND_MSG_HDR = {.length =1 ,.sender_tid = TID_UART, .type = 0};
-static RTX_MSG_HDR *msg_Send_Buf;
-
-U8 sendBuf[7];
-U8 recvBuf[7];
-
-/**************************************************************************//**
+/**************************************************************************/ /**
  * @brief: initialize the n_uart
  * NOTES: It only supports UART0. It can be easily extended to support UART1 IRQ.
  * The step number in the comments matches the item number in Section 14.1 on pg 298
  * of LPC17xx_UM
  *****************************************************************************/
-int uart_irq_init(int n_uart) {
-		k_mbx_create(UART_MBX_SIZE);
-    LPC_UART_TypeDef *pUart;
-		*msg_Send_Buf = SEND_MSG_HDR;
-		for(U8 i = 0 ; i < 6; i++)
-		{
-			sendBuf[i] = ((U8*)msg_Send_Buf)[i];
-		}
+int uart_irq_init(int n_uart)
+{
 
-    if ( n_uart ==0 ) {
+    k_mbx_create(UART_MBX_SIZE);
+    LPC_UART_TypeDef *pUart;
+
+    if (n_uart == 0)
+    {
         /*
         Steps 1 & 2: system control configuration.
         Under CMSIS, system_LPC17xx.c does these two steps
@@ -100,30 +92,32 @@ int uart_irq_init(int n_uart) {
         -----------------------------------------------------
         Note this is done before Steps3-4 for coding purpose.
         */
-        
-        /* Pin P0.2 used as TXD0 (Com0) */
-        LPC_PINCON->PINSEL0 |= (1 << 4);  
-        
-        /* Pin P0.3 used as RXD0 (Com0) */
-        LPC_PINCON->PINSEL0 |= (1 << 6);  
 
-        pUart = (LPC_UART_TypeDef *) LPC_UART0;     
-        
-    } else if ( n_uart == 1) {
-        
-        /* see Table 79 on pg108 in LPC17xx_UM */ 
+        /* Pin P0.2 used as TXD0 (Com0) */
+        LPC_PINCON->PINSEL0 |= (1 << 4);
+
+        /* Pin P0.3 used as RXD0 (Com0) */
+        LPC_PINCON->PINSEL0 |= (1 << 6);
+
+        pUart = (LPC_UART_TypeDef *)LPC_UART0;
+    }
+    else if (n_uart == 1)
+    {
+
+        /* see Table 79 on pg108 in LPC17xx_UM */
         /* Pin P2.0 used as TXD1 (Com1) */
         LPC_PINCON->PINSEL4 |= (2 << 0);
 
         /* Pin P2.1 used as RXD1 (Com1) */
-        LPC_PINCON->PINSEL4 |= (2 << 2);          
+        LPC_PINCON->PINSEL4 |= (2 << 2);
 
-        pUart = (LPC_UART_TypeDef *) LPC_UART1;
-        
-    } else {
+        pUart = (LPC_UART_TypeDef *)LPC_UART1;
+    }
+    else
+    {
         return 1; /* not supported yet */
-    } 
-    
+    }
+
     /*
     -----------------------------------------------------
     Step 3: Transmission Configuration.
@@ -131,21 +125,19 @@ int uart_irq_init(int n_uart) {
             for baud rate calculation.
     -----------------------------------------------------
     */
-    
+
     /* Step 3a: DLAB=1, 8N1 */
-    pUart->LCR = UART_8N1; /* see uart.h file */ 
+    pUart->LCR = UART_8N1; /* see uart.h file */
 
     /* Step 3b: 115200 baud rate @ 25.0 MHZ PCLK */
     pUart->DLM = 0; /* see table 274, pg302 in LPC17xx_UM */
-    pUart->DLL = 9;    /* see table 273, pg302 in LPC17xx_UM */
-    
+    pUart->DLL = 9; /* see table 273, pg302 in LPC17xx_UM */
+
     /* FR = 1.507 ~ 1/2, DivAddVal = 1, MulVal = 2
        FR = 1.507 = 25MHZ/(16*9*115200)
        see table 285 on pg312 in LPC_17xxUM
     */
-    pUart->FDR = 0x21;       
-    
- 
+    pUart->FDR = 0x21;
 
     /*
     ----------------------------------------------------- 
@@ -155,7 +147,7 @@ int uart_irq_init(int n_uart) {
         enable Rx and Tx FIFOs, clear Rx and Tx FIFOs
     Trigger level 0 (1 char per interrupt)
     */
-    
+
     pUart->FCR = 0x07;
 
     /* Step 5 was done between step 2 and step 4 a few lines above */
@@ -172,26 +164,30 @@ int uart_irq_init(int n_uart) {
        See Table 275 on pg 302 in LPC17xx_UM for IER setting 
     */
     /* disable the Divisior Latch Access Bit DLAB=0 */
-    pUart->LCR &= ~(BIT(7)); 
-    
+    pUart->LCR &= ~(BIT(7));
+
     /* enable RBR and RLS interrupts */
-    pUart->IER = IER_RBR | IER_RLS; 
-    
-    /* Step 6b: set UART interrupt priority and enable the UART interrupt from the system level */   
-    if ( n_uart == 0 ) {
+    pUart->IER = IER_RBR | IER_RLS;
+
+    /* Step 6b: set UART interrupt priority and enable the UART interrupt from the system level */
+    if (n_uart == 0)
+    {
         /* UART0 IRQ priority setting */
         NVIC_SetPriority(UART0_IRQn, 0x08);
-        NVIC_EnableIRQ(UART0_IRQn); 
-    } else if ( n_uart == 1 ) {
+        NVIC_EnableIRQ(UART0_IRQn);
+    }
+    else if (n_uart == 1)
+    {
         NVIC_SetPriority(UART1_IRQn, 0x08);
         NVIC_EnableIRQ(UART1_IRQn);
-    } else {
+    }
+    else
+    {
         return 1; /* not supported yet */
     }
-    
+
     return 0;
 }
-
 
 /**
  * @brief: CMSIS ISR for UART0 IRQ Handler
@@ -199,56 +195,81 @@ int uart_irq_init(int n_uart) {
 
 void UART0_IRQHandler(void)
 {
-    uint8_t IIR_IntId;        /* Interrupt ID from IIR */          
+    uint8_t IIR_IntId; /* Interrupt ID from IIR */
     LPC_UART_TypeDef *pUart = (LPC_UART_TypeDef *)LPC_UART0;
-    
+
 #ifdef DEBUG_1
     uart1_put_string("Entering c_UART0_IRQHandler\r\n");
 #endif // DEBUG_1
 
     /* Reading IIR automatically acknowledges the interrupt */
-    IIR_IntId = (pUart->IIR) >> 1 ; /* skip pending bit in IIR */ 
-    if (IIR_IntId & IIR_RDA) { /* Receive Data Avaialbe */
-        
+    IIR_IntId = (pUart->IIR) >> 1; /* skip pending bit in IIR */
+    if (IIR_IntId & IIR_RDA)
+    { /* Receive Data Avaialbe */
+
         /* Read UART. Reading RBR will clear the interrupt */
         int char_in = pUart->RBR;
 #ifdef DEBUG_0
         printf("Reading a char = %c \r\n", char_in);
-#endif /* DEBUG_0 */ 
-        if (g_send_char == 0 && !g_tx_irq) {
+#endif /* DEBUG_0 */
+        if (g_send_char == 0 && !g_tx_irq)
+        {
             g_char_in = char_in;
-					
-						sendBuf[6] = g_char_in;
-					//nonBlocking send
-						k_send_msg_nb(TID_KCD,sendBuf);
+
+            char *to_send = k_mpool_alloc(MPID_IRAM2, 6 + 1);
+            RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
+            char *data_ts = (char *)(to_send);
+            data_ts += 6;
+
+            header_ts->length = 1 + 6;
+            header_ts->sender_tid = TID_UART;
+            header_ts->type = KEY_IN;
+
+            *data_ts = g_char_in;
+
+            //nonBlocking send
+            k_send_msg_nb(TID_KCD, to_send);
+
+            k_mpool_dealloc(MPID_IRAM2, to_send);
+
 #ifdef DEBUG_0
             printf("char %c gets processed\r\n", g_char_in);
-#endif /* DEBUG_0 */ 
+#endif /* DEBUG_0 */
             g_send_char = 1;
         }
-    } else if (IIR_IntId & IIR_THRE) { //transit data
+    }
+    else if (IIR_IntId & IIR_THRE)
+    { //transit data
         uint8_t char_out;
         /* THRE Interrupt, transmit holding register becomes empty */
-						if(k_recv_msg_nb(recvBuf,7)){ // TODO: should be while?
-							
-							char_out = recvBuf[6];
-#ifdef DEBUG_1
+        
+        
+        char *msg_buf = k_mpool_alloc(MPID_IRAM2, 6 + 1);
+        if (k_recv_msg_nb(msg_buf, 7))
+        { // TODO: should be while?
+
+            char_out = msg_buf[6];
+// #ifdef DEBUG_1
             printf("Writing a char = %c \r\n", char_out);
-#endif /* DEBUG_1 */
-							pUart->THR = char_out;
-						}
+// #endif /* DEBUG_1 */
+            pUart->THR = char_out;
+        }
         // end of the string
 #ifdef DEBUG_1
-            uart1_put_string("Finish writing. Turning off IER_THRE\r\n");
-#endif /* DEBUG_1 */
-            pUart->IER &= ~IER_THRE; // clear the IER_THRE bit 
-            g_tx_irq = 0;
-    } else {  /* not implemented yet *///no data
+        uart1_put_string("Finish writing. Turning off IER_THRE\r\n");
+#endif                           /* DEBUG_1 */
+        pUart->IER &= ~IER_THRE; // clear the IER_THRE bit
+        g_tx_irq = 0;
+
+        k_mpool_dealloc(MPID_IRAM2, msg_buf);
+    }
+    else
+    { /* not implemented yet */ //no data
 #ifdef DEBUG_0
-            uart1_put_string("Should not get here!\r\n");
+        uart1_put_string("Should not get here!\r\n");
 #endif /* DEBUG_0 */
         return;
-    }    
+    }
 }
 /*
  *===========================================================================

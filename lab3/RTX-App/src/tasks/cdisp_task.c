@@ -5,9 +5,11 @@
  */
 
 #include "rtx.h"
-
 #include "k_msg.h"
 #include "common.h"
+#include "uart_irq.h"
+
+// uint8_t g_send_char;
 
 // TODO: make it utility class function?
 void printToUART(char *data, U32 data_len)
@@ -23,7 +25,7 @@ void printToUART(char *data, U32 data_len)
         header_ts->sender_tid = TID_CON;
         header_ts->type = DISPLAY;
 
-        data_ts = &(data[i]);
+        *data_ts = data[i];
 
         send_msg(TID_UART, to_send);
 
@@ -45,14 +47,19 @@ void task_cdisp(void)
 
         // CALLED when something to output (character)
         recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
+				printf("CONSOLE DISPLAY HAS GOT A MESSAGE!");
         RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
         char *data = (char *)(msg_buf);
         data += 6;
+			
+				printf("CDISP DATA WE GOT: %x \r\n", *data);
+
 
         // sends messsage to UART0_IRQ_Handler to output
         if (header->type == DISPLAY)
         {
 
+            // g_send_char = 0;
             printToUART(data, header->length - 6);
             // enable TX Interrupt
             pUart->IER |= IER_THRE;

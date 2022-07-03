@@ -63,8 +63,7 @@ void printToConsole(char *data, U32 data_len) {
     header_ts->sender_tid = TID_KCD;
     header_ts->type = DISPLAY;
 
-    data_ts = data;
-
+    *data_ts = *data;
     send_msg(TID_CON, to_send);
 
     mem_dealloc(to_send);
@@ -73,6 +72,7 @@ void printToConsole(char *data, U32 data_len) {
 
 void task_kcd(void)
 {
+		printf("KCD TASK CALLED \r\n");
     for (int i = 0; i < 26; i++)
     {
         lowercase[i] = UNDEF;
@@ -94,9 +94,12 @@ void task_kcd(void)
 
         // infinite call recv_msg
         recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
+		printf("KCD TASK RECEIVED A MESSAGE \r\n");
+        // printToConsole("!", 1);
         RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
         char *data = (char *)(msg_buf);
         data += 6;
+				printf("KCD DATA WE GOT: %x \r\n", *data);
 
         if (header->type == KCD_REG)
         {
@@ -104,6 +107,7 @@ void task_kcd(void)
         }
         else if (header->type == KEY_IN)
         {
+            printf("GOT INPUT OF KEY!!!!!!!!\r\n");
             if (*(data) == '\r') // TODO: Is enter check correct?
             { 
                 if (cmd[0] == '%')
@@ -150,7 +154,7 @@ void task_kcd(void)
             {
                 cmd[len] = *(data);
 
-                printToConsole(&cmd[len], 1);
+                printToConsole(data, 1);
 
                 len++;
             }
