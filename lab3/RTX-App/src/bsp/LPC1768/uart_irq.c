@@ -245,15 +245,17 @@ void UART0_IRQHandler(void)
         /* THRE Interrupt, transmit holding register becomes empty */
         
         
-        char *msg_buf = k_mpool_alloc(MPID_IRAM2, 6 + 1);
-        if (k_recv_msg_nb_uart(msg_buf, 7))
+        char *msg_buf = k_mpool_alloc(MPID_IRAM2, KCD_CMD_BUF_SIZE);
+        if (k_recv_msg_nb_uart(msg_buf, KCD_CMD_BUF_SIZE) == RTX_OK)
         { // TODO: should be while?
-
-            char_out = msg_buf[6];
-// #ifdef DEBUG_1
-            printf("Writing a char = %c \r\n", char_out);
-// #endif /* DEBUG_1 */
-            pUart->THR = char_out;
+					
+						int len = 0;
+						while((len+6)<KCD_CMD_BUF_SIZE && msg_buf[len+6] != NULL){
+							char_out = msg_buf[len+6];
+							printf("Writing a char = %c \r\n", char_out);
+							pUart->THR = char_out;
+							len++;
+						}
         }
         // end of the string
 #ifdef DEBUG_1

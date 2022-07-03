@@ -63,7 +63,9 @@ void printToConsole(char *data, U32 data_len) {
     header_ts->sender_tid = TID_KCD;
     header_ts->type = DISPLAY;
 
-    *data_ts = *data;
+		for(int i=0;i<data_len;i++){
+			*(data_ts+i) = *(data+i);
+		}
     send_msg(TID_CON, to_send);
 
     mem_dealloc(to_send);
@@ -131,24 +133,38 @@ void task_kcd(void)
                                 data_ts[i] = cmd[i + 1];
                             }
 
-                            send_msg(taskId, to_send);
+                            send_msg(taskId, to_send); //TODO: any uart edge case handling here?
 
                             mem_dealloc(to_send);
 
                             len = 0;
                         } else {
-                            printToConsole("Command not found", 18);
+													char * command_not_found = mem_alloc(18);
+													command_not_found = "Command not found";
+													printToConsole(command_not_found, 18);
+													mem_dealloc(command_not_found);
                         }
                     }
 
                 } 
                 else {
-                    printToConsole("Invalid Command", 15);
+										char * invalid_command = mem_alloc(15);
+										invalid_command = "Invalid Command";
+										printToConsole(invalid_command, 15);
+										mem_dealloc(invalid_command);
                 }
 									
                 // Enter on Console
-                printToConsole("\r", 1);
-
+								cmd[len] = *(data);
+								char * enter = mem_alloc(2);
+								enter = "\n\r";
+								printToConsole(enter, 2);
+								mem_dealloc(enter);
+								
+								for(int i=0;i<KCD_CMD_BUF_SIZE;i++){
+									cmd[i] = NULL;
+								}
+								len = 0;
             }
             else
             {

@@ -16,23 +16,24 @@ extern uint8_t g_tx_irq;
 // TODO: make it utility class function?
 void printToUART(char *data, U32 data_len)
 {
-    for (int i = 0; i < data_len; i++)
-    {
-        char *to_send = mem_alloc(6 + 1);
-        RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
-        char *data_ts = (char *)(to_send);
-        data_ts += 6;
+		char *to_send = mem_alloc(6 + data_len-1);
+		RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
+		char *data_ts = (char *)(to_send);
 
-        header_ts->length = data_len + 6;
-        header_ts->sender_tid = TID_CON;
-        header_ts->type = DISPLAY;
+		header_ts->length = data_len-1 + 6;
+		header_ts->sender_tid = TID_CON;
+		header_ts->type = DISPLAY;
 
-        *data_ts = data[i];
+		if(data_len>1) {
+			data_ts += 6;
+			for(int i=1;i<data_len;i++){
+				*(data_ts+i-1) = data[i];
+			}
+		}
+		
+		send_msg_nb(TID_UART, to_send);
 
-        send_msg_nb(TID_UART, to_send);
-
-        mem_dealloc(to_send);
-    }
+		mem_dealloc(to_send);
 }
 
 void task_cdisp(void)
