@@ -63,9 +63,9 @@ void task_cdisp(void)
 						pUart->THR = *data;
             g_send_char = 0;
             printToUART(data, header->length - 6);
+						g_tx_irq = 1;
             // enable TX Interrupt
             pUart->IER |= IER_THRE;
-						g_tx_irq = 1;
         }
         else
         {

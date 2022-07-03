@@ -47,6 +47,7 @@ static uint8_t *gp_buffer = g_buffer; // TX IRQ read/write this var
 uint8_t g_send_char = 0;              // main() read/write this flag
 uint8_t g_char_in;                    // main() read this var
 uint8_t g_tx_irq = 0;                 // initial TX irq is off
+
 mailbox_t * uart_mailbox;
 
 /**************************************************************************/ /**
@@ -236,7 +237,6 @@ void UART0_IRQHandler(void)
 #ifdef DEBUG_0
             printf("char %c gets processed\r\n", g_char_in);
 #endif /* DEBUG_0 */
-            g_send_char = 1;
         }
     }
     else if (IIR_IntId & IIR_THRE)
@@ -261,7 +261,7 @@ void UART0_IRQHandler(void)
 #endif                           /* DEBUG_1 */
         pUart->IER &= ~IER_THRE; // clear the IER_THRE bit
         g_tx_irq = 0;
-
+				g_send_char = 0;
         k_mpool_dealloc(MPID_IRAM2, msg_buf);
     }
     else
