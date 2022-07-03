@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "k_mem.h": "c",
+        "k_msg.h": "c",
+        "cmath": "c",
+        "cstdarg": "c",
+        "cstdio": "c",
+        "cstdlib": "c",
+        "type_traits": "c",
+        "limits": "c",
+        "*.tcc": "c",
+        "cstdint": "c",
+        "typeinfo": "c",
+        "uart_irq.h": "c",
+        "printf.h": "c",
+        "common.h": "c",
+        "k_inc.h": "c",
+        "k_rtx_init.h": "c",
+        "k_task.h": "c",
+        "free_list.h": "c"
+    }
+}
