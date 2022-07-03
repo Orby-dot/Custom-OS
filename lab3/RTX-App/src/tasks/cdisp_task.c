@@ -1,61 +1,79 @@
 /**
- * @brief The Console Display Task Template File 
+ * @brief The Console Display Task Template File
  * @note  The file name and the function name can be changed
  * @see   k_tasks.h
  */
 
 #include "rtx.h"
-
 #include "k_msg.h"
 #include "common.h"
-#include "message_node.h"
+#include "uart_irq.h"
+#include "uart_polling.h"
+
+// uint8_t g_send_char;
+extern uint8_t g_tx_irq;
 
 // TODO: make it utility class function?
-void printToUART(char *data, U32 data_len) {
-    for (int i = 0; i < data_len; i++) {
-        msg_node *to_send = k_mpool_alloc(MPID_IRAM2, 6 + 1); // 1 for character to echo
-        to_send->header->length = 1 + 6;
-        to_send->header->sender_tid = TID_CON;
-        to_send->header->type = DISPLAY;
+void printToUART(char *data, U32 data_len)
+{
+    for (int i = 0; i < data_len; i++)
+    {
+        char *to_send = mem_alloc(6 + 1);
+        RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
+        char *data_ts = (char *)(to_send);
+        data_ts += 6;
 
-        to_send->data = &(data[i]);
+        header_ts->length = data_len + 6;
+        header_ts->sender_tid = TID_CON;
+        header_ts->type = DISPLAY;
 
-        k_send_msg(TID_UART, to_send);
+        *data_ts = data[i];
 
-        k_mpool_dealloc(MPID_IRAM2, to_send);
+        send_msg_nb(TID_UART, to_send);
+
+        mem_dealloc(to_send);
     }
 }
 
 void task_cdisp(void)
 {
-    k_mbx_create(CON_MBX_SIZE);
+    mbx_create(CON_MBX_SIZE);
 
-    U8 *msg_buf = k_mpool_alloc(MPID_IRAM2, KCD_CMD_BUF_SIZE); // is repeatedly overwritten
-    msg_node *tmp_msg;
+    U8 *msg_buf = mem_alloc(KCD_CMD_BUF_SIZE); // is repeatedly overwritten
 
-    
     LPC_UART_TypeDef *pUart;
-    pUart = (LPC_UART_TypeDef *) LPC_UART0;    
+    pUart = (LPC_UART_TypeDef *)LPC_UART0;
 
-    while(1) {
+    while (1)
+    {
 
         // CALLED when something to output (character)
-        k_recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
-        tmp_msg = (msg_node *)msg_buf;
+        recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
+				printf("CONSOLE DISPLAY HAS GOT A MESSAGE!\r\n");
+        RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
+        char *data = (char *)(msg_buf);
+        data += 6;
+			
+				printf("CDISP DATA WE GOT: %x \r\n", *data);
+
 
         // sends messsage to UART0_IRQ_Handler to output
-        if (tmp_msg->header->type == DISPLAY) {
-
-            printToUART(tmp_msg->data, tmp_msg->header->length - 6 );
+        if (header->type == DISPLAY)
+        {
+						pUart->THR = *data;
+            g_send_char = 0;
+            printToUART(data, header->length - 6);
+						g_tx_irq = 1;
             // enable TX Interrupt
             pUart->IER |= IER_THRE;
-        } else {
+        }
+        else
+        {
             // "Ignores the Rest"
         }
     }
 
-    k_mpool_dealloc(MPID_IRAM2, msg_buf); // will probably never run
-
+    mem_dealloc(msg_buf); // will probably never run
 }
 
 /*
@@ -63,4 +81,3 @@ void task_cdisp(void)
  *                             END OF FILE
  *===========================================================================
  */
-

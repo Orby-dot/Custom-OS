@@ -37,7 +37,6 @@
 #include <LPC17xx.h>
 #include "uart_irq.h"
 #include "uart_polling.h"
-#include "k_msg.h"
 #ifdef DEBUG_0
 #include "printf.h"
 #endif
@@ -54,6 +53,8 @@ static RTX_MSG_HDR *msg_Send_Buf;
 U8 sendBuf[7];
 U8 recvBuf[7];
 
+mailbox_t* uart_mailbox;
+
 /**************************************************************************//**
  * @brief: initialize the n_uart
  * NOTES: It only supports UART0. It can be easily extended to support UART1 IRQ.
@@ -62,6 +63,7 @@ U8 recvBuf[7];
  *****************************************************************************/
 int uart_irq_init(int n_uart) {
 		k_mbx_create(UART_MBX_SIZE);
+		initializeMailbox(uart_mailbox, TID_UART,UART_MBX_SIZE);
     LPC_UART_TypeDef *pUart;
 		*msg_Send_Buf = SEND_MSG_HDR;
 		for(U8 i = 0 ; i < 6; i++)
