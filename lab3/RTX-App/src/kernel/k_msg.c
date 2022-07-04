@@ -101,7 +101,7 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 	else{
 		TCB * selectedTCB = &g_tcbs[(U32) receiver_tid];
 		addMessage(&(selectedTCB->mailbox),(void*)buf);
-		printf("======== %x %x \r\n", selectedTCB->state, BLK_RECV);
+		// printf("======== %x %x \r\n", selectedTCB->state, BLK_RECV);
 		if((selectedTCB->state) == BLK_RECV)
 		{
 			selectedTCB->state = READY;

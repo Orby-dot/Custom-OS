@@ -68,7 +68,7 @@ void printToConsole(char *data, U32 data_len) {
 		for(int i=0;i<data_len;i++){
 			*(data_ts+i) = *(data+i);
 		}
-    printf("KCD SENDING TO CONSOLE LENGTH %d********* \r\n", header_ts->length);
+    //printf("KCD SENDING TO CONSOLE LENGTH %d********* \n\r", header_ts->length);
     send_msg(TID_CON, to_send);
 
     mem_dealloc(to_send);
@@ -77,20 +77,23 @@ void printToConsole(char *data, U32 data_len) {
 void printLSbuffer(	task_t *buffer, int count) {
 
 
-    char *tmp_str = k_mpool_alloc(MPID_IRAM1, count + 1);
+    char *tmp_str = k_mpool_alloc(MPID_IRAM1, count + 3);
 
-    for (int i = 0; i  < count; i++) {
+    int i;
+    for (i = 0; i  < count; i++) {
         sprintf(&(tmp_str[i]), "%x", buffer[i]);
     }
-
-    printToConsole(tmp_str, count + 1); // TODO: Correct Size?
+    tmp_str[i] = '\n';
+    tmp_str[i+1] = '\r';
+    
+    printToConsole(tmp_str, count + 3); // TODO: Correct Size?
 
     k_mpool_dealloc(MPID_IRAM2, tmp_str);
 }
 
 void task_kcd(void)
 {
-		printf("KCD TASK CALLED \r\n");
+		//printf("KCD TASK CALLED \n\r");
     for (int i = 0; i < 26; i++)
     {
         lowercase[i] = UNDEF;
@@ -112,12 +115,12 @@ void task_kcd(void)
 
         // infinite call recv_msg
         recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
-		printf("KCD TASK RECEIVED A MESSAGE \r\n");
+		//printf("KCD TASK RECEIVED A MESSAGE \n\r");
         // printToConsole("!", 1);
         RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
         char *data = (char *)(msg_buf);
         data += 6;
-				printf("KCD DATA WE GOT: %x \r\n", *data);
+				//printf("KCD DATA WE GOT: %x \n\r", *data);
 
         if (header->type == KCD_REG)
         {
@@ -125,8 +128,8 @@ void task_kcd(void)
         }
         else if (header->type == KEY_IN)
         {
-            printf("GOT INPUT OF KEY!!!!!!!!\r\n");
-            if (*(data) == '\r') // TODO: Is enter check correct?
+            //printf("GOT INPUT OF KEY!!!!!!!!\n\r");
+            if (*(data) == '\r' || *(data) == '\n') // TODO: Is enter check correct?
             { 
                 if (cmd[0] == '%')
                 {
@@ -134,19 +137,19 @@ void task_kcd(void)
                         if (cmd[2] == 'T') {
                             task_t buffer[10];
                             int ret = k_tsk_ls(buffer, 10);
-                            printf("*****TASK_LS: %d\r\n", ret);
+                            //printf("*****TASK_LS: %d\n\r", ret);
                             printLSbuffer(buffer, ret);
                         }
                         else if (cmd[2] == 'M') {
                             task_t buffer[10];
                             int ret = k_mbx_ls(buffer, 10);
-                            printf("*****MSG_LS: %d\r\n", ret);
+                            //printf("*****MSG_LS: %d\n\r", ret);
                             printLSbuffer(buffer, ret);
                         }
                         else {
-                            char * command_not_found = mem_alloc(20);
-                            command_not_found = "\r\nCommand not found";
-                            printToConsole(command_not_found, 20);
+                            char * command_not_found = mem_alloc(22);
+                            command_not_found = "\n\rCommand not found\n\r";
+                            printToConsole(command_not_found, 22);
                             mem_dealloc(command_not_found);
                         }
                     } else {
@@ -172,27 +175,27 @@ void task_kcd(void)
 
                             len = 0;
                         } else {
-													char * command_not_found = mem_alloc(20);
-													command_not_found = "\r\nCommand not found";
-													printToConsole(command_not_found, 20);
+													char * command_not_found = mem_alloc(22);
+													command_not_found = "\n\rCommand not found\n\r";
+													printToConsole(command_not_found, 22);
 													mem_dealloc(command_not_found);
                         }
                     }
 
                 } 
                 else {
-										char * invalid_command = mem_alloc(18);
-										invalid_command = "\r\nInvalid Command";
-										printToConsole(invalid_command, 18);
+										char * invalid_command = mem_alloc(20);
+										invalid_command = "\n\rInvalid Command\n\r";
+										printToConsole(invalid_command, 20);
 										mem_dealloc(invalid_command);
                 }
 									
-                // Enter on Console
-								cmd[len] = *(data);
-								char * enter = mem_alloc(2);
-								enter = "\r\n";
-								printToConsole(enter, 2);
-								mem_dealloc(enter);
+                // // Enter on Console
+				// 				cmd[len] = *(data);
+				// 				char * enter = mem_alloc(2);
+				// 				enter = "\n\r";
+				// 				printToConsole(enter, 2);
+				// 				mem_dealloc(enter);
 								
 								for(int i=0;i<KCD_CMD_BUF_SIZE;i++){
 									cmd[i] = NULL;

@@ -173,18 +173,18 @@ void task1(void)
     mem_dump();
 
     //printf("task1: TID =%d\r\n", tid); 
-    for (i = 1;i<30;i++) {
+    for (i = 1;i<10;i++) {
         char out_char = '0' + i%10;
-        for (j = 0; j < 5; j++ ) {
+        for (j = 0; j < 1; j++ ) {
             uart1_put_char(out_char);
         }
-        uart1_put_string("\n\r");
+        //uart1_put_string("\n\r");
         
         for ( x = 0; x < DELAY; x++); // some artifical delay
         if ( i%6 == 0 ) {
-            uart1_put_string("task1 before yielding cpu.\n\r");
+            //uart1_put_string("task1 before yielding cpu.\n\r");
             ret_val = tsk_yield();
-            uart1_put_string("task1 after yielding cpu.\n\r");
+            //uart1_put_string("task1 after yielding cpu.\n\r");
             //printf("task1: ret_val=%d\n\r", ret_val);
 #ifdef DEBUG_0
             //printf("task1: tid = %d, ret_val=%d\n\r", tid, ret_val);
@@ -214,7 +214,7 @@ void task2(void)
     int ret_val;
     U8 *buf = mem_alloc(BUF_LEN);
     
-    uart1_put_string("task2: entering \n\r");
+    //uart1_put_string("task2: entering \n\r");
     
     ret_val = mbx_create(BUF_LEN);
 		//printf("CREATED MAILBOX\r\n");
@@ -233,7 +233,7 @@ void task2(void)
  */
 void task3(void)
 {
-    uart1_put_string("task3: entering \r\n");
+    //uart1_put_string("task3: entering \r\n");
     /* do something */
     /* terminating */
     tsk_exit();

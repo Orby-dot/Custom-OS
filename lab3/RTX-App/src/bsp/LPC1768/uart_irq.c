@@ -252,7 +252,7 @@ void UART0_IRQHandler(void)
 						int len = 0;
 						while((len+6)<KCD_CMD_BUF_SIZE && msg_buf[len+6] != NULL){
 							char_out = msg_buf[len+6];
-							printf("Writing a char = %c \r\n", char_out);
+							printf("WC = %c \r\n", char_out);
 							pUart->THR = char_out;
 							len++;
 						}
