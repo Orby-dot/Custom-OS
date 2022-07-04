@@ -55,6 +55,24 @@ int k_mbx_create(size_t size) {
 int k_send_msg(task_t receiver_tid, const void *buf) {
     printf("k_send_msg: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;
+	
+	if (buf == NULL ){ // buf is null
+		errno = EFAULT;
+		return RTX_ERR;
+	} else if((U32)receiver_tid<=10 && g_tcbs[(U32)receiver_tid].mailbox.ring_buffer == NULL){ // no mailbox
+		errno = ENOENT;		
+		return RTX_ERR;
+	} else if (currentMsg->length<MIN_MSG_SIZE ||(U32)receiver_tid>10) {
+		errno = EINVAL;		
+		return RTX_ERR;
+	} else if (currentMsg->length>g_tcbs[(U32)receiver_tid].mailbox.max_size){
+		errno = EMSGSIZE;		
+		return RTX_ERR;
+	} else if ((g_tcbs[(U32)receiver_tid].mailbox.max_size-g_tcbs[(U32)receiver_tid].mailbox.current_size)<currentMsg->length){
+		errno = ENOSPC;
+		return RTX_ERR;
+	}
+	
 	//if msg can fit in mailbox
 
 	if((g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >g_tcbs[(U32)receiver_tid].mailbox.max_size)
@@ -89,6 +107,23 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
     printf("SSSS k_send_msg_nb: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;
 	
+	if (buf == NULL ){ // buf is null
+		errno = EFAULT;
+		return RTX_ERR;
+	} else if((U32)receiver_tid<=10 && g_tcbs[(U32)receiver_tid].mailbox.ring_buffer == NULL){ // no mailbox
+		errno = ENOENT;		
+		return RTX_ERR;
+	} else if (currentMsg->length<MIN_MSG_SIZE ||(U32)receiver_tid>10) {
+		errno = EINVAL;		
+		return RTX_ERR;
+	} else if (currentMsg->length>g_tcbs[(U32)receiver_tid].mailbox.max_size){
+		errno = EMSGSIZE;		
+		return RTX_ERR;
+	} else if ((g_tcbs[(U32)receiver_tid].mailbox.max_size-g_tcbs[(U32)receiver_tid].mailbox.current_size)<currentMsg->length){
+		errno = ENOSPC;
+		return RTX_ERR;
+	}
+	
 	if(receiver_tid != TID_UART && (g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >=g_tcbs[(U32)receiver_tid].mailbox.max_size){
 		return RTX_ERR;		
 	}
@@ -111,12 +146,29 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 			return k_tsk_run_new();
 		}
 	}
-		
     return 0;
 }
 
 int k_recv_msg(void *buf, size_t len) {
 	printf("k_recv_msg: buf=0x%x, len=%d\r\n", buf, len);
+	
+	if (buf == NULL ){ // buf is null
+		errno = EFAULT;
+		return RTX_ERR;
+	}
+	else if(gp_current_task->mailbox.ring_buffer == NULL){ // no mailbox
+		errno = ENOENT;		
+		return RTX_ERR;
+	}
+	else if(gp_current_task->mailbox.current_size == 0){ // mailbox has no message
+		errno = ENOMSG;
+		return RTX_ERR;
+	} 
+	else if (gp_current_task->mailbox.current_size>len){
+		errno = ENOSPC;
+		return RTX_ERR;
+	}
+	
 	sendAll();
 	if(gp_current_task->mailbox.current_size != 0)
 	{
@@ -158,6 +210,10 @@ int k_recv_msg_nb_uart(void *buf, size_t len) {
 		errno = ENOMSG;
 		return RTX_ERR;
 	}
+	else if (uart_mailbox->current_size>len){
+		errno = ENOSPC;
+		return RTX_ERR;
+	}
 
 	if(getMessage(uart_mailbox,buf,len) == RTX_OK)
 	{
@@ -185,6 +241,10 @@ int k_recv_msg_nb(void *buf, size_t len) {
 		errno = ENOMSG;
 		return RTX_ERR;
 	}
+	else if (gp_current_task->mailbox.current_size>len){
+		errno = ENOSPC;
+		return RTX_ERR;
+	}
 
 	if(getMessage(&gp_current_task->mailbox,buf,len) == RTX_OK)
 	{
@@ -201,6 +261,12 @@ int k_recv_msg_nb(void *buf, size_t len) {
 }
 
 int k_mbx_ls(task_t *buf, size_t count) {
+	
+	if (buf == NULL) {
+        errno = EFAULT;
+        return RTX_ERR;
+  }
+	
 	U8 currentNumTCB =0;
 	for(U8 i =0; i < MAX_TASKS; i++)
 	{
@@ -228,6 +294,7 @@ int k_mbx_get(task_t tid)
 #endif /* DEBUG_0 */
 		return gp_current_task->mailbox.max_size - gp_current_task->mailbox.current_size;
 }
+
 void sendAll(void)
 {
 	//loops thru the send queue and checks if we can send anything
