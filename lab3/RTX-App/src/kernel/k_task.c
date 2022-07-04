@@ -400,7 +400,7 @@ int k_tsk_run_new(void)
 
     p_tcb_old = gp_current_task;
     gp_current_task = scheduler();
-    printf(" ########## NOW RUNNING %u FROM %u\r\n", gp_current_task->tid, p_tcb_old->tid);
+    // printf(" ########## NOW RUNNING %u FROM %u\r\n", gp_current_task->tid, p_tcb_old->tid);
     if ( gp_current_task == NULL  ) {
         gp_current_task = p_tcb_old;        // revert back to the old task
         return RTX_ERR;

@@ -148,7 +148,7 @@ int uart_put_char(int n_uart, char c)
  *****************************************************************************/
 int uart_put_string(int n_uart, char *s)
 {
-    if (n_uart >1 ) return -1;    /* only uart0, 1 are supported for now      */
+    if (n_uart >1 ) return -1;    /* only uart0, 1 are  supported for now      */
     while (*s !=0) {              /* loop through each char in the string */
         uart_put_char(n_uart, *s++);/* print the char, then ptr increments  */
     }

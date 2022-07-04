@@ -68,6 +68,7 @@ void printToConsole(char *data, U32 data_len) {
 		for(int i=0;i<data_len;i++){
 			*(data_ts+i) = *(data+i);
 		}
+    printf("KCD SENDING TO CONSOLE LENGTH %d********* \r\n", header_ts->length);
     send_msg(TID_CON, to_send);
 
     mem_dealloc(to_send);
@@ -76,13 +77,13 @@ void printToConsole(char *data, U32 data_len) {
 void printLSbuffer(	task_t *buffer, int count) {
 
 
-    char *tmp_str = k_mpool_alloc(MPID_IRAM2, 30);
+    char *tmp_str = k_mpool_alloc(MPID_IRAM1, count + 1);
 
     for (int i = 0; i  < count; i++) {
         sprintf(&(tmp_str[i]), "%x", buffer[i]);
     }
 
-    printToConsole(tmp_str, 30); // TODO: Correct Size?
+    printToConsole(tmp_str, count + 1); // TODO: Correct Size?
 
     k_mpool_dealloc(MPID_IRAM2, tmp_str);
 }

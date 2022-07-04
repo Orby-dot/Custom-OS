@@ -69,12 +69,12 @@ void priv_task1(void) {
     char *buf = NULL;           // this is a user dynamically allocated buffer
     RTX_MSG_HDR msg_hdr;
     
-    printf("sizeof(RTX_MSG_HDR) = %u \r\n", sizeof(RTX_MSG_HDR));
-    printf("sizeof(struct rtx_msg_hdr) = %u \r\n", sizeof(struct rtx_msg_hdr));
-    printf("&msg_hdr = 0x%x, &(msg_hdr.sender_tid) = 0x%x, &(msg_hdr.type) = 0x%x\r\n",\
+    //printf("sizeof(RTX_MSG_HDR) = %u \r\n", sizeof(RTX_MSG_HDR));
+    //printf("sizeof(struct rtx_msg_hdr) = %u \r\n", sizeof(struct rtx_msg_hdr));
+    //printf("&msg_hdr = 0x%x, &(msg_hdr.sender_tid) = 0x%x, &(msg_hdr.type) = 0x%x\r\n",\
             &msg_hdr, &(msg_hdr.sender_tid), &(msg_hdr.type));
     
-    printf("priv_task1: TID =%d\r\n", tid);
+    //printf("priv_task1: TID =%d\r\n", tid);
     
     buf = mem_alloc(BUF_LEN);
     mbx_id = mbx_create(BUF_LEN);  // create a mailbox for itself
@@ -102,7 +102,7 @@ void priv_task1(void) {
             if ( ptr->type == KCD_CMD ) {
                 char *p_cmd = (char *)(g_buf1 + MSG_HDR_SIZE);
                 if ( *p_cmd == 'A' ) {
-                    printf("A received\r\n");
+                    //printf("A received\r\n");
                 }
             }
         } 
@@ -119,10 +119,10 @@ void priv_task1(void) {
         ((RTX_MSG_HDR*)buf1)->type = MY_MSG_TYPE;
         ((RTX_MSG_HDR*)buf1)->sender_tid = tid;
 				((char*)buf1)[sizeof(RTX_MSG_HDR)] = 'a';
-				printf("I'm going to try to sent task 2 msgs with data\r\n");
+				//printf("I'm going to try to sent task 2 msgs with data\r\n");
 			for(int i = 0 ; i < 10; i++)
 			{
-				printf("Sending msg\r\n");
+				//printf("Sending msg\r\n");
         ret_val = send_msg(tid1, buf1);
 				((char*)buf1)[sizeof(RTX_MSG_HDR)] =((char*)buf1)[sizeof(RTX_MSG_HDR)]+1 ;			
 			}
@@ -168,11 +168,11 @@ void task1(void)
     buf = &g_buf1[0];
 
     int *ptr1 = mem_alloc(sizeof(int));
-    printf("ptr = 0x%x\r\n", ptr1); 
+    //printf("ptr = 0x%x\r\n", ptr1); 
     mem_dealloc(ptr1);
     mem_dump();
 
-    printf("task1: TID =%d\r\n", tid); 
+    //printf("task1: TID =%d\r\n", tid); 
     for (i = 1;i<30;i++) {
         char out_char = '0' + i%10;
         for (j = 0; j < 5; j++ ) {
@@ -185,20 +185,20 @@ void task1(void)
             uart1_put_string("task1 before yielding cpu.\n\r");
             ret_val = tsk_yield();
             uart1_put_string("task1 after yielding cpu.\n\r");
-            printf("task1: ret_val=%d\n\r", ret_val);
+            //printf("task1: ret_val=%d\n\r", ret_val);
 #ifdef DEBUG_0
-            printf("task1: tid = %d, ret_val=%d\n\r", tid, ret_val);
+            //printf("task1: tid = %d, ret_val=%d\n\r", tid, ret_val);
 #endif /* DEBUG_0 */
         }
     }
-        printf("NOW EXPECTING GP?\r\n");
+        //printf("NOW EXPECTING GP?\r\n");
 
         while(1){
             char*buf1 = mem_alloc(25);
-			printf("**************** RECV BLOCKEd??\r\n");
+			//printf("**************** RECV BLOCKEd??\r\n");
             recv_msg(buf1, 25);
-			printf("**************** RECV BLOCKEd??\r\n");
-			printf("Received: %x %x\r\n", buf1[6], buf1[7]);
+			//printf("**************** RECV BLOCKEd??\r\n");
+			//printf("Received: %x %x\r\n", buf1[6], buf1[7]);
             mem_dealloc(buf);
 
         }
@@ -217,14 +217,14 @@ void task2(void)
     uart1_put_string("task2: entering \n\r");
     
     ret_val = mbx_create(BUF_LEN);
-		printf("CREATED MAILBOX\r\n");
+		//printf("CREATED MAILBOX\r\n");
 	for(int i = 0 ; i < 10 ;i++)
 		{
     ret_val = recv_msg(buf, BUF_LEN);  // blocking receive    
-		printf("TASK2: I got it! Here it is: %c\r\n",(char)buf[6]);
+		//printf("TASK2: I got it! Here it is: %c\r\n",(char)buf[6]);
 		}
     mem_dealloc(buf);   // free the buffer space
-    printf("TASK 2 DED\r\n");
+    //printf("TASK 2 DED\r\n");
     tsk_exit();
 }
 
