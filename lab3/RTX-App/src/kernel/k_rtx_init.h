@@ -51,7 +51,7 @@
  *===========================================================================
  */
  
-extern readyQueue_t readyQueuesArray[7];
+extern readyQueue_t readyQueuesArray[6];
 extern readyQueue_t sendQueuesArray[5];
 //note to self please change rdyQ to size 6 when u have some time
  

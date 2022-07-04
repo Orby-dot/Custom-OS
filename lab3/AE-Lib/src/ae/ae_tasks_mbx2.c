@@ -183,7 +183,6 @@ void task1(void)
     buf += msg_hdr_size;                        
     *buf = 'G';                             // set message data
     send_msg(TID_KCD, (void *)ptr);         // blocking send
-    recv_msg(g_buf2, BUF_LEN);              // blocking recv
     
     // code to process received messages omitted
     
@@ -216,7 +215,6 @@ void task1(void)
 		tsk_exit();         // terminating the task
 
 }
-
 /**
  * @brief: a dummy task2
  */

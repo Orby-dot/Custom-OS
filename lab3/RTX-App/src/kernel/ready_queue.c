@@ -7,7 +7,7 @@ U8 priorityLevelToIndex(U8 priorityLevel) {
 	if (priorityLevel >= 0x80 && priorityLevel <= 0x85) {
 		return (priorityLevel - 0x80);
 	} else {
-		return 4; // for the null task
+		return 4; // for the null task FF
 	}
 }
 
@@ -103,21 +103,6 @@ void removeSpecificTCB(readyQueue_t * readyQueuesArray, U8 priorityLevel, task_t
 void addTCBtoRecvBLK(readyQueue_t * readyQueuesArray, TCB *tcb)
 	{
 		U8 arrayIndex = priorityLevelToIndex(RECV_PRIO);
-		if(readyQueuesArray[arrayIndex].tail){
-			readyQueuesArray[arrayIndex].tail->next = tcb;
-			tcb->prev = readyQueuesArray[arrayIndex].tail;
-			tcb->next = NULL;
-			readyQueuesArray[arrayIndex].tail = tcb;
-		} else { // if queue is empty
-			tcb->prev = NULL;
-			tcb->next = NULL;
-			readyQueuesArray[arrayIndex].tail = tcb;
-			readyQueuesArray[arrayIndex].head = tcb;
-	}
-}
-void addTCBtoSentBLK(readyQueue_t * readyQueuesArray, TCB *tcb)
-	{
-		U8 arrayIndex = priorityLevelToIndex(SEND_PRIO);
 		if(readyQueuesArray[arrayIndex].tail){
 			readyQueuesArray[arrayIndex].tail->next = tcb;
 			tcb->prev = readyQueuesArray[arrayIndex].tail;
