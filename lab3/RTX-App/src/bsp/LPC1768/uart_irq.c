@@ -58,7 +58,7 @@ mailbox_t * uart_mailbox;
  *****************************************************************************/
 int uart_irq_init(int n_uart)
 {
-		uart_mailbox = k_mpool_alloc(MPID_IRAM2, UART_MBX_SIZE);
+		uart_mailbox = k_mpool_alloc(MPID_IRAM1, UART_MBX_SIZE);
 		initializeMailbox(uart_mailbox, TID_UART, UART_MBX_SIZE);
     LPC_UART_TypeDef *pUart;
 
@@ -218,7 +218,7 @@ void UART0_IRQHandler(void)
         {
             g_char_in = char_in;
 
-            char *to_send = k_mpool_alloc(MPID_IRAM2, 6 + 1);
+            char *to_send = k_mpool_alloc(MPID_IRAM1, 6 + 1);
             RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
             char *data_ts = (char *)(to_send);
             data_ts += 6;
@@ -245,14 +245,14 @@ void UART0_IRQHandler(void)
         /* THRE Interrupt, transmit holding register becomes empty */
         
         
-        char *msg_buf = k_mpool_alloc(MPID_IRAM2, KCD_CMD_BUF_SIZE);
+        char *msg_buf = k_mpool_alloc(MPID_IRAM1, KCD_CMD_BUF_SIZE);
         if (k_recv_msg_nb_uart(msg_buf, KCD_CMD_BUF_SIZE) == RTX_OK)
         { // TODO: should be while?
 					
 						int len = 0;
 						while((len+6)<KCD_CMD_BUF_SIZE && msg_buf[len+6] != NULL){
 							char_out = msg_buf[len+6];
-							printf("Writing a char = %c \r\n", char_out);
+							printf("WC = %c \r\n", char_out);
 							pUart->THR = char_out;
 							len++;
 						}

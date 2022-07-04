@@ -119,8 +119,7 @@
 #define MEDIUM              0x81
 #define LOW                 0x82
 #define LOWEST              0x83
-#define RECV_PRIO						0x84
-#define SEND_PRIO						0x85
+#define RECV_PRIO						0x85 // NOT a priority, array storing tasks that are in BLK_RECV
 #define PRIO_NULL           0xFF    /* hidden priority for the null task */
 
 /* Task States */

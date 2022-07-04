@@ -17,7 +17,7 @@ TCB *removeTCB(readyQueue_t * readyQueuesArray, U8 priorityLevel);
 void removeSpecificTCB(readyQueue_t * readyQueuesArray, U8 priorityLevel, task_t tid);
 
 void addTCBtoRecvBLK(readyQueue_t * readyQueuesArray, TCB *tcb);
-void addTCBtoSentBLK(readyQueue_t * readyQueuesArray, TCB *tcb);
+
 
 TCB *canSendMsg(readyQueue_t * readyQueuesArray, U8 target,U32 size,U8 arrayIndex);
 

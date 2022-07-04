@@ -1,0 +1,247 @@
+/**
+ * TEST COMMAND REGISTRATION! 
+ * 
+ * TASK 1 registers G, you should see it.
+ * Copied from ae_tasks_mbx2.c
+ */ 
+
+/**************************************************************************//**
+ * @file        ae_dummy_tasks_p1.c
+ * @brief       dummy tasks for P1
+ *
+ * @version     V1.2022.05
+ * @authors     Yiqing Huang
+ * @date        2022 MAY
+ *
+ * @note        Each task is in an infinite loop. These Tasks never terminate.
+ *
+ *****************************************************************************/
+
+#include "ae_tasks.h"
+#include "uart_polling.h"
+#include "printf.h"
+#include "ae_util.h"
+#include "ae_tasks_util.h"
+
+#define     BUF_LEN         100
+#define     MY_MSG_TYPE     100     // some customized message type, better move it to common_ext.h
+
+#define     NUM_INIT_TASKS  2       // number of tasks during initialization
+TASK_INIT   g_init_tasks[NUM_INIT_TASKS];
+
+U8 g_buf1[BUF_LEN];
+U8 g_buf2[BUF_LEN];
+task_t g_tasks[MAX_TASKS];
+
+void set_ae_init_tasks (TASK_INIT **pp_tasks, int *p_num)
+{
+    *p_num = NUM_INIT_TASKS;
+    *pp_tasks = g_init_tasks;
+    set_ae_tasks(*pp_tasks, *p_num);
+}
+
+void set_ae_tasks(TASK_INIT *tasks, int num)
+{
+    for (int i = 0; i < num; i++ ) {                                                 
+        tasks[i].u_stack_size = PROC_STACK_SIZE;    
+        tasks[i].prio = HIGH;
+        tasks[i].priv = 1;
+    }
+    tasks[0].priv  = 1;
+    tasks[0].ptask = &priv_task1;
+    tasks[1].priv  = 0;
+    tasks[1].ptask = &task1;
+}
+
+/**************************************************************************//**
+ * @brief       a task that prints AAAAA, BBBBB, CCCCC,...., ZZZZZ on each line.
+ *              It yields the cpu every 6 lines are printed.
+ *****************************************************************************/
+
+void priv_task1(void) {
+    int i = 0;
+    int j = 0;
+    long int x = 0;
+    int ret_val = 10;
+    mbx_t mbx_id = -1;
+    task_t tid = tsk_gettid();
+    task_t tid1; 
+    char *buf = NULL;           // this is a user dynamically allocated buffer
+    RTX_MSG_HDR msg_hdr;
+    
+    //printf("sizeof(RTX_MSG_HDR) = %u \r\n", sizeof(RTX_MSG_HDR));
+    //printf("sizeof(struct rtx_msg_hdr) = %u \r\n", sizeof(struct rtx_msg_hdr));
+    //printf("&msg_hdr = 0x%x, &(msg_hdr.sender_tid) = 0x%x, &(msg_hdr.type) = 0x%x\r\n",\
+            &msg_hdr, &(msg_hdr.sender_tid), &(msg_hdr.type));
+    
+    //printf("priv_task1: TID =%d\r\n", tid);
+    
+    buf = mem_alloc(BUF_LEN);
+    mbx_id = mbx_create(BUF_LEN);  // create a mailbox for itself
+    /*
+    if ( mbx_id >= 0 ) {
+        dump_mbx_info(tid);
+    }
+    
+      
+    ret_val = tsk_ls(g_tasks, MAX_TASKS);
+    if (ret_val) {
+        dump_tasks(g_tasks, ret_val);
+    }
+    ret_val = mbx_ls(g_tasks, MAX_TASKS);
+    if (ret_val)
+    {
+        dump_mailboxes(g_tasks, ret_val);
+    }
+    */
+    
+    if ( mbx_id >= 0 && buf != NULL ) {
+        ret_val = recv_msg_nb(&g_buf1, BUF_LEN);  // non-blocking receive
+				if ( ret_val == RTX_OK ) {
+            struct rtx_msg_hdr *ptr = (void *)g_buf1;
+            if ( ptr->type == KCD_CMD ) {
+                char *p_cmd = (char *)(g_buf1 + MSG_HDR_SIZE);
+                if ( *p_cmd == 'A' ) {
+                    //printf("A received\r\n");
+                }
+            }
+        } 
+        mem_dealloc(buf);
+    }
+    
+    ret_val = tsk_create(&tid1, task2, HIGH, PROC_STACK_SIZE);
+    
+    tsk_set_prio(tid, HIGH);
+    
+    if ( ret_val == RTX_OK ) {
+        U8 *buf1 = mem_alloc(sizeof(RTX_MSG_HDR) +1);   
+        ((RTX_MSG_HDR*)buf1)->length = sizeof(RTX_MSG_HDR) +1;
+        ((RTX_MSG_HDR*)buf1)->type = MY_MSG_TYPE;
+        ((RTX_MSG_HDR*)buf1)->sender_tid = tid;
+				((char*)buf1)[sizeof(RTX_MSG_HDR)] = 'a';
+				//printf("I'm going to try to sent task 2 msgs with data\r\n");
+			for(int i = 0 ; i < 10; i++)
+			{
+				//printf("Sending msg\r\n");
+        ret_val = send_msg(tid1, buf1);
+				((char*)buf1)[sizeof(RTX_MSG_HDR)] =((char*)buf1)[sizeof(RTX_MSG_HDR)]+1 ;			
+			}
+    }
+		tsk_yield();
+    tsk_exit();
+    
+}
+
+/**************************************************************************//**
+ * @brief:      a task that prints 00000, 11111, 22222,....,99999 on each line.
+ *              It yields the cpu every 6 lines are printed
+ *              before printing these lines indefinitely, it does the following:
+ *              - creates a mailbox
+ *              - registers %G command with KCD 
+ *              - blocking receive 
+ *              - allocates some memory
+ *              - deallocates some memory
+ *              - calls memory dump function
+ *****************************************************************************/
+void task1(void)
+{
+    long int x = 0;
+    int ret_val = 10;
+    int i = 0;
+    int j = 0;
+    task_t tid = tsk_gettid();
+    
+    size_t msg_hdr_size = sizeof(struct rtx_msg_hdr);
+    U8  *buf = &g_buf1[0];                  // buffer is allocated by the caller */
+    struct rtx_msg_hdr *ptr = (void *)buf;
+    
+    mbx_create(BUF_LEN);                    // create a mailbox for itself
+    ptr->length = msg_hdr_size + 1;         // set the message length
+    ptr->type = KCD_REG;                    // set message type
+    ptr->sender_tid = tid;                  // set sender id 
+    buf += msg_hdr_size;                        
+    *buf = 'G';                             // set message data
+    send_msg(TID_KCD, (void *)ptr);         // blocking send
+    
+    // code to process received messages omitted
+    
+    buf = &g_buf1[0];
+
+    int *ptr1 = mem_alloc(sizeof(int));
+    //printf("ptr = 0x%x\r\n", ptr1); 
+    mem_dealloc(ptr1);
+    mem_dump();
+
+    //printf("task1: TID =%d\r\n", tid); 
+    for (i = 1;i<10;i++) {
+        char out_char = '0' + i%10;
+        for (j = 0; j < 1; j++ ) {
+            uart1_put_char(out_char);
+        }
+        //uart1_put_string("\n\r");
+        
+        for ( x = 0; x < DELAY; x++); // some artifical delay
+        if ( i%6 == 0 ) {
+            //uart1_put_string("task1 before yielding cpu.\n\r");
+            ret_val = tsk_yield();
+            //uart1_put_string("task1 after yielding cpu.\n\r");
+            //printf("task1: ret_val=%d\n\r", ret_val);
+#ifdef DEBUG_0
+            //printf("task1: tid = %d, ret_val=%d\n\r", tid, ret_val);
+#endif /* DEBUG_0 */
+        }
+    }
+        //printf("NOW EXPECTING GP?\r\n");
+
+        while(1){
+            char*buf1 = mem_alloc(25);
+			//printf("**************** RECV BLOCKEd??\r\n");
+            recv_msg(buf1, 25);
+			//printf("**************** RECV BLOCKEd??\r\n");
+			//printf("Received: %x %x\r\n", buf1[6], buf1[7]);
+            mem_dealloc(buf);
+
+        }
+        
+        tsk_exit();         // terminating the task
+
+}
+/**
+ * @brief: a dummy task2
+ */
+void task2(void)
+{
+    int ret_val;
+    U8 *buf = mem_alloc(BUF_LEN);
+    
+    //uart1_put_string("task2: entering \n\r");
+    
+    ret_val = mbx_create(BUF_LEN);
+		//printf("CREATED MAILBOX\r\n");
+	for(int i = 0 ; i < 10 ;i++)
+		{
+    ret_val = recv_msg(buf, BUF_LEN);  // blocking receive    
+		//printf("TASK2: I got it! Here it is: %c\r\n",(char)buf[6]);
+		}
+    mem_dealloc(buf);   // free the buffer space
+    //printf("TASK 2 DED\r\n");
+    tsk_exit();
+}
+
+/**
+ * @brief: a dummy task3
+ */
+void task3(void)
+{
+    //uart1_put_string("task3: entering \r\n");
+    /* do something */
+    /* terminating */
+    tsk_exit();
+}
+
+
+/*
+ *===========================================================================
+ *                             END OF FILE
+ *===========================================================================
+ */
