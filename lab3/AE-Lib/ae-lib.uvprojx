@@ -10,13 +10,13 @@
       <TargetName>AE Lib SIM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>LPC1768</Device>
           <Vendor>NXP</Vendor>
-          <PackID>Keil.LPC1700_DFP.2.6.0</PackID>
+          <PackID>Keil.LPC1700_DFP.2.7.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x10000000,0x8000) IRAM2(0x2007C000,0x8000) IROM(0x00000000,0x80000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -518,9 +518,9 @@
           </GroupOption>
           <Files>
             <File>
-              <FileName>ae_tasks.c</FileName>
+              <FileName>ae_tasks300_G99.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
             </File>
             <File>
               <FileName>ae_tasks100_G99.c</FileName>
@@ -533,9 +533,9 @@
           <GroupName>AE-active</GroupName>
           <Files>
             <File>
-              <FileName>ae_tasks300_G99.c</FileName>
+              <FileName>ae_tasks.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -639,13 +639,13 @@
       <TargetName>AE Lib RAM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>LPC1768</Device>
           <Vendor>NXP</Vendor>
-          <PackID>Keil.LPC1700_DFP.2.6.0</PackID>
+          <PackID>Keil.LPC1700_DFP.2.7.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x10000000,0x8000) IRAM2(0x2007C000,0x8000) IROM(0x00000000,0x80000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -966,7 +966,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>ECE350_P2</Define>
+              <Define>ECE350_P3</Define>
               <Undefine></Undefine>
               <IncludePath>..\include;..\include\bsp\LPC1768</IncludePath>
             </VariousControls>
@@ -1147,9 +1147,9 @@
           </GroupOption>
           <Files>
             <File>
-              <FileName>ae_tasks.c</FileName>
+              <FileName>ae_tasks300_G99.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
             </File>
             <File>
               <FileName>ae_tasks100_G99.c</FileName>
@@ -1162,9 +1162,9 @@
           <GroupName>AE-active</GroupName>
           <Files>
             <File>
-              <FileName>ae_tasks300_G99.c</FileName>
+              <FileName>ae_tasks.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks.c</FilePath>
             </File>
           </Files>
         </Group>

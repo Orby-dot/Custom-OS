@@ -8,6 +8,8 @@
 #include "free_list.h"
 #include "k_msg.h"
 #include "common.h"
+#include "k_task.h"
+#include "printf.h"
 
 #define UNDEF 20
 
@@ -71,6 +73,19 @@ void printToConsole(char *data, U32 data_len) {
     mem_dealloc(to_send);
 }
 
+void printLSbuffer(	task_t *buffer, int count) {
+
+
+    char *tmp_str = k_mpool_alloc(MPID_IRAM2, 30);
+
+    for (int i = 0; i  < count; i++) {
+        sprintf(&(tmp_str[i]), "%x", buffer[i]);
+    }
+
+    printToConsole(tmp_str, 30); // TODO: Correct Size?
+
+    k_mpool_dealloc(MPID_IRAM2, tmp_str);
+}
 
 void task_kcd(void)
 {
@@ -115,7 +130,24 @@ void task_kcd(void)
                 if (cmd[0] == '%')
                 {
                     if (cmd[1] == 'L') {
-                        // TODO:
+                        if (cmd[2] == 'T') {
+                            task_t buffer[10];
+                            int ret = k_tsk_ls(buffer, 10);
+                            printf("*****TASK_LS: %d\r\n", ret);
+                            printLSbuffer(buffer, ret);
+                        }
+                        else if (cmd[2] == 'M') {
+                            task_t buffer[10];
+                            int ret = k_mbx_ls(buffer, 10);
+                            printf("*****MSG_LS: %d\r\n", ret);
+                            printLSbuffer(buffer, ret);
+                        }
+                        else {
+                            char * command_not_found = mem_alloc(20);
+                            command_not_found = "\r\nCommand not found";
+                            printToConsole(command_not_found, 20);
+                            mem_dealloc(command_not_found);
+                        }
                     } else {
                         U8 taskId = getTaskId(cmd[1]);
 
@@ -157,7 +189,7 @@ void task_kcd(void)
                 // Enter on Console
 								cmd[len] = *(data);
 								char * enter = mem_alloc(2);
-								enter = "\n\r";
+								enter = "\r\n";
 								printToConsole(enter, 2);
 								mem_dealloc(enter);
 								

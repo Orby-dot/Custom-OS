@@ -212,13 +212,13 @@ int k_mbx_ls(task_t *buf, size_t count) {
 				currentNumTCB ++;
 				if(currentNumTCB == count)
 				{
-					return 0;
+					return currentNumTCB;
 				}
 			}
 		}
 	}
    
-	return 0;
+	return currentNumTCB;
 }
 
 int k_mbx_get(task_t tid)

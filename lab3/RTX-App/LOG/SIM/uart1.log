@@ -1,0 +1,254 @@
+KCD TASK CALLED 
+k_recv_msg: buf=0x10007000, len=64
+k_recv_msg: buf=0x10007040, len=64
+sizeof(RTX_MSG_HDR) = 6 
+sizeof(struct rtx_msg_hdr) = 6 
+&msg_hdr = 0x2007c5f0, &(msg_hdr.sender_tid) = 0x2007c5f4, &(msg_hdr.type) = 0x2007c5f5
+priv_task1: TID =1
+TID = 1, malbox free bytes = 128.
+tid:          0
+state:        1
+prio:         255
+priv:         0
+ptask:        0x30e1
+k_sp_base:    0x2007c800
+k_sp:         0x2007c7a8
+k_stack_size: 0x400
+u_sp_base:    0x2007c400
+u_sp:         0x2007c3e0
+u_stack_size: 0x200
+tid:          1
+state:        2
+prio:         130
+priv:         1
+ptask:        0x2445
+k_sp_base:    0x2007cc00
+k_sp:         0x2007cbd0
+k_stack_size: 0x400
+u_sp_base:    0x2007c600
+u_sp:         0x2007c5e0
+u_stack_size: 0x200
+tid:          2
+state:        1
+prio:         130
+priv:         0
+ptask:        0x2c41
+k_sp_base:    0x2007d400
+k_sp:         0x2007d3d0
+k_stack_size: 0x400
+u_sp_base:    0x2007d000
+u_sp:         0x2007cfe0
+u_stack_size: 0x200
+tid:          8
+state:        4
+prio:         128
+priv:         1
+ptask:        0x2dc9
+k_sp_base:    0x2007e000
+k_sp:         0x2007dfa0
+k_stack_size: 0x400
+u_sp_base:    0x2007dc00
+u_sp:         0x2007dbe0
+u_stack_size: 0x200
+tid:          9
+state:        4
+prio:         128
+priv:         0
+ptask:        0x2e6d
+k_sp_base:    0x2007d800
+k_sp:         0x2007d7a0
+k_stack_size: 0x400
+u_sp_base:    0x2007d200
+u_sp:         0x2007d1e0
+u_stack_size: 0x200
+tid 1 has a mailbox
+TID = 1, malbox free bytes = 128.
+tid 8 has a mailbox
+TID = 8, malbox free bytes = 128.
+tid 9 has a mailbox
+TID = 9, malbox free bytes = 128.
+k_recv_msg_nb: buf=0x10000c38, len=128
+task2: entering 
+k_recv_msg: buf=0x10007080, len=128
+SSSS k_send_msg_nb: receiver_tid = 3, buf=0x10007100
+======== 4 4 
+AAAAA
+BBBBB
+CCCCC
+DDDDD
+EEEEE
+FFFFF
+priv_task1 before yielding cpu.
+priv_task1 after yielding cpu.
+priv_task1: ret_val=0
+GGGGG
+HHHHH
+IIIII
+JJJJJ
+SSSS k_send_msg_nb: receiver_tid = 9, buf=0x2007e680
+======== 4 4 
+KCD TASK RECEIVED A MESSAGE 
+KCD DATA WE GOT: 25 
+GOT INPUT OF KEY!!!!!!!!
+k_send_msg: receiver_tid = 8, buf=0x10007120
+k_recv_msg: buf=0x10007000, len=64
+CSSSS k_send_msg_nb: receiver_tid = 9, buf=0x2007e6a0
+======== 4 4 
+ONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: 25 %
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007120
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+k_recv_msg: buf=0x10007040, len=64
+KCD TASK RECEIVED A MESSAGE 
+KCD DATA WE GOT: 4c 
+GOT INPUT OF KEY!!!!!!!!
+k_send_msg: receiver_tid = 8, buf=0x10007120
+k_recv_msg: buf=0x10007000, len=64
+CONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: 4c L
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007120
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+k_recv_msg: buf=0x10007040, len=64
+KKKKK
+LLLLL
+priv_task1 before yielding cpu.
+priv_task1 after yielding cpu.
+priv_task1: ret_val=0
+MMMMM
+NNNNN
+OOOOO
+SSSS k_send_msg_nb: receiver_tid = 9, buf=0x2007e680
+======== 4 4 
+KCD TASK RECEIVED A MESSAGE 
+KCD DATA WE GOT: 54 
+GOT INPUT OF KEY!!!!!!!!
+k_send_msg: receiver_tid = 8, buf=0x10007120
+k_recv_msg: buf=0x10007000, len=64
+CONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: 54 T
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007120
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+k_recv_msg: buf=0x10007040, len=64
+PPPPP
+QQQQQ
+RRRRR
+SSSS k_send_msg_nb: receiver_tid = 9, buf=0x2007e680
+======== 4 4 
+KCD TASK RECEIVED A MESSAGE 
+KCD DATA WE GOT: d 
+GOT INPUT OF KEY!!!!!!!!
+*****TASK_LS: 5
+k_send_msg: receiver_tid = 8, buf=0x10007140
+k_send_msg: receiver_tid = 8, buf=0x10007140
+k_recv_msg: buf=0x10007000, len=64
+CONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: 30 0
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007140
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+Writing a char = 1 1
+Writing a char = 2 2
+Writing a char = 8 8
+Writing a char = 9 9
+k_recv_msg: buf=0x10007040, len=64
+CONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: d 
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007140
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+Writing a char = 
+ 
+
+k_recv_msg: buf=0x10007040, len=64
+priv_task1 before yielding cpu.
+priv_task1 after yielding cpu.
+priv_task1: ret_val=0
+SSSSS
+TTTTT
+UUUUU
+VVVVV
+WWWWW
+XXXXX
+priv_task1 before yielding cpu.
+priv_task1 after yielding cpu.
+priv_task1: ret_val=0
+YYYYY
+ZZZZZ
+AAAAA
+BBBBB
+SSSS k_send_msg_nb: receiver_tid = 9, buf=0x2007e680
+======== 4 4 
+KCD TASK RECEIVED A MESSAGE 
+KCD DATA WE GOT: 25 
+GOT INPUT OF KEY!!!!!!!!
+k_send_msg: receiver_tid = 8, buf=0x10007140
+k_recv_msg: buf=0x10007000, len=64
+CONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: 25 %
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007140
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+k_recv_msg: buf=0x10007040, len=64
+CCCCC
+DDDDD
+SSSS k_send_msg_nb: receiver_tid = 9, buf=0x2007e680
+======== 4 4 
+KCD TASK RECEIVED A MESSAGE 
+KCD DATA WE GOT: 4c 
+GOT INPUT OF KEY!!!!!!!!
+k_send_msg: receiver_tid = 8, buf=0x10007140
+k_recv_msg: buf=0x10007000, len=64
+CONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: 4c L
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007140
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+k_recv_msg: buf=0x10007040, len=64
+SSSS k_send_msg_nb: receiver_tid = 9, buf=0x2007e680
+======== 4 4 
+KCD TASK RECEIVED A MESSAGE 
+KCD DATA WE GOT: 4d 
+GOT INPUT OF KEY!!!!!!!!
+k_send_msg: receiver_tid = 8, buf=0x10007140
+k_recv_msg: buf=0x10007000, len=64
+CONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: 4d M
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007140
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+k_recv_msg: buf=0x10007040, len=64
+priv_task1 before yielding cpu.
+priv_task1 after yielding cpu.
+priv_task1: ret_SSSS k_send_msg_nb: receiver_tid = 9, buf=0x2007e680
+======== 4 4 
+KCD TASK RECEIVED A MESSAGE 
+KCD DATA WE GOT: d 
+GOT INPUT OF KEY!!!!!!!!
+*****MSG_LS: 3
+k_send_msg: receiver_tid = 8, buf=0x10007140
+k_send_msg: receiver_tid = 8, buf=0x10007160
+k_recv_msg: buf=0x10007000, len=64
+CONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: 31 1
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007180
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+Writing a char = 8 8
+Writing a char = 9 9
+k_recv_msg: buf=0x10007040, len=64
+CONSOLE DISPLAY HAS GOT A MESSAGE!
+CDISP DATA WE GOT: d 
+SSSS k_send_msg_nb: receiver_tid = 254, buf=0x10007160
+k_recv_msg_nb: buf=0x2007e6c0, len=64
+Writing a char = 
+ 
+
+k_recv_msg: buf=0x10007040, len=64
+val=0
+EEEEE
+FFFFF
+GGGGG
+HHHHH
+IIIII
+JJJJJ
+priv_task1 before yielding cpu.
+priv_task1 after yielding cpu.
+priv_task1: ret_val=0
+KKKKK
+LLLLL
+MMMMM
+
