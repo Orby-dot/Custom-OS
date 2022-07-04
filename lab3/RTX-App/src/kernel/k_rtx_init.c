@@ -48,7 +48,7 @@
 
 int errno = 0;
 
-readyQueue_t readyQueuesArray[7];
+readyQueue_t readyQueuesArray[6];
 //level 6 is receive queue
 //level 7 is send queue
 readyQueue_t sendQueuesArray[5];
@@ -89,14 +89,10 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     
     /* add timer(s) initialization code */
     
-		initializeArrayOfReadyQueues(readyQueuesArray,7);
+		initializeArrayOfReadyQueues(readyQueuesArray,6);
 		initializeArrayOfReadyQueues(sendQueuesArray,5);
 
-    if ( k_tsk_init(tasks, num_tasks) != RTX_OK ) {
-        return RTX_ERR;
-    }
-
-		TASK_INIT taskinfo;
+	TASK_INIT taskinfo;
     // KCD
     taskinfo.ptask = task_kcd;
     taskinfo.u_stack_size = PROC_STACK_SIZE;
@@ -112,6 +108,10 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     taskinfo.prio = HIGH;
     taskinfo.priv = 1; //privileged
     k_tsk_create_new(&taskinfo, &g_tcbs[TID_CON], TID_CON);
+	
+    if ( k_tsk_init(tasks, num_tasks) != RTX_OK ) {
+        return RTX_ERR;
+    }
     
 		/* add message passing initialization code */
     

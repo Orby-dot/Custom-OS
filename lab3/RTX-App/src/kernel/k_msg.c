@@ -53,7 +53,7 @@ int k_mbx_create(size_t size) {
 }
 
 int k_send_msg(task_t receiver_tid, const void *buf) {
-    printf("k_send_msg: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
+    // printf("k_send_msg: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;
 	
 	if (buf == NULL ){ // buf is null
@@ -104,7 +104,7 @@ int k_send_msg(task_t receiver_tid, const void *buf) {
 }
 
 int k_send_msg_nb(task_t receiver_tid, const void *buf) {
-    printf("SSSS k_send_msg_nb: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
+    // printf("SSSS k_send_msg_nb: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;
 	
 	if (buf == NULL ){ // buf is null
@@ -136,7 +136,7 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 	else{
 		TCB * selectedTCB = &g_tcbs[(U32) receiver_tid];
 		addMessage(&(selectedTCB->mailbox),(void*)buf);
-		printf("======== %x %x \r\n", selectedTCB->state, BLK_RECV);
+		// printf("======== %x %x \r\n", selectedTCB->state, BLK_RECV);
 		if((selectedTCB->state) == BLK_RECV)
 		{
 			selectedTCB->state = READY;
@@ -150,7 +150,7 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 }
 
 int k_recv_msg(void *buf, size_t len) {
-	printf("k_recv_msg: buf=0x%x, len=%d\r\n", buf, len);
+	// printf("k_recv_msg: buf=0x%x, len=%d\r\n", buf, len);
 	
 	if (buf == NULL ){ // buf is null
 		errno = EFAULT;
@@ -197,7 +197,7 @@ int k_recv_msg(void *buf, size_t len) {
 }
 
 int k_recv_msg_nb_uart(void *buf, size_t len) {
-	printf("k_recv_msg_nb: buf=0x%x, len=%d\r\n", buf, len);
+	// printf("k_recv_msg_nb: buf=0x%x, len=%d\r\n", buf, len);
 	if (buf == NULL ){ // buf is null
 		errno = EFAULT;
 		return RTX_ERR;
@@ -228,7 +228,7 @@ int k_recv_msg_nb_uart(void *buf, size_t len) {
 }
 
 int k_recv_msg_nb(void *buf, size_t len) {
-	printf("k_recv_msg_nb: buf=0x%x, len=%d\r\n", buf, len);
+	// printf("k_recv_msg_nb: buf=0x%x, len=%d\r\n", buf, len);
 	if (buf == NULL ){ // buf is null
 		errno = EFAULT;
 		return RTX_ERR;
@@ -278,13 +278,13 @@ int k_mbx_ls(task_t *buf, size_t count) {
 				currentNumTCB ++;
 				if(currentNumTCB == count)
 				{
-					return 0;
+					return currentNumTCB;
 				}
 			}
 		}
 	}
    
-	return 0;
+	return currentNumTCB;
 }
 
 int k_mbx_get(task_t tid)

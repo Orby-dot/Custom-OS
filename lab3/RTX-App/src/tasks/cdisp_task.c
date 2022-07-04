@@ -13,6 +13,7 @@
 // uint8_t g_send_char;
 extern uint8_t g_tx_irq;
 
+
 // TODO: make it utility class function?
 void printToUART(char *data, U32 data_len)
 {
@@ -26,7 +27,7 @@ void printToUART(char *data, U32 data_len)
 
 		if(data_len>1) {
 			data_ts += 6;
-			for(int i=1;i<data_len;i++){ // skipping 1st character
+			for(int i=1;i<data_len;i++){ // skipping 1st letter
 				*(data_ts+i-1) = data[i];
 			}
 		}
@@ -50,21 +51,21 @@ void task_cdisp(void)
 
         // CALLED when something to output (character)
         recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
-				printf("CONSOLE DISPLAY HAS GOT A MESSAGE!\r\n");
+				//printf("CONSOLE DISPLAY HAS GOT A MESSAGE!\r\n");
         RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
         char *data = (char *)(msg_buf);
         data += 6;
 			
-				printf("CDISP DATA WE GOT: %x \r\n", *data);
+				//printf("CDISP DATA WE GOT: %x \r\n", *data);
 
 
         // sends messsage to UART0_IRQ_Handler to output
         if (header->type == DISPLAY)
         {
 						pUart->THR = *data;
+						g_tx_irq = 1;
             g_send_char = 0;
             printToUART(data, header->length - 6);
-						g_tx_irq = 1;
             // enable TX Interrupt
             pUart->IER |= IER_THRE;
         }

@@ -216,7 +216,6 @@ void task1(void)
 		tsk_exit();         // terminating the task
 
 }
-
 /**
  * @brief: a dummy task2
  */
