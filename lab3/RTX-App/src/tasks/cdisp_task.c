@@ -26,7 +26,7 @@ void printToUART(char *data, U32 data_len)
 
 		if(data_len>1) {
 			data_ts += 6;
-			for(int i=1;i<data_len;i++){
+			for(int i=1;i<data_len;i++){ // skipping 1st character
 				*(data_ts+i-1) = data[i];
 			}
 		}

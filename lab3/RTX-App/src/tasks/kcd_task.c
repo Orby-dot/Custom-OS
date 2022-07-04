@@ -139,18 +139,18 @@ void task_kcd(void)
 
                             len = 0;
                         } else {
-													char * command_not_found = mem_alloc(18);
-													command_not_found = "Command not found";
-													printToConsole(command_not_found, 18);
+													char * command_not_found = mem_alloc(20);
+													command_not_found = "\r\nCommand not found";
+													printToConsole(command_not_found, 20);
 													mem_dealloc(command_not_found);
                         }
                     }
 
                 } 
                 else {
-										char * invalid_command = mem_alloc(15);
-										invalid_command = "Invalid Command";
-										printToConsole(invalid_command, 15);
+										char * invalid_command = mem_alloc(18);
+										invalid_command = "\r\nInvalid Command";
+										printToConsole(invalid_command, 18);
 										mem_dealloc(invalid_command);
                 }
 									
