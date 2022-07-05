@@ -56,7 +56,10 @@ int getMessage(mailbox_t *mailbox, void* buf, U8 reqSize) {
 	U8 length = header->length;//
 	
 	// This is the only error we need to read the header
-	if(length > (reqSize)) return RTX_ERR;//
+	if(length > (reqSize)) {
+		errno = ENOSPC;
+		return RTX_ERR;//
+	}
 	
 	char *return_message = buf;
 	char* headAddress = mailbox->head;
@@ -99,7 +102,8 @@ void initializeMailbox(mailbox_t *mailbox, U8 id, U32 size) {
 	mailbox->head = mailbox->ring_buffer;
 	mailbox->tail = mailbox->ring_buffer; 
 	if(mailbox->ring_buffer == NULL){
-		//SET AN ERROR
+		errno = ENOMEM;
+		// return RTX_ERR happens in k_mbx_create
 	}
 }
 

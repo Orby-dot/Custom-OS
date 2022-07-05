@@ -109,7 +109,7 @@ int removeNodes(bitArray *array, U32 address){
 	if (debugBA) printf(" ============== BA REMOVE NODES addr %x \r\n", address);
 
 	if (address < array->startAddress || address > array->endAddress) {
-		// printf("Invalid address: %x \r\n", address);
+		printf("Invalid address: %x \r\n", address);
 		return -1;
 	}
 	U32 height = getHeight(array);

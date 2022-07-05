@@ -46,10 +46,18 @@ int k_mbx_create(size_t size) {
 	//i set the head of the mailbox to null when we first create the task
 	if(gp_current_task->mailbox.head != NULL)
 	{
-		return -1;
+		errno = EEXIST;
+		return RTX_ERR;
+	} else if (size < MIN_MSG_SIZE) {
+		errno = EINVAL;
+		return RTX_ERR;
 	}
 	initializeMailbox(&gp_current_task->mailbox, gp_current_task->tid,size);
-	return 0;
+	if (gp_current_task->mailbox.ring_buffer == NULL) {
+		errno = ENOMEM;
+		return RTX_ERR;
+	}
+	return RTX_OK;
 }
 
 int k_send_msg(task_t receiver_tid, const void *buf) {
@@ -59,22 +67,18 @@ int k_send_msg(task_t receiver_tid, const void *buf) {
 	if (buf == NULL ){ // buf is null
 		errno = EFAULT;
 		return RTX_ERR;
-	} else if((U32)receiver_tid<=10 && g_tcbs[(U32)receiver_tid].mailbox.ring_buffer == NULL){ // no mailbox
+	} else if((U32)receiver_tid<=10 && g_tcbs[(U32)receiver_tid].mailbox.ring_buffer == NULL){ // no mailbox. For UART, it should still be fine b/c first check fails
 		errno = ENOENT;		
 		return RTX_ERR;
-	} else if (currentMsg->length<MIN_MSG_SIZE ||(U32)receiver_tid>10) {
+	} else if (currentMsg->length<MIN_MSG_SIZE || ((U32)receiver_tid>10 && receiver_tid != TID_UART)) {
 		errno = EINVAL;		
 		return RTX_ERR;
 	} else if (currentMsg->length>g_tcbs[(U32)receiver_tid].mailbox.max_size){
 		errno = EMSGSIZE;		
 		return RTX_ERR;
-	} else if ((g_tcbs[(U32)receiver_tid].mailbox.max_size-g_tcbs[(U32)receiver_tid].mailbox.current_size)<currentMsg->length){
-		errno = ENOSPC;
-		return RTX_ERR;
-	}
+	} // NO ENOSPC in blocking send
 	
 	//if msg can fit in mailbox
-
 	if((g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >g_tcbs[(U32)receiver_tid].mailbox.max_size)
 	{
 		gp_current_task->msg = (void*)buf;
@@ -103,6 +107,9 @@ int k_send_msg(task_t receiver_tid, const void *buf) {
 	return 0;
 }
 
+/**
+ * FUNCTION ALSO USED BY UART 
+ */
 int k_send_msg_nb(task_t receiver_tid, const void *buf) {
     // printf("SSSS k_send_msg_nb: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;
@@ -113,21 +120,20 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 	} else if((U32)receiver_tid<=10 && g_tcbs[(U32)receiver_tid].mailbox.ring_buffer == NULL){ // no mailbox
 		errno = ENOENT;		
 		return RTX_ERR;
-	} else if (currentMsg->length<MIN_MSG_SIZE ||(U32)receiver_tid>10) {
+	} else if (currentMsg->length<MIN_MSG_SIZE || ((U32)receiver_tid>10 && receiver_tid != TID_UART)) {
 		errno = EINVAL;		
 		return RTX_ERR;
-	} else if (currentMsg->length>g_tcbs[(U32)receiver_tid].mailbox.max_size){
+	} else if (receiver_tid != TID_UART && currentMsg->length>g_tcbs[(U32)receiver_tid].mailbox.max_size){
 		errno = EMSGSIZE;		
-		return RTX_ERR;
-	} else if ((g_tcbs[(U32)receiver_tid].mailbox.max_size-g_tcbs[(U32)receiver_tid].mailbox.current_size)<currentMsg->length){
-		errno = ENOSPC;
 		return RTX_ERR;
 	}
 	
 	if(receiver_tid != TID_UART && (g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >=g_tcbs[(U32)receiver_tid].mailbox.max_size){
+		errno = ENOSPC;
 		return RTX_ERR;		
 	}
 	else if(receiver_tid == TID_UART && (uart_mailbox->current_size + currentMsg->length) >= uart_mailbox->max_size){
+		errno = ENOSPC;
 		return RTX_ERR;
 	}
 	else if(receiver_tid == TID_UART){
@@ -160,14 +166,6 @@ int k_recv_msg(void *buf, size_t len) {
 		errno = ENOENT;		
 		return RTX_ERR;
 	}
-	else if(gp_current_task->mailbox.current_size == 0){ // mailbox has no message
-		errno = ENOMSG;
-		return RTX_ERR;
-	} 
-	else if (gp_current_task->mailbox.current_size>len){
-		errno = ENOSPC;
-		return RTX_ERR;
-	}
 	
 	sendAll();
 	if(gp_current_task->mailbox.current_size != 0)
@@ -180,6 +178,7 @@ int k_recv_msg(void *buf, size_t len) {
 			return k_tsk_run_new();
 		}
 		else{
+			errno = ENOSPC; // only time getMessage returns -1 is no space
 			return RTX_ERR;
 		}
 		
@@ -204,14 +203,6 @@ int k_recv_msg_nb_uart(void *buf, size_t len) {
 	}
 	else if(uart_mailbox->ring_buffer == NULL){ // no mailbox
 		errno = ENOENT;		
-		return RTX_ERR;
-	}
-	else if(uart_mailbox->current_size == 0){ // mailbox has no message
-		errno = ENOMSG;
-		return RTX_ERR;
-	}
-	else if (uart_mailbox->current_size>len){
-		errno = ENOSPC;
 		return RTX_ERR;
 	}
 
@@ -239,10 +230,6 @@ int k_recv_msg_nb(void *buf, size_t len) {
 	}
 	else if(gp_current_task->mailbox.current_size == 0){ // mailbox has no message
 		errno = ENOMSG;
-		return RTX_ERR;
-	}
-	else if (gp_current_task->mailbox.current_size>len){
-		errno = ENOSPC;
 		return RTX_ERR;
 	}
 

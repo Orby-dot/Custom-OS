@@ -232,7 +232,7 @@ void UART0_IRQHandler(void)
             //nonBlocking send
             k_send_msg_nb(TID_KCD, to_send);
 
-            k_mpool_dealloc(MPID_IRAM2, to_send);
+            k_mpool_dealloc(MPID_IRAM1, to_send);
 
 #ifdef DEBUG_0
             printf("char %c gets processed\r\n", g_char_in);
@@ -264,7 +264,7 @@ void UART0_IRQHandler(void)
         pUart->IER &= ~IER_THRE; // clear the IER_THRE bit
         g_tx_irq = 0;
 				g_send_char = 0;
-        k_mpool_dealloc(MPID_IRAM2, msg_buf);
+        k_mpool_dealloc(MPID_IRAM1, msg_buf);
     }
     else
     { /* not implemented yet */ //no data

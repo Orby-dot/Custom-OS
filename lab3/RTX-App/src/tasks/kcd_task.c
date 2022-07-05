@@ -88,7 +88,7 @@ void printLSbuffer(	task_t *buffer, int count) {
     
     printToConsole(tmp_str, count + 3); // TODO: Correct Size?
 
-    k_mpool_dealloc(MPID_IRAM2, tmp_str);
+    k_mpool_dealloc(MPID_IRAM1, tmp_str);
 }
 
 void task_kcd(void)

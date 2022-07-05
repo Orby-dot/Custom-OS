@@ -593,7 +593,7 @@ void k_tsk_exit(void)
     printf("k_tsk_exit: entering...\n\r");
 #endif /* DEBUG_0 */
     if (debugEntryPrint) printf("===== task exit =====\r\n");
-	k_mpool_dealloc(0,gp_current_task->psp);
+	k_mpool_dealloc(MPID_IRAM2,gp_current_task->psp);
 	gp_current_task->state = DORMANT;
 	deallocateMailbox(&gp_current_task->mailbox);
 	k_tsk_run_new();
