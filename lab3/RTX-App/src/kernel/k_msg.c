@@ -280,7 +280,7 @@ int k_mbx_get(task_t tid)
     printf("k_mbx_get: tid=%u\r\n", tid);
 #endif /* DEBUG_0 */
 	
-		if((U32)tid>10 || gp_current_task->mailbox.head==NULL){
+		if((U32)tid<=10 &&  gp_current_task->mailbox.ring_buffer==NULL){
 			errno = ENOENT;
 			return RTX_ERR;
 		}
