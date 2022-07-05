@@ -287,7 +287,7 @@ int k_mbx_get(task_t tid)
 			return uart_mailbox->max_size - uart_mailbox->current_size;
 		}
 		
-		if ( ((U32)tid<10 && (U32)tid>0) && g_tcbs[(U32)tid].mailbox.head == NULL){
+		if ( ((U32)tid<MAX_TASKS && (U32)tid>0) && g_tcbs[(U32)tid].mailbox.head == NULL){
 			errno = ENOENT;
 			return RTX_ERR;
 		}
