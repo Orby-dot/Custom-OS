@@ -3,7 +3,6 @@
 .\doc\G25-TS1.log
 .\doc\G25-TS2.log
 .\doc\G25-TS3.log
-.\doc\G25-TS4.log
 .\objects\ram\ae.o
 .\objects\ram\ae_tasks_util.o
 .\objects\ram\ae_timer.o
