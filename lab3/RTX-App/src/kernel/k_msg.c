@@ -280,7 +280,7 @@ int k_mbx_get(task_t tid)
     printf("k_mbx_get: tid=%u\r\n", tid);
 #endif /* DEBUG_0 */
 		if(tid == TID_UART) {
-			if (uart_mailbox == NULL) {
+			if (uart_mailbox.head == NULL) {
 				errno = ENOENT;
 				return RTX_ERR;
 			}
