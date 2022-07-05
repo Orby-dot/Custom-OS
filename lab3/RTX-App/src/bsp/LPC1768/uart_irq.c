@@ -58,7 +58,7 @@ mailbox_t * uart_mailbox;
  *****************************************************************************/
 int uart_irq_init(int n_uart)
 {
-		uart_mailbox = k_mpool_alloc(MPID_IRAM1, UART_MBX_SIZE);
+		uart_mailbox = k_mpool_alloc(MPID_IRAM1, sizeof(mailbox_t));
 		initializeMailbox(uart_mailbox, TID_UART, UART_MBX_SIZE);
     LPC_UART_TypeDef *pUart;
 
