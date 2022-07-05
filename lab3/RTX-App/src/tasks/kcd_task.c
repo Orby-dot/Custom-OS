@@ -128,10 +128,10 @@ void task_kcd(void)
         {
             //printf("GOT INPUT OF KEY!!!!!!!!\n\r");
             if (*(data) == '\r' || *(data) == '\n') // TODO: Is enter check correct?
-            { 
-                if (cmd[0] == '%')
+            {
+								if (cmd[0] == '%')
                 {
-                    if (cmd[1] == 'L') {
+                    if (cmd[1] == 'L' && len == 3) {
                         if (cmd[2] == 'T') {
                             task_t buffer[10];
                             int ret = k_tsk_ls(buffer, 10);
@@ -150,7 +150,14 @@ void task_kcd(void)
                             printToConsole(command_not_found, 22);
                             mem_dealloc(command_not_found);
                         }
-                    } else {
+                    }
+										else if (cmd[1]=='L' && len!=3){
+											char * invalid_command = mem_alloc(20);
+											sprintf(invalid_command, "\n\rInvalid Command\n\r");
+											printToConsole(invalid_command, 20);
+											mem_dealloc(invalid_command);
+										}
+										else if (len == 2) { //our map is only compatiable with single alphanumeric chars so this is a valid check?
                         U8 taskId = getTaskId(cmd[1]);
 
                         if (taskId != UNDEF) {
