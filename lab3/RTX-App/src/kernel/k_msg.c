@@ -226,7 +226,7 @@ int k_mbx_get(task_t tid)
 #ifdef DEBUG_0
     printf("k_mbx_get: tid=%u\r\n", tid);
 #endif /* DEBUG_0 */
-		return gp_current_task->mailbox.max_size - gp_current_task->mailbox.current_size;
+		return g_tcbs[(U32)tid].mailbox.max_size - g_tcbs[(U32)tid].mailbox.current_size;
 }
 void sendAll(void)
 {
