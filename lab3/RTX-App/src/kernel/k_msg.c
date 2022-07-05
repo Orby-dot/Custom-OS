@@ -279,6 +279,12 @@ int k_mbx_get(task_t tid)
 #ifdef DEBUG_0
     printf("k_mbx_get: tid=%u\r\n", tid);
 #endif /* DEBUG_0 */
+	
+		if((U32)tid>10 || gp_current_task->mailbox.head==NULL){
+			errno = ENOENT;
+			return RTX_ERR;
+		}
+	
 		return gp_current_task->mailbox.max_size - gp_current_task->mailbox.current_size;
 }
 
