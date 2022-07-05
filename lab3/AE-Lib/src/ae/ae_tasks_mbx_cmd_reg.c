@@ -191,14 +191,14 @@ void task1(void)
 #endif /* DEBUG_0 */
         }
     }
-        //printf("NOW EXPECTING GP?\r\n");
+        printf("Command Registered. Enter Percent, G and another letter.\r\n");
 
         while(1){
             char*buf1 = mem_alloc(25);
 			//printf("**************** RECV BLOCKEd??\r\n");
             recv_msg(buf1, 25);
 			//printf("**************** RECV BLOCKEd??\r\n");
-			//printf("Received: %x %x\r\n", buf1[6], buf1[7]);
+			printf("Received: %c %c\r\n", buf1[6], buf1[7]);
             mem_dealloc(buf1);
 
         }
