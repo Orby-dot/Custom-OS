@@ -38,6 +38,7 @@
 #include "uart_irq.h"
 #include "uart_polling.h"
 #include "k_msg.h"
+#include "k_task.h"
 #ifdef DEBUG_0
 #include "printf.h"
 #endif
@@ -265,6 +266,7 @@ void UART0_IRQHandler(void)
         g_tx_irq = 0;
 				g_send_char = 0;
         k_mpool_dealloc(MPID_IRAM1, msg_buf);
+				k_tsk_run_new();
     }
     else
     { /* not implemented yet */ //no data

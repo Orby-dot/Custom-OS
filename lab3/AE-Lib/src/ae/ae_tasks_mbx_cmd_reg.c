@@ -199,7 +199,7 @@ void task1(void)
             recv_msg(buf1, 25);
 			//printf("**************** RECV BLOCKEd??\r\n");
 			//printf("Received: %x %x\r\n", buf1[6], buf1[7]);
-            mem_dealloc(buf);
+            mem_dealloc(buf1);
 
         }
         
