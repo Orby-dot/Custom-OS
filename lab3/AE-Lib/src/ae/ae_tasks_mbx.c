@@ -53,6 +53,7 @@ TASK_INIT   g_init_tasks[NUM_INIT_TASKS];
 U8 g_buf1[BUF_LEN];
 U8 g_buf2[BUF_LEN];
 task_t g_tasks[MAX_TASKS];
+#define     NUM_TESTS       2       // number of tests
 
 void set_ae_init_tasks (TASK_INIT **pp_tasks, int *p_num)
 {
