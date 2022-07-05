@@ -408,11 +408,6 @@
               <FileType>4</FileType>
               <FilePath>.\doc\G25-TS3.log</FilePath>
             </File>
-            <File>
-              <FileName>G25-TS4.log</FileName>
-              <FileType>4</FileType>
-              <FilePath>.\doc\G25-TS4.log</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -612,6 +607,11 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>ae_tasks3_G25.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
+            </File>
+            <File>
               <FileName>ae_tasks1_G25.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks1_G25.c</FilePath>
@@ -622,14 +622,9 @@
               <FilePath>.\src\ae\ae_tasks2_G25.c</FilePath>
             </File>
             <File>
-              <FileName>ae_tasks3_G25.c</FileName>
+              <FileName>ae_tasks_mbx_cmd_reg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
-            </File>
-            <File>
-              <FileName>ae_tasks4_G25.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks4_G25.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks_mbx_cmd_reg.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1037,11 +1032,6 @@
               <FileType>4</FileType>
               <FilePath>.\doc\G25-TS3.log</FilePath>
             </File>
-            <File>
-              <FileName>G25-TS4.log</FileName>
-              <FileType>4</FileType>
-              <FilePath>.\doc\G25-TS4.log</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1241,6 +1231,11 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>ae_tasks3_G25.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
+            </File>
+            <File>
               <FileName>ae_tasks1_G25.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks1_G25.c</FilePath>
@@ -1251,14 +1246,9 @@
               <FilePath>.\src\ae\ae_tasks2_G25.c</FilePath>
             </File>
             <File>
-              <FileName>ae_tasks3_G25.c</FileName>
+              <FileName>ae_tasks_mbx_cmd_reg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
-            </File>
-            <File>
-              <FileName>ae_tasks4_G25.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks4_G25.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks_mbx_cmd_reg.c</FilePath>
             </File>
           </Files>
         </Group>

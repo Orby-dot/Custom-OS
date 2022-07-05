@@ -1,153 +1,22 @@
-G99-TS200: START
-===== k_tsk_yield is called =====
-===== priv_task1 begins =====
-G99-TS200-LOG2: TID = 1, priv_task1: starting test0
-===== task2 begins =====
-G99-TS200-LOG2: TID = 2, task2: entering
-G99-TS200-LOG2: TID = 2, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG2: TID = 2, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG: Test[0]-[0]: task2 calling tsk_yield - 2.
-G99-TS200-LOG: Test[0]-[0]: result = 1.
------ TASK GET OUTPUT ----- 
-TID: 2
-PRIO: x82 -- PRIV: 0 -- STATE: 1 
-ENTRY POINT (ptask): x24d9
-K stack_size: x0 -- sp: x10000bf0 -- sp_base: x10000c50
-U stack_size: x200 -- sp: x2007c5e0 -- sp_base: x2007c600
------ -----
-===== task2 begins =====
-G99-TS200-LOG2: TID = 3, task2: entering
-G99-TS200-LOG2: TID = 3, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG2: TID = 3, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG: Test[0]-[1]: task2 calling tsk_yield - 2.
-G99-TS200-LOG: Test[0]-[1]: result = 1.
------ TASK GET OUTPUT ----- 
-TID: 3
-PRIO: x82 -- PRIV: 0 -- STATE: 1 
-ENTRY POINT (ptask): x24d9
-K stack_size: x0 -- sp: x10000ff0 -- sp_base: x10001050
-U stack_size: x200 -- sp: x2007c7e0 -- sp_base: x2007c800
------ -----
-===== task2 begins =====
-G99-TS200-LOG2: TID = 4, task2: entering
-G99-TS200-LOG2: TID = 4, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG2: TID = 4, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG: Test[0]-[2]: task2 calling tsk_yield - 2.
-G99-TS200-LOG: Test[0]-[2]: result = 1.
------ TASK GET OUTPUT ----- 
-TID: 4
-PRIO: x82 -- PRIV: 0 -- STATE: 1 
-ENTRY POINT (ptask): x24d9
-K stack_size: x0 -- sp: x100013f0 -- sp_base: x10001450
-U stack_size: x200 -- sp: x2007c9e0 -- sp_base: x2007ca00
------ -----
-===== task2 begins =====
-G99-TS200-LOG2: TID = 5, task2: entering
-G99-TS200-LOG2: TID = 5, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG2: TID = 5, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG: Test[0]-[3]: task2 calling tsk_yield - 2.
-G99-TS200-LOG: Test[0]-[3]: result = 1.
------ TASK GET OUTPUT ----- 
-TID: 5
-PRIO: x82 -- PRIV: 0 -- STATE: 1 
-ENTRY POINT (ptask): x24d9
-K stack_size: x0 -- sp: x100017f0 -- sp_base: x10001850
-U stack_size: x200 -- sp: x2007cbe0 -- sp_base: x2007cc00
------ -----
-===== task2 begins =====
-G99-TS200-LOG2: TID = 6, task2: entering
-G99-TS200-LOG2: TID = 6, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG2: TID = 6, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG: Test[0]-[4]: task2 calling tsk_yield - 2.
-G99-TS200-LOG: Test[0]-[4]: result = 1.
------ TASK GET OUTPUT ----- 
-TID: 6
-PRIO: x82 -- PRIV: 0 -- STATE: 1 
-ENTRY POINT (ptask): x24d9
-K stack_size: x0 -- sp: x10001bf0 -- sp_base: x10001c50
-U stack_size: x200 -- sp: x2007cde0 -- sp_base: x2007ce00
------ -----
-===== task2 begins =====
-G99-TS200-LOG2: TID = 7, task2: entering
-G99-TS200-LOG2: TID = 7, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG2: TID = 7, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG: Test[0]-[5]: task2 calling tsk_yield - 2.
-G99-TS200-LOG: Test[0]-[5]: result = 1.
------ TASK GET OUTPUT ----- 
-TID: 7
-PRIO: x82 -- PRIV: 0 -- STATE: 1 
-ENTRY POINT (ptask): x24d9
-K stack_size: x0 -- sp: x10001ff0 -- sp_base: x10002050
-U stack_size: x200 -- sp: x2007cfe0 -- sp_base: x2007d000
------ -----
-===== task2 begins =====
-G99-TS200-LOG2: TID = 8, task2: entering
-G99-TS200-LOG2: TID = 8, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG2: TID = 8, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG: Test[0]-[6]: task2 calling tsk_yield - 2.
-G99-TS200-LOG: Test[0]-[6]: result = 1.
------ TASK GET OUTPUT ----- 
-TID: 8
-PRIO: x82 -- PRIV: 0 -- STATE: 1 
-ENTRY POINT (ptask): x24d9
-K stack_size: x0 -- sp: x100023f0 -- sp_base: x10002450
-U stack_size: x200 -- sp: x2007d1e0 -- sp_base: x2007d200
------ -----
-===== task2 begins =====
-G99-TS200-LOG2: TID = 9, task2: entering
-G99-TS200-LOG2: TID = 9, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG2: TID = 9, task2: yielding cpu 
-===== k_tsk_yield is called =====
-===== k_tsk_yield is called =====
-G99-TS200-LOG: Test[0]-[7]: task2 calling tsk_yield - 2.
-G99-TS200-LOG: Test[0]-[7]: result = 1.
------ TASK GET OUTPUT ----- 
-TID: 9
-PRIO: x82 -- PRIV: 0 -- STATE: 1 
-ENTRY POINT (ptask): x24d9
-K stack_size: x0 -- sp: x100027f0 -- sp_base: x10002850
-U stack_size: x200 -- sp: x2007d3e0 -- sp_base: x2007d400
------ -----
-G99-TS200-LOG: Test[0]-[8]: Testing that new task can not be created since max_tasks has exceeded. 
-.
-G99-TS200-LOG: Test[0]-[8]: result = 1.
-AAAAA
-G99-TS200-LOG2: TID = 1, priv_task1: yielding cpu
-===== k_tsk_yield is called =====
-G99-TS200: FINISHED
-G99-TS200-LOG: Test 0: 9/9 PASSED. Expected = 0x1FF, result = 0x1FF
-G99-TS200: 1/1 test function(s) COMPLETED.
-G99-TS200: 9/9 tests PASSED.
-G99-TS200: 0/9 tests FAILED.
-G99-TS200: END
-
+G99-TS300: START
+G99-TS300-LOG2: TID = 1, task0 entering
+G99-TS300-LOG: Test[0]-[0]: task0: creating a LOW prio task that runs task1 function.
+G99-TS300-LOG: Test[0]-[0]: result = 1.
+G99-TS300-LOG: Test[0]-[1]: task0: creating a MEDIUM prio task that runs task2 function.
+G99-TS300-LOG: Test[0]-[1]: result = 1.
+G99-TS300-LOG: Test[0]-[2]: task0: creating a mailbox of size 128 Bytes.
+G99-TS300-LOG: Test[0]-[2]: result = 1.
+G99-TS300-LOG: Test[0]-[3]: task0: calling mbx_get on itself, should be equal to BUF_LEN (since nothing sent).
+G99-TS300-LOG: Test[0]-[3]: result = 1.
+G99-TS300-LOG: Test[0]-[4]: task0: calling mbx_get on UART MAILBOX, should be equal to UART_MBX_SIZE (since nothing sent).
+G99-TS300-LOG: Test[0]-[4]: result = 1.
+G99-TS300-LOG: Test[0]-[5]: task0: calling mbx_ls, should return 1 + KCD + CON = 3.
+G99-TS300-LOG: Test[0]-[5]: result = 1.
+G99-TS300-LOG: Test[0]-[6]: task0: calling mbx_get on wrong tid, should return RTX_ERr and errno.
+G99-TS300-LOG: Test[0]-[6]: result = 1.
+G99-TS300: FINISHED
+G99-TS300-LOG: Test 0: 7/7 PASSED. Expected = 0x7F, result = 0x7F
+G99-TS300: 1/1 test function(s) COMPLETED.
+G99-TS300: 7/7 tests PASSED.
+G99-TS300: 0/7 tests FAILED.
+G99-TS300: END
