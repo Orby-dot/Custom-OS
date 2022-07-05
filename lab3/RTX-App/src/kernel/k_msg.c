@@ -280,14 +280,14 @@ int k_mbx_get(task_t tid)
     printf("k_mbx_get: tid=%u\r\n", tid);
 #endif /* DEBUG_0 */
 		if(tid == TID_UART) {
-			if (uart_mailbox.head == NULL) {
+			if (uart_mailbox->head == NULL) {
 				errno = ENOENT;
 				return RTX_ERR;
 			}
 			return uart_mailbox->max_size - uart_mailbox->current_size;
 		}
 		
-		if ( ((U32)tid<MAX_TASKS && (U32)tid>0) && g_tcbs[(U32)tid].mailbox.head == NULL){
+		if ( ((U32)tid<MAX_TASKS) && g_tcbs[(U32)tid].mailbox.head == NULL){
 			errno = ENOENT;
 			return RTX_ERR;
 		}
