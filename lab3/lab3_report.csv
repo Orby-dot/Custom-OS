@@ -1,5 +1,5 @@
 Name,PlannedHours,RealHours,Contributions
-Kevin,20,25,"tsk_create, tsk_create_new, Adding/updating TCB struct parameters"
-Aryaman,20,25,"Ready Queue, Scheduler function, test cases for 'tsk_get' and case where >10 tasks called, bug tracking"
-Nick,20,25,"Project Design, tsk_create, tsk_create_new, tsk_set_prio, tsk_yield, Test cases for setting priority (preemption)"
-Jason,20,22,"Ready Queue, Scheduler function, Test cases for ls (correctly changes as tasks become dormant or exit)"
+Kevin,30,40,"Mailbox Design/Implementation, KCD/Cdisp Task, UART integration with Cdisp, Lab 2 Fixes (TS 234, 250)"
+Aryaman,30,40,"KCD/Cdisp Task, LT and LM functions, UART integration with Cdisp, Testing KCD (KCD REG and KCD CMD), Lab 2 Fixes (TS 240, 260)"
+Nick,30,40,"Mailbox Design/Implementation, K Functions (including scheduling), Mailbox Testing, UART_INIT"
+Jason,30,30,"Errno checks, Mailbox Implementation"
