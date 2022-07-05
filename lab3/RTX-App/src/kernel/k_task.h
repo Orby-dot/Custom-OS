@@ -89,6 +89,7 @@ task_t k_tsk_gettid     (void);  /* get tid of the current running task */
 // Not implemented, to be done by students
 int  k_tsk_create       (task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size);
 void k_tsk_exit         (void);
+void k_tsk_run_new_put_current_task_to_rq         (void);
 int  k_tsk_set_prio     (task_t task_id, U8 prio);
 int  k_tsk_get          (task_t task_id, RTX_TASK_INFO *buffer);
 TCB  *scheduler         (void);  /* student needs to change this function */

@@ -266,7 +266,6 @@ void UART0_IRQHandler(void)
         g_tx_irq = 0;
 				g_send_char = 0;
         k_mpool_dealloc(MPID_IRAM1, msg_buf);
-				k_tsk_run_new();
     }
     else
     { /* not implemented yet */ //no data
@@ -275,6 +274,7 @@ void UART0_IRQHandler(void)
 #endif /* DEBUG_0 */
         return;
     }
+    k_tsk_run_new_put_current_task_to_rq();
 }
 /*
  *===========================================================================

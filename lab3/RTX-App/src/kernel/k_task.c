@@ -434,6 +434,16 @@ int k_tsk_yield(void)
 	return k_tsk_run_new();
 }
 
+void k_tsk_run_new_put_current_task_to_rq(void) 
+{
+#ifdef DEBUG_0
+    printf("k_tsk_run_new_put_current_task_to_rq: entering...\n\r");
+#endif /* DEBUG_0 */
+	addTCBtoBack(readyQueuesArray,gp_current_task->prio,gp_current_task);
+	k_tsk_run_new();
+    return;
+}
+
 /**
  * @brief   get task identification
  * @return  the task ID (TID) of the calling task

@@ -65,7 +65,7 @@ void set_ae_tasks(TASK_INIT *tasks, int num)
 {
     for (int i = 0; i < num; i++ ) {                                                 
         tasks[i].u_stack_size = PROC_STACK_SIZE;    
-        tasks[i].prio = LOW;
+        tasks[i].prio = HIGH;
         tasks[i].priv = 1;
     }
     tasks[0].priv  = 1;
