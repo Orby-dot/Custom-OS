@@ -115,8 +115,6 @@ void task_kcd(void)
 
         // infinite call recv_msg
         recv_msg(msg_buf, KCD_CMD_BUF_SIZE);
-		//printf("KCD TASK RECEIVED A MESSAGE \n\r");
-        // printToConsole("!", 1);
         RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
         char *data = (char *)(msg_buf);
         data += 6;
@@ -148,7 +146,7 @@ void task_kcd(void)
                         }
                         else {
                             char * command_not_found = mem_alloc(22);
-                            command_not_found = "\n\rCommand not found\n\r";
+														sprintf(command_not_found, "\n\rCommand not found\n\r");
                             printToConsole(command_not_found, 22);
                             mem_dealloc(command_not_found);
                         }
@@ -176,7 +174,7 @@ void task_kcd(void)
                             len = 0;
                         } else {
 													char * command_not_found = mem_alloc(22);
-													command_not_found = "\n\rCommand not found\n\r";
+													sprintf(command_not_found, "\n\rCommand not found\n\r");
 													printToConsole(command_not_found, 22);
 													mem_dealloc(command_not_found);
                         }
@@ -185,17 +183,10 @@ void task_kcd(void)
                 } 
                 else {
 										char * invalid_command = mem_alloc(20);
-										invalid_command = "\n\rInvalid Command\n\r";
+										sprintf(invalid_command, "\n\rInvalid Command\n\r");
 										printToConsole(invalid_command, 20);
 										mem_dealloc(invalid_command);
                 }
-									
-                // // Enter on Console
-				// 				cmd[len] = *(data);
-				// 				char * enter = mem_alloc(2);
-				// 				enter = "\n\r";
-				// 				printToConsole(enter, 2);
-				// 				mem_dealloc(enter);
 								
 								for(int i=0;i<KCD_CMD_BUF_SIZE;i++){
 									cmd[i] = NULL;
@@ -205,9 +196,7 @@ void task_kcd(void)
             else
             {
                 cmd[len] = *(data);
-
                 printToConsole(data, 1);
-
                 len++;
             }
         }
