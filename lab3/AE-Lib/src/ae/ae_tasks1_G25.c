@@ -63,9 +63,9 @@ task 0 will finish the last 5 msg, task 1 will then read them.
  *                             GLOBAL VARIABLES 
  *===========================================================================
  */
-const char   PREFIX[]      = "G99-TS300";
-const char   PREFIX_LOG[]  = "G99-TS300-LOG";
-const char   PREFIX_LOG2[] = "G99-TS300-LOG2";
+const char   PREFIX[]      = "G25-TS300";
+const char   PREFIX_LOG[]  = "G25-TS300-LOG";
+const char   PREFIX_LOG2[] = "G25-TS300-LOG2";
 TASK_INIT    g_init_tasks[NUM_INIT_TASKS];
 
 AE_XTEST     g_ae_xtest;                // test data, re-use for each test
