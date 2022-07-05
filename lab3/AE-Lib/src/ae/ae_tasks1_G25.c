@@ -27,19 +27,23 @@
  */
 
 /**************************************************************************//**
- * @file        ae_tasks200.c
- * @brief       P2 public testing suite 200
+ * @file        ae_tasks300.c
+ * @brief       P3 Test Suite 300  - Basic Non-blocking Message Passing
  *
- * @version     V1.2021.06
+ * @version     V1.2021.07
  * @authors     Yiqing Huang
- * @date        2021 Jun
- * *
+ * @date        2021 Jul
+ *
+ * @note        Each task is in an infinite loop. These Tasks never terminate.
+ *
  *****************************************************************************/
-
+/*
+tl;dr task 0 will be able to send 5 msgs then task 1 will then receive 5 then
+task 0 will finish the last 5 msg, task 1 will then read them.
+*/
 #include "ae_tasks.h"
 #include "uart_polling.h"
 #include "printf.h"
-#include "ae.h"
 #include "ae_util.h"
 #include "ae_tasks_util.h"
 
@@ -49,22 +53,33 @@
  *===========================================================================
  */
     
-#define NUM_TESTS       2       // number of tests
-#define NUM_INIT_TASKS  2       // number of tasks during initialization
+#define     NUM_TESTS       2       // number of tests
+#define     NUM_INIT_TASKS  1       // number of tasks during initialization
+#define     BUF_LEN         35     // receiver buffer length
+#define     MY_MSG_TYPE     100     // some customized message type
+
 /*
  *===========================================================================
  *                             GLOBAL VARIABLES 
  *===========================================================================
  */
-
-TASK_INIT   g_init_tasks[NUM_INIT_TASKS];
-const char   PREFIX[]      = "G99-TS200";
-const char   PREFIX_LOG[]  = "G99-TS200-LOG";
-const char   PREFIX_LOG2[] = "G99-TS200-LOG2";
+const char   PREFIX[]      = "G99-TS300";
+const char   PREFIX_LOG[]  = "G99-TS300-LOG";
+const char   PREFIX_LOG2[] = "G99-TS300-LOG2";
+TASK_INIT    g_init_tasks[NUM_INIT_TASKS];
 
 AE_XTEST     g_ae_xtest;                // test data, re-use for each test
 AE_CASE      g_ae_cases[NUM_TESTS];
 AE_CASE_TSK  g_tsk_cases[NUM_TESTS];
+
+/* The following arrays can also be dynamic allocated to reduce ZI-data size
+ *  They do not have to be global buffers (provided the memory allocator has no bugs)
+ */
+ 
+U8 g_buf1[BUF_LEN];
+U8 g_buf2[BUF_LEN];
+task_t g_tasks[MAX_TASKS];
+task_t g_tids[MAX_TASKS];
 
 void set_ae_init_tasks (TASK_INIT **pp_tasks, int *p_num)
 {
@@ -73,19 +88,15 @@ void set_ae_init_tasks (TASK_INIT **pp_tasks, int *p_num)
     set_ae_tasks(*pp_tasks, *p_num);
 }
 
-// initial task configuration
 void set_ae_tasks(TASK_INIT *tasks, int num)
 {
     for (int i = 0; i < num; i++ ) {                                                 
         tasks[i].u_stack_size = PROC_STACK_SIZE;    
-        tasks[i].prio = HIGH + i;
-        tasks[i].priv = 1;
+        tasks[i].prio = HIGH;
+        tasks[i].priv = 0;
     }
-    tasks[0].priv  = 1;
-    tasks[0].ptask = &priv_task1;
-    tasks[1].priv  = 0;
-    tasks[1].ptask = &task1;
-		tasks[1].prio = LOWEST;
+
+    tasks[0].ptask = &task0;
     
     init_ae_tsk_test();
 }
@@ -117,22 +128,19 @@ void update_ae_xtest(int test_id)
 
 void gen_req0(int test_id)
 {
-    // bits[0:1] for two tsk_create, [2:5] for 4 tsk_yield return value checks
-    g_tsk_cases[test_id].p_ae_case->num_bits = 3;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = 22;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
-    g_tsk_cases[test_id].len = 16; // assign a value no greater than MAX_LEN_SEQ
-    g_tsk_cases[test_id].pos_expt = 5;
+    g_tsk_cases[test_id].len = 25; // assign a value no greater than MAX_LEN_SEQ
+    g_tsk_cases[test_id].pos_expt = 23;
        
-    g_ae_xtest.test_id = test_id;
-    g_ae_xtest.index = 0;
-    g_ae_xtest.num_tests_run++;
+    update_ae_xtest(test_id);
 }
 
 void gen_req1(int test_id)
 {
-    //bits[0:3] pos check, bits[4:9] for exec order check
-    g_tsk_cases[test_id].p_ae_case->num_bits = 9;  
+    //bits[0:3] pos check, bits[4:12] for exec order check
+    g_tsk_cases[test_id].p_ae_case->num_bits = 27;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
     g_tsk_cases[test_id].len = 0;       // N/A for this test
@@ -144,18 +152,17 @@ void gen_req1(int test_id)
 int test0_start(int test_id)
 {
     int ret_val = 10;
-    task_t tid1;
-    task_t tid2;
     
     gen_req0(test_id);
-    
-    U8      *p_index    = &(g_ae_xtest.index);
-    int     sub_result  = 0;
+    g_tids[0] = tsk_gettid();
+
+    U8   *p_index    = &(g_ae_xtest.index);
+    int  sub_result  = 0;
     
     //test 0-[0]
     *p_index = 0;
-    strcpy(g_ae_xtest.msg, "creating a HIGH prio task that runs task2 function");
-    ret_val = tsk_create(&tid1, &task2, HIGH, 0x200);  /*create a user task */
+    strcpy(g_ae_xtest.msg, "task0: creating a HIGH prio task that runs task1 function");
+    ret_val = tsk_create(&g_tids[1], &task1, HIGH, 0x200);  /*create a user task */
     sub_result = (ret_val == RTX_OK) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);    
     if ( ret_val != RTX_OK ) {
@@ -163,23 +170,30 @@ int test0_start(int test_id)
         test_exit();
     }
     
-    //test 0-[1]
-    (*p_index)++;
-    strcpy(g_ae_xtest.msg, "creating a HIGH prio task that runs task3 function");
-    ret_val = tsk_create(&tid2, &task3, HIGH, 0x200);  /*create a user task */
-    sub_result = (ret_val == RTX_OK) ? 1 : 0;
-    process_sub_result(test_id, *p_index, sub_result);
-    if ( ret_val != RTX_OK ) {
-        test_exit();
-    }
-
-    task_t *p_seq_expt = g_tsk_cases[test_id].seq_expt;
-		p_seq_expt[0] =tsk_gettid();
-		p_seq_expt[1] =tid1;
-		p_seq_expt[2] =tid1;
-		p_seq_expt[3] =tid2;
-		p_seq_expt[4] =tsk_gettid();
+    
+    task_t  *p_seq_expt = g_tsk_cases[test_id].seq_expt;
+		p_seq_expt[0] = g_tids[0];
+		p_seq_expt[1] = g_tids[1];
 		
+		for(int i = 2 ;i < 7 ; i ++)
+		{
+			p_seq_expt[i]   = g_tids[0];
+		}
+		for(int i = 7 ;i < 13 ; i ++)
+		{
+			p_seq_expt[i]   = g_tids[1];
+		}
+		for(int i = 13 ;i < 18 ; i ++)
+		{
+			p_seq_expt[i]   = g_tids[0];
+		}
+		for(int i = 18 ;i < 22 ; i ++)
+		{
+			p_seq_expt[i]   = g_tids[1];
+		}
+		p_seq_expt[22] = g_tids[0];
+		
+    
     
     return RTX_OK;
 }
@@ -245,7 +259,7 @@ void test1_start(int test_id, int test_id_data)
     sub_result = (diff == 0) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
     
-    //test 1-[4:9]
+    //test 1-[4:12]
     for ( int i = 0; i < pos_expt; i ++ ) {
         (*p_index)++;
         sprintf(g_ae_xtest.msg, "checking execution sequence @ %d", i);
@@ -253,8 +267,10 @@ void test1_start(int test_id, int test_id_data)
         process_sub_result(test_id, *p_index, sub_result);
     }
         
+    
     test_exit();
 }
+
 
 int update_exec_seq(int test_id, task_t tid) 
 {
@@ -269,173 +285,108 @@ int update_exec_seq(int test_id, task_t tid)
 }
 
 /**************************************************************************//**
- * @brief       a task that prints AAAAA, BBBBB on each line.
- *              it yields the cpu after each line
+ * @brief   The first task to run in the system
  *****************************************************************************/
 
-void priv_task1(void)
+void task0(void)
 {
+    int ret_val = 10;
+    //mbx_t mbx_id = -1;
     task_t tid = tsk_gettid();
-    int test_id = 0;
+    task_t tid1; 
+    char *buf = NULL;           // this is a user dynamically allocated buffer
+    RTX_MSG_HDR msg_hdr;
+    g_tids[0] = tid;
+    int     test_id    = 0;
+    U8      *p_index   = &(g_ae_xtest.index);
+    int     sub_result = 0;
+
+    printf("%s: TID = %u, task0 entering\r\n", PREFIX_LOG2, tid);
+    update_exec_seq(test_id, tid);
     
-    printf("%s: TID = %d, priv_task1: starting test0\r\n", PREFIX_LOG2, tid);
-    strcpy(g_ae_xtest.msg, "Four same priority tasks yielding cpu test");
-    test0_start(test_id);
-    /*
-    for ( int i = 0; i < 2; i++) {
-        char out_char = 'A' + i%26;
-        for ( int j = 0; j < 5; j++) {
-            uart1_put_char(out_char);
-        }
-        uart1_put_string("\r\n");       
-        printf("%s: TID = %d, priv_task1: yielding cpu\r\n", PREFIX_LOG2, tid );
-        update_exec_seq(test_id, tid);
-        int ret = tsk_yield();
-        // 0-[2:3]
-        sprintf(g_ae_xtest.msg, "priv_task1 calling tsk_yield - %d", i+1);
-        sub_result = ( ret == RTX_OK ) ? 1 : 0;
-        (*p_index)++;
-        process_sub_result(test_id, *p_index, sub_result);
-    }*/
-		//changing prio to see if other tasks run 
-		update_exec_seq(test_id, tid);
-		tsk_set_prio(tid, MEDIUM);
-		
-    //tsk_yield();
-    //tsk_yield();
-		update_exec_seq(test_id, tid);
-    test1_start(test_id + 1, test_id);
+    ret_val = test0_start(test_id);
+    
+    if ( ret_val == RTX_OK ) {
+        printf("%s: TID = %u, task0: calling tsk_yield()\r\n", PREFIX_LOG2, tid);     
+        tsk_yield();    // let task1 run to create its mailbox
+        //update_exec_seq(test_id, tid);
+        
+        U8 *buf1 = mem_alloc(sizeof(RTX_MSG_HDR) +1);   
+				if(buf1 ==NULL)
+				{
+					printf("FAILED at mem\r\n");
+					tsk_exit();
+				}
+        ((RTX_MSG_HDR*)buf1)->length = sizeof(RTX_MSG_HDR) +1;
+        ((RTX_MSG_HDR*)buf1)->type = MY_MSG_TYPE;
+        ((RTX_MSG_HDR*)buf1)->sender_tid = tid;
+				((char*)buf1)[sizeof(RTX_MSG_HDR)] = 'a';
+        
+        for(int i = 0 ; i < 10; i++)
+				{
+					ret_val = send_msg(g_tids[1], buf1);
+					sprintf(g_ae_xtest.msg, "task0: send_msg_nb to tid(%u)", g_tids[1]);
+					update_exec_seq(test_id, tid);
+					
+					(*p_index)++;
+					((char*)buf1)[sizeof(RTX_MSG_HDR)] =((char*)buf1)[sizeof(RTX_MSG_HDR)]+1 ;
+					sub_result = (ret_val == RTX_OK) ? 1 : 0;	
+					process_sub_result(test_id, *p_index, sub_result);							
+				}    
+				
+				tsk_yield();//allows task 1 to read the last 5 msgs
+				update_exec_seq(test_id, tid);
+				
+        
+        mem_dealloc(buf1);
+    } 
+		test1_start(test_id + 1, test_id);
+    
 }
 
 /**************************************************************************//**
- * @brief:      a task that prints 00000, 11111 and 22222 on each line.
- *              It yields the cpu every after each line is printed.
+ * @brief:  Receives 10 msg from task 0 {'a','b',...}
  *****************************************************************************/
 
 void task1(void)
 {
-    int test_id = 0;
-    U8      *p_index    = &(g_ae_xtest.index);
-    int     sub_result  = 0;
+    int ret_val;
+		U8      *p_index   = &(g_ae_xtest.index);
+    U8 *buf = mem_alloc(BUF_LEN);
+		int     test_id    = 0;
+		int     sub_result = 0;
     
-    task_t tid = tsk_gettid();
-    printf("%s: TID = %d, task1: should not run! Exiting... \r\n", PREFIX_LOG2, tid);
-    
-    test1_start(1, 0);
-    
-    for ( int i = 0; i < 2; i++) {
-        char out_char = '1' + i%26;
-        for ( int j = 0; j < 5; j++) {
-            uart1_put_char(out_char);
-        }
-        uart1_put_string("\r\n");
-        printf("%s: TID = %d, task1: yielding cpu\r\n", PREFIX_LOG2, tid);
-        update_exec_seq(test_id, tid);
-        int ret = tsk_yield();
-        sprintf(g_ae_xtest.msg, "task1 calling tsk_yield - %d", i+1);
-        sub_result = ( ret == RTX_OK ) ? 1 : 0;
-        (*p_index)++;
-        process_sub_result(test_id, *p_index, sub_result);
-    }
-    
-    tsk_set_prio(tid, MEDIUM);
-    printf("%s: TID = %d, task1: I should not run \r\n", PREFIX_LOG2, tid);
-    update_exec_seq(test_id, tid);
-
-    test1_start(test_id + 1, test_id);
+    uart1_put_string("task2: entering \n\r");
+		strcpy(g_ae_xtest.msg, "task1: creating a mailbox");
+    (*p_index) ++;
+    ret_val = mbx_create(BUF_LEN);
+		sub_result = (ret_val == RTX_OK) ? 1 : 0;
+    process_sub_result(test_id, *p_index, sub_result);
+		update_exec_seq(test_id, g_tids[1]);
+	
+		//printf("CREATED MAILBOX\r\n");
+		for(int i = 0 ; i < 10 ;i++)
+		{
+			
+			ret_val = recv_msg(buf, BUF_LEN);  // blocking receive
+			strcpy(g_ae_xtest.msg, "task1: Reciving msg");
+			(*p_index) ++;
+				if(ret_val == RTX_OK && (char)buf[6] == ('a'+i))
+				{
+					//uart1_put_string("task2: Recieved \n\r");
+					sub_result = 1;
+					process_sub_result(test_id, *p_index, sub_result);
+				}
+				else
+				{
+					sub_result = 0;
+					process_sub_result(test_id, *p_index, sub_result);
+				}
+				update_exec_seq(test_id, g_tids[1]);
+		}
+    tsk_exit();
 }
-
-/**
- * @brief: a dummy task2
- */
-void task2(void)
-{
-    task_t tid = tsk_gettid();
-    int    test_id = 0;
-    U8     *p_index    = &(g_ae_xtest.index);
-    int    sub_result  = 0;
-	
-	
-		printf("%s: TID = %d, task2: entering. Setting prio to the same\r\n", PREFIX_LOG2, tid);
-		//setting prio to the same to see if it changes priorty 
-	
-		int ret;
-		update_exec_seq(test_id, tid);
-		ret = tsk_set_prio(tid,HIGH);
-		sub_result = ( ret == RTX_OK ) ? 1 : 0;
-    (*p_index)++;
-		process_sub_result(test_id, *p_index, sub_result);
-	
-		update_exec_seq(test_id, tid);
-		tsk_yield();
-		
-    /*
-    printf("%s: TID = %d, task2: entering\r\n", PREFIX_LOG2, tid);
-    for ( int i = 0; i < 2; i++) {
-        printf("%s: TID = %d, task2: yielding cpu \r\n", PREFIX_LOG2, tid);
-        update_exec_seq(test_id, tid);
-        tsk_yield();
-        int ret = tsk_yield();
-        // 0-[4]
-        sprintf(g_ae_xtest.msg, "task2 calling tsk_yield - %d", i+1);
-        sub_result = ( ret == RTX_OK ) ? 1 : 0;
-        (*p_index)++;
-        process_sub_result(test_id, *p_index, sub_result);
-    }
-    tsk_set_prio(tid, LOW);
-    printf("%s: TID = %d, task2: I should not run \r\n", PREFIX_LOG2, tid);
-    update_exec_seq(test_id, tid);
-    tsk_yield();
-		*/
-
-    //test1_start(test_id + 1, test_id);
-		tsk_exit();
-}
-
-/**
- * @brief: a dummy task3
- */
-void task3(void)
-{
-    int    test_id = 0;
-    task_t tid = tsk_gettid();
-    U8     *p_index    = &(g_ae_xtest.index);
-    int    sub_result  = 0;
-    
-    printf("%s: TID = %d, task3: entering setting prio to lowest \r\n", PREFIX_LOG2, tid);
-	
-		int ret;
-		update_exec_seq(test_id, tid);
-		ret = tsk_set_prio(tid,LOWEST);
-		sub_result = ( ret == RTX_OK ) ? 1 : 0;
-    (*p_index)++;
-		process_sub_result(test_id, *p_index, sub_result);
-	
-		update_exec_seq(test_id, tid);
-    tsk_yield();
-		
-    /*
-    for ( int i = 0; i < 2; i++) {
-        printf("%s: TID = %d, task3: yielding cpu \r\n", PREFIX_LOG2, tid);
-        update_exec_seq(test_id, tid);
-        tsk_yield();
-        int ret = tsk_yield();
-        // 0-[5]
-        sprintf(g_ae_xtest.msg, "task3 calling tsk_yield - %d", i+1);
-        sub_result = ( ret == RTX_OK ) ? 1 : 0;
-        (*p_index)++;
-        process_sub_result(test_id, *p_index, sub_result);
-    }
-    tsk_set_prio(tid, LOWEST);
-    printf("%s: TID = %d, task3: I should not run \r\n", PREFIX_LOG2, tid);
-    update_exec_seq(test_id, tid);
-    tsk_yield();
-		*/
-		tsk_exit();
-    //test1_start(test_id + 1, test_id);
-}
-
-
+   
 /*
  *===========================================================================
  *                             END OF FILE
