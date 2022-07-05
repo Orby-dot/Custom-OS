@@ -187,6 +187,11 @@ void task_kcd(void)
 
                             send_msg(taskId, to_send); //TODO: any uart edge case handling here?
 
+                            char *command_not_found = mem_alloc(17);
+                            sprintf(command_not_found, "\n\rCommand Sent\n\r");
+                            printToConsole(command_not_found, 17);
+                            mem_dealloc(command_not_found);
+
                             mem_dealloc(to_send);
 
                             len = 0;
