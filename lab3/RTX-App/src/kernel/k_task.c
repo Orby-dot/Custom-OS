@@ -604,7 +604,22 @@ void k_tsk_exit(void)
 #endif /* DEBUG_0 */
     if (debugEntryPrint) printf("===== task exit =====\r\n");
 	k_mpool_dealloc(MPID_IRAM2,gp_current_task->psp);
+	
 	gp_current_task->state = DORMANT;
+	
+	gp_current_task->mailbox.max_size=0xffff;
+	gp_current_task->mailbox.current_size=0;
+	TCB* selectedTCB =sendQScheduler();
+	
+	while(selectedTCB !=NULL){
+		selectedTCB->state = READY;
+		selectedTCB ->msg = NULL;
+		selectedTCB ->destination = NULL;
+		
+		addTCBtoBack(readyQueuesArray,selectedTCB->prio,selectedTCB);
+		selectedTCB =sendQScheduler();
+	}
+	
 	deallocateMailbox(&gp_current_task->mailbox);
 	k_tsk_run_new();
     return;
