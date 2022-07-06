@@ -54,6 +54,13 @@ U8 assignTaskId(char cmd, U8 sender_tid)
     return UNDEF;
 }
 
+int countDigits (int x) {
+    if (x < 10) return 1;
+    if (x < 100) return 2;
+    if (x < 1000) return 3;
+    return 4;
+}
+
 // TODO: make it utility class function?
 void printToConsole(char *data, U32 data_len)
 {
@@ -76,21 +83,49 @@ void printToConsole(char *data, U32 data_len)
     mem_dealloc(to_send);
 }
 
-void printLSbuffer(task_t *buffer, int count)
+void printLTbuffer(task_t *buffer, int count)
 {
 
-    char *tmp_str = k_mpool_alloc(MPID_IRAM1, count + 3);
-
+    char *tmp_str = k_mpool_alloc(MPID_IRAM1, count + 5);
+    tmp_str[0] = '\n';
+    tmp_str[1] = '\r';
     int i;
-    for (i = 0; i < count; i++)
+    for (i = 2; i < count + 2; i++)
     {
-        sprintf(&(tmp_str[i]), "%x", buffer[i]);
+        sprintf(&(tmp_str[i]), "%x", buffer[i - 2]);
     }
     tmp_str[i] = '\n';
     tmp_str[i + 1] = '\r';
+    tmp_str[i + 2] = '\0';
 
-    printToConsole(tmp_str, count + 3); // TODO: Correct Size?
+    printToConsole(tmp_str, count + 5); // count + 2(initial new line) + 2(final new line) + 1(string terminator)
 
+    k_mpool_dealloc(MPID_IRAM1, tmp_str);
+}
+
+void printLMbuffer(task_t *buffer, int count)
+{
+
+    char *tmp_str = k_mpool_alloc(MPID_IRAM1, 100);
+    
+    char *tmp_str_cursor = tmp_str;
+    tmp_str_cursor[0] = '\n';
+    tmp_str_cursor[1] = '\r';
+    tmp_str_cursor += 2;
+    int total_len = 2; // including initial new line
+    for (int i = 0; i < count; i++)
+    {
+        sprintf(tmp_str_cursor, "%x-%d ", buffer[i], k_mbx_get(buffer[i]));
+        // printf(tmp_str);
+        tmp_str_cursor += 2 + countDigits(k_mbx_get(buffer[i])) + 1;
+        total_len += 2 + countDigits(k_mbx_get(buffer[i])) + 1;
+    }
+    tmp_str[total_len] = '\n';
+    tmp_str[total_len + 1] = '\r';
+    tmp_str[total_len + 2] = '\0';
+
+    printToConsole(tmp_str, total_len + 3); // + 3 for \n\r\0
+    
     k_mpool_dealloc(MPID_IRAM1, tmp_str);
 }
 
@@ -141,14 +176,14 @@ void task_kcd(void)
                             task_t buffer[10];
                             int ret = k_tsk_ls(buffer, 10);
                             //printf("*****TASK_LS: %d\n\r", ret);
-                            printLSbuffer(buffer, ret);
+                            printLTbuffer(buffer, ret);
                         }
                         else if (cmd[2] == 'M')
                         {
                             task_t buffer[10];
                             int ret = k_mbx_ls(buffer, 10);
                             //printf("*****MSG_LS: %d\n\r", ret);
-                            printLSbuffer(buffer, ret);
+                            printLMbuffer(buffer, ret);
                         }
                         else
                         {
