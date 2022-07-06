@@ -492,18 +492,6 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\src\ae\ae_tasks.c</PathWithFileName>
-      <FilenameWithoutPath>ae_tasks.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>3</GroupNumber>
-      <FileNumber>13</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
       <PathWithFileName>.\src\ae\ae_tasks100_G99.c</PathWithFileName>
       <FilenameWithoutPath>ae_tasks100_G99.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
@@ -519,13 +507,13 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>4</GroupNumber>
-      <FileNumber>14</FileNumber>
+      <FileNumber>13</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\src\ae\ae_tasks_mbx_cmd_reg.c</PathWithFileName>
-      <FilenameWithoutPath>ae_tasks_mbx_cmd_reg.c</FilenameWithoutPath>
+      <PathWithFileName>.\src\ae\ae_tasks.c</PathWithFileName>
+      <FilenameWithoutPath>ae_tasks.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -537,6 +525,18 @@
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>5</GroupNumber>
+      <FileNumber>14</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\src\ae\ae_tasks_mbx_cmd_reg.c</PathWithFileName>
+      <FilenameWithoutPath>ae_tasks_mbx_cmd_reg.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
     <File>
       <GroupNumber>5</GroupNumber>
       <FileNumber>15</FileNumber>

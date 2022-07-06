@@ -8,4 +8,4 @@
 .\objects\ram\ae_timer.o
 .\objects\ram\ae_util.o
 .\objects\ram\main.o
-.\objects\ram\ae_tasks_mbx_cmd_reg.o
+.\objects\ram\ae_tasks.o
