@@ -116,7 +116,6 @@ void printLMbuffer(task_t *buffer, int count)
     for (int i = 0; i < count; i++)
     {
         sprintf(tmp_str_cursor, "%x-%d ", buffer[i], k_mbx_get(buffer[i]));
-        // printf(tmp_str);
         tmp_str_cursor += 2 + countDigits(k_mbx_get(buffer[i])) + 1;
         total_len += 2 + countDigits(k_mbx_get(buffer[i])) + 1;
     }
@@ -127,6 +126,13 @@ void printLMbuffer(task_t *buffer, int count)
     printToConsole(tmp_str, total_len + 3); // + 3 for \n\r\0
     
     k_mpool_dealloc(MPID_IRAM1, tmp_str);
+}
+
+void prnCNF() {
+    char *cnf = mem_alloc(22);
+    sprintf(cnf, "\n\rCommand not found\n\r");
+    printToConsole(cnf, 22);
+    mem_dealloc(cnf);
 }
 
 void task_kcd(void)
@@ -187,10 +193,7 @@ void task_kcd(void)
                         }
                         else
                         {
-                            char *command_not_found = mem_alloc(22);
-                            sprintf(command_not_found, "\n\rCommand not found\n\r");
-                            printToConsole(command_not_found, 22);
-                            mem_dealloc(command_not_found);
+                            prnCNF();
                         }
                     }
                     else if (cmd[1] == 'L' && len != 3)
@@ -222,10 +225,10 @@ void task_kcd(void)
 
                             send_msg(taskId, to_send); //TODO: any uart edge case handling here?
 
-                            char *command_not_found = mem_alloc(17);
-                            sprintf(command_not_found, "\n\rCommand Sent\n\r");
-                            printToConsole(command_not_found, 17);
-                            mem_dealloc(command_not_found);
+                            char *csnt = mem_alloc(17);
+                            sprintf(csnt, "\n\rCommand Sent\n\r");
+                            printToConsole(csnt, 17);
+                            mem_dealloc(csnt);
 
                             mem_dealloc(to_send);
 
@@ -233,10 +236,7 @@ void task_kcd(void)
                         }
                         else
                         {
-                            char *command_not_found = mem_alloc(22);
-                            sprintf(command_not_found, "\n\rCommand not found\n\r");
-                            printToConsole(command_not_found, 22);
-                            mem_dealloc(command_not_found);
+                            prnCNF();
                         }
                     }
                 }

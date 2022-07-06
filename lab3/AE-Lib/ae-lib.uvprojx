@@ -10,7 +10,7 @@
       <TargetName>AE Lib SIM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -518,6 +518,11 @@
               <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
             </File>
             <File>
+              <FileName>ae_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+            </File>
+            <File>
               <FileName>ae_tasks100_G99.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks100_G99.c</FilePath>
@@ -528,9 +533,9 @@
           <GroupName>AE-active</GroupName>
           <Files>
             <File>
-              <FileName>ae_tasks.c</FileName>
+              <FileName>ae_tasks_mbx_cmd_reg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks_mbx_cmd_reg.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -612,19 +617,14 @@
               <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
             </File>
             <File>
-              <FileName>ae_tasks1_G25.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks1_G25.c</FilePath>
-            </File>
-            <File>
               <FileName>ae_tasks2_G25.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks2_G25.c</FilePath>
             </File>
             <File>
-              <FileName>ae_tasks_mbx_cmd_reg.c</FileName>
+              <FileName>ae_tasks1_G25.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks_mbx_cmd_reg.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks1_G25.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -634,7 +634,7 @@
       <TargetName>AE Lib RAM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -1142,6 +1142,11 @@
               <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
             </File>
             <File>
+              <FileName>ae_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+            </File>
+            <File>
               <FileName>ae_tasks100_G99.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks100_G99.c</FilePath>
@@ -1152,9 +1157,9 @@
           <GroupName>AE-active</GroupName>
           <Files>
             <File>
-              <FileName>ae_tasks.c</FileName>
+              <FileName>ae_tasks_mbx_cmd_reg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks_mbx_cmd_reg.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1236,19 +1241,14 @@
               <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
             </File>
             <File>
-              <FileName>ae_tasks1_G25.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks1_G25.c</FilePath>
-            </File>
-            <File>
               <FileName>ae_tasks2_G25.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks2_G25.c</FilePath>
             </File>
             <File>
-              <FileName>ae_tasks_mbx_cmd_reg.c</FileName>
+              <FileName>ae_tasks1_G25.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks_mbx_cmd_reg.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks1_G25.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1266,6 +1266,11 @@
     <Layers>
       <Layer>
         <LayName>&lt;Project Info&gt;</LayName>
+        <LayDesc></LayDesc>
+        <LayUrl></LayUrl>
+        <LayKeys></LayKeys>
+        <LayCat></LayCat>
+        <LayLic></LayLic>
         <LayTarg>0</LayTarg>
         <LayPrjMark>1</LayPrjMark>
       </Layer>

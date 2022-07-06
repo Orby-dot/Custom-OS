@@ -121,7 +121,7 @@ void addNode(U32 level, U32 address, freeList_t *freeListArray, U8 totalLevels) 
 		if (debug) printf("AN tl of %d:%x addr:%x\r\n", i, freeListArray[i].tail, &freeListArray[i].tail);
 	}
 
-	if (debug) printListLevel(freeListArray[level]);
+	// if (debug) printListLevel(freeListArray[level]);
 
 	node_t *currNode = freeListArray[level].tail;
 	node_t *newNode = (node_t*) address;
@@ -150,7 +150,7 @@ void removeNode(int level, U32 address, freeList_t *freeListArray, U8 totalLevel
 		if (debug) printf("RN hd of %d:%x addr:%x\r\n", i, freeListArray[i].head, &freeListArray[i].head);
 		if (debug) printf("RN tl of %d:%x addr:%x\r\n", i, freeListArray[i].tail, &freeListArray[i].tail);
 	}
-	if (debug) printListLevel(freeListArray[level]);
+	// if (debug) printListLevel(freeListArray[level]);
 
 	while(currNode && (U32)currNode!=address){
 		currNode = currNode->next;

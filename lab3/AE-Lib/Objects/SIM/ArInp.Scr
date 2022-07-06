@@ -8,4 +8,4 @@
 .\objects\sim\ae_timer.o
 .\objects\sim\ae_util.o
 .\objects\sim\main.o
-.\objects\sim\ae_tasks.o
+.\objects\sim\ae_tasks_mbx_cmd_reg.o

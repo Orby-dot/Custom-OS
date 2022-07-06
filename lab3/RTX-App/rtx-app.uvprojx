@@ -10,7 +10,7 @@
       <TargetName>RTX App SIM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -489,16 +489,6 @@
               <FilePath>.\src\kernel\helper.h</FilePath>
             </File>
             <File>
-              <FileName>tester.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\kernel\tester.c</FilePath>
-            </File>
-            <File>
-              <FileName>tester.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\kernel\tester.h</FilePath>
-            </File>
-            <File>
               <FileName>ready_queue.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\kernel\ready_queue.c</FilePath>
@@ -601,7 +591,7 @@
       <TargetName>RTX App RAM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -867,7 +857,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x10000000</StartAddress>
-                <Size>0x4000</Size>
+                <Size>0x4100</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -891,8 +881,8 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x10004000</StartAddress>
-                <Size>0x3000</Size>
+                <StartAddress>0x10004100</StartAddress>
+                <Size>0x2900</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -1080,16 +1070,6 @@
               <FilePath>.\src\kernel\helper.h</FilePath>
             </File>
             <File>
-              <FileName>tester.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\kernel\tester.c</FilePath>
-            </File>
-            <File>
-              <FileName>tester.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\kernel\tester.h</FilePath>
-            </File>
-            <File>
               <FileName>ready_queue.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\kernel\ready_queue.c</FilePath>
@@ -1243,6 +1223,11 @@
     <Layers>
       <Layer>
         <LayName>&lt;Project Info&gt;</LayName>
+        <LayDesc></LayDesc>
+        <LayUrl></LayUrl>
+        <LayKeys></LayKeys>
+        <LayCat></LayCat>
+        <LayLic></LayLic>
         <LayTarg>0</LayTarg>
         <LayPrjMark>1</LayPrjMark>
       </Layer>
