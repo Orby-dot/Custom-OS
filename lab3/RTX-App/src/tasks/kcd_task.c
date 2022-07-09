@@ -85,21 +85,25 @@ void printToConsole(char *data, U32 data_len)
 
 void printLTbuffer(task_t *buffer, int count)
 {
-
-    char *tmp_str = k_mpool_alloc(MPID_IRAM1, count + 5);
-    tmp_str[0] = '\n';
-    tmp_str[1] = '\r';
-    int i;
-    for (i = 2; i < count + 2; i++)
+    char *tmp_str = k_mpool_alloc(MPID_IRAM1, 100);
+    
+    char *tmp_str_cursor = tmp_str;
+    tmp_str_cursor[0] = '\n';
+    tmp_str_cursor[1] = '\r';
+    tmp_str_cursor += 2;
+    int total_len = 2; // including initial new line
+    for (int i = 0; i < count; i++)
     {
-        sprintf(&(tmp_str[i]), "%x", buffer[i - 2]);
+        sprintf(tmp_str_cursor, "%x-%d ", buffer[i], g_tcbs[buffer[i]].state);
+        tmp_str_cursor += 2 + countDigits(g_tcbs[buffer[i]].state) + 1;
+        total_len += 2 + countDigits(g_tcbs[buffer[i]].state) + 1;
     }
-    tmp_str[i] = '\n';
-    tmp_str[i + 1] = '\r';
-    tmp_str[i + 2] = '\0';
+    tmp_str[total_len] = '\n';
+    tmp_str[total_len + 1] = '\r';
+    tmp_str[total_len + 2] = '\0';
 
-    printToConsole(tmp_str, count + 5); // count + 2(initial new line) + 2(final new line) + 1(string terminator)
-
+    printToConsole(tmp_str, total_len + 3); // + 3 for \n\r\0
+    
     k_mpool_dealloc(MPID_IRAM1, tmp_str);
 }
 
@@ -115,9 +119,9 @@ void printLMbuffer(task_t *buffer, int count)
     int total_len = 2; // including initial new line
     for (int i = 0; i < count; i++)
     {
-        sprintf(tmp_str_cursor, "%x-%d ", buffer[i], k_mbx_get(buffer[i]));
-        tmp_str_cursor += 2 + countDigits(k_mbx_get(buffer[i])) + 1;
-        total_len += 2 + countDigits(k_mbx_get(buffer[i])) + 1;
+        sprintf(tmp_str_cursor, "%x-%d-%d ", buffer[i], g_tcbs[buffer[i]].state, k_mbx_get(buffer[i]));
+        tmp_str_cursor += 2 + countDigits(g_tcbs[buffer[i]].state) + 1 + countDigits(k_mbx_get(buffer[i])) + 1;
+        total_len +=2 + countDigits(g_tcbs[buffer[i]].state) + 1 + countDigits(k_mbx_get(buffer[i])) + 1;
     }
     tmp_str[total_len] = '\n';
     tmp_str[total_len + 1] = '\r';
