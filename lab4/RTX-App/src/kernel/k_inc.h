@@ -87,6 +87,7 @@ typedef struct tcb {
 		void*				msg;
 		task_t			destination;
 		mailbox_t		mailbox; 		
+		TIMEVAL			period;
 } TCB;
 
 /*
