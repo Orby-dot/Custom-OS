@@ -53,6 +53,7 @@
 #include "k_rtx.h"
 #include "ready_queue.h"
 #include "k_mem.h"
+#include "EDF.h"
 // #include "tester2.h"
 /*
  *==========================================================================
@@ -139,14 +140,23 @@ TCB *scheduler(void)
     /* *****MODIFY THIS FUNCTION ***** */
     //task_t tid = gp_current_task->tid;
     //return &g_tcbs[(++tid)%g_num_active_tasks];
-	for (U8 i = 0; i < 5 ;i++) {
+	TCB * selectedTCB = NULL;
+	
+	if(readyQueuesArray[0].head){
+		selectedTCB = popFromEDF(readyQueuesArray);
+	}
+	
+	for (U8 i = 1; i < 5 ;i++) {
 		if (readyQueuesArray[i].head){
-			
-			TCB * selectedTCB = removeTCB(readyQueuesArray, i);
-			selectedTCB->state = RUNNING;
-			return selectedTCB;
+			selectedTCB = removeTCB(readyQueuesArray, i);
 		}
 	}
+	
+	if(selectedTCB){
+		selectedTCB->state = RUNNING;
+		return selectedTCB;
+	}
+	
 	return &g_tcbs[0]; // null task
 }
 

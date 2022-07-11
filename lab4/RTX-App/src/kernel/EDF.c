@@ -53,13 +53,16 @@ int pushToEDF(readyQueue_t * queue, TCB * tsk)
 	return 1;
 }
 
-TCB * popToEDF(readyQueue_t * queue)
+TCB * popFromEDF(readyQueue_t * readyQueuesArray)
 {
-	TCB* currentTCB = queue->head;
+	TCB* currentTCB = readyQueuesArray[0].head;
 	if(currentTCB != NULL)
 	{	
-		queue->head = currentTCB->next;
-		if(currentTCB->next != NULL) currentTCB->next->prev = NULL;
+		readyQueuesArray[0].head = currentTCB->next;
+		if(currentTCB->next != NULL)
+		{
+			currentTCB->next->prev = NULL;
+		}
 	}
 	
 	return currentTCB;
@@ -75,14 +78,7 @@ int isShorter(TIMEVAL current, TIMEVAL reference)
 		return 0;
 	}
 	else{
-		if(current.usec <= reference.usec)
-		{
-			return 1;
-		}
-		else
-		{
-			return 0;
-		}
+		return current.usec <= reference.usec;
 	}
 	
 	
