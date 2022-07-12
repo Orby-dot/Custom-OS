@@ -32,8 +32,16 @@ void printToUART(char *data, U32 data_len)
 			}
 		}
 		
+    for(int x = 0; x < 100000; x++);
+    
 		send_msg_nb(TID_UART, to_send);
-
+        LPC_UART_TypeDef *pUart;
+    pUart = (LPC_UART_TypeDef *)LPC_UART0;
+						pUart->THR = *data;
+						g_tx_irq = 1;
+            g_send_char = 0;
+                        // enable TX Interrupt
+            pUart->IER |= IER_THRE;
 		mem_dealloc(to_send);
 }
 
@@ -43,8 +51,7 @@ void task_cdisp(void)
 
     U8 *msg_buf = mem_alloc(KCD_CMD_BUF_SIZE); // is repeatedly overwritten
 
-    LPC_UART_TypeDef *pUart;
-    pUart = (LPC_UART_TypeDef *)LPC_UART0;
+
 
     while (1)
     {
@@ -62,12 +69,9 @@ void task_cdisp(void)
         // sends messsage to UART0_IRQ_Handler to output
         if (header->type == DISPLAY)
         {
-						pUart->THR = *data;
-						g_tx_irq = 1;
-            g_send_char = 0;
+
             printToUART(data, header->length - 6);
-            // enable TX Interrupt
-            pUart->IER |= IER_THRE;
+
         }
         else
         {
