@@ -235,9 +235,7 @@ void UART0_IRQHandler(void)
 
             k_mpool_dealloc(MPID_IRAM1, to_send);
 
-#ifdef DEBUG_0
-            printf("char %c gets processed\r\n", g_char_in);
-#endif /* DEBUG_0 */
+            // printf("char %c gets processed\r\n", g_char_in);
         }
     }
     else if (IIR_IntId & IIR_THRE)
@@ -248,8 +246,7 @@ void UART0_IRQHandler(void)
         
         char *msg_buf = k_mpool_alloc(MPID_IRAM1, KCD_CMD_BUF_SIZE);
         if (k_recv_msg_nb_uart(msg_buf, KCD_CMD_BUF_SIZE) == RTX_OK)
-        { // TODO: should be while?
-					
+        { // TODO: should be while?	
 						int len = 0;
 						while((len+6)<KCD_CMD_BUF_SIZE && msg_buf[len+6] != NULL){
 							char_out = msg_buf[len+6];
@@ -259,12 +256,10 @@ void UART0_IRQHandler(void)
 						}
         }
         // end of the string
-#ifdef DEBUG_1
-        uart1_put_string("Finish writing. Turning off IER_THRE\r\n");
-#endif                           /* DEBUG_1 */
+        // uart1_put_string("Finish writing. Turning off IER_THRE\r\n");
         pUart->IER &= ~IER_THRE; // clear the IER_THRE bit
         g_tx_irq = 0;
-				g_send_char = 0;
+		g_send_char = 0;
         k_mpool_dealloc(MPID_IRAM1, msg_buf);
     }
     else

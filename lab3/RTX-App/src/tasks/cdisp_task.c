@@ -31,17 +31,22 @@ void printToUART(char *data, U32 data_len)
 				*(data_ts+i-1) = data[i];
 			}
 		}
-		
-    for(int x = 0; x < 100000; x++);
+
+    
+    LPC_UART_TypeDef *pUart;
+    pUart = (LPC_UART_TypeDef *)LPC_UART0;
+
+    // printf("IER B: %d\n\r", pUart->IER);
+    while ((pUart->IER & (1 << 1))); // wait until IER_THRE is cleared
+    // printf("IER A: %d\n\r", pUart->IER);
     
 		send_msg_nb(TID_UART, to_send);
-        LPC_UART_TypeDef *pUart;
-    pUart = (LPC_UART_TypeDef *)LPC_UART0;
-						pUart->THR = *data;
-						g_tx_irq = 1;
-            g_send_char = 0;
-                        // enable TX Interrupt
-            pUart->IER |= IER_THRE;
+
+    pUart->THR = *data;
+    g_tx_irq = 1;
+    g_send_char = 0;
+                // enable TX Interrupt
+    pUart->IER |= IER_THRE;
 		mem_dealloc(to_send);
 }
 
