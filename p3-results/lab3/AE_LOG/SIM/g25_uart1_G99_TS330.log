@@ -1,0 +1,30 @@
+=======SIM Target LOG - Tue Jul  5 18:23:14 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS330
+G99-TS330: START
+G99-TS330-LOG: task 1: Entering task1
+G99-TS330-LOG: task 1: Creating a mailbox of 32 bytes
+G99-TS330-LOG: task 1: Changing priority of task1 to low. task0 should preempt task1
+G99-TS330-LOG: task 0: Entering task0
+G99-TS330-LOG: Test[0]-[0]: task 0 : Sending msg1 with a total length of 16 bytes to task1.
+G99-TS330-LOG: Test[0]-[0]: result = 1.
+G99-TS330-LOG: Test[0]-[1]: task 0: Sending msg2 with a total length of 16 bytes to task1.
+G99-TS330-LOG: Test[0]-[1]: result = 0.
+G99-TS330-LOG: task 0: Changing priority of task0 to lowest. task1 should preempt task0
+G99-TS330-LOG: task 1: Receive the first 16 bytes of message from task0
+G99-TS330-LOG: task 1: The received message in task1 is : msg1
+G99-TS330-LOG: Test[0]-[2]: task 1: Comparing msg1.
+G99-TS330-LOG: Test[0]-[2]: result = 1.
+G99-TS330-LOG: task 1: Receive the second 16 bytes of message from task0
+G99-TS330-LOG: Test[0]-[3]: task 0: Check for reception of msg1 in task1.
+G99-TS330-LOG: Test[0]-[3]: result = 1.
+G99-TS330-LOG: Test[0]-[6]: task 0: Check for reception of msg2 in task1.
+G99-TS330-LOG: Test[0]-[6]: result = 0.
+G99-TS330-LOG: task 0: Sending 32 bytes of message to task1
+G99-TS330-LOG: Test[0]-[4]: task 0: Check for reception of msg3 in task1.
+G99-TS330-LOG: Test[0]-[4]: result = 0.
+G99-TS330: FINISHED
+G99-TS330-LOG: Test 0: 3/7 PASSED. Expected = 0x7F, result = 0xD
+G99-TS330: 1/1 test function(s) COMPLETED.
+G99-TS330: 3/7 tests PASSED.
+G99-TS330: 4/7 tests FAILED.
+G99-TS330: END

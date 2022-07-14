@@ -1,0 +1,43 @@
+=======SIM Target LOG - Tue Jul  5 18:27:55 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS332
+G99-TS332: START
+task0 : tid=1. This is the root task from which other tasks come up.
+task0 : tid=1. Creating mailbox of 16 bytes
+task0 : tid=1. Creating child task.
+task0 : tid=1. Yielding CPU
+task0 : tid=2. This is the child task.
+task0 : tid=2. Creating mailbox of 16 bytes
+task0 : tid=2. Creating child task.
+task0 : tid=2. Yielding CPU
+task0 : tid=1. Yielding CPU
+task0 : tid=3. This is the child task.
+task0 : tid=3. Creating mailbox of 16 bytes
+task0 : tid=3. Creating child task.
+task0 : tid=3. Yielding CPU
+task0 : tid=2. Yielding CPU
+task0 : tid=1. Yielding CPU
+task0 : tid=4. This is the child task.
+task0 : tid=4. Creating mailbox of 16 bytes
+task0 : tid=4. Creating child task.
+task0 : tid=4. Yielding CPU
+task0 : tid=3. Yielding CPU
+task0 : tid=2. Yielding CPU
+task0 : tid=1. Yielding CPU
+task0 : tid=5. This is the child task.
+task0 : tid=5. Creating mailbox of 16 bytes
+task0 : tid=5. Creating child task.
+task0 : tid=5. Yielding CPU
+task0 : tid=4. Yielding CPU
+task0 : tid=3. Yielding CPU
+task0 : tid=2. Yielding CPU
+task0 : tid=1. Yielding CPU
+task0 : tid=6. This is the child task.
+task0 : tid=6. Creating mailbox of 16 bytes
+task0 : tid=6. Before calling a blocking receive message on empty mailbox
+task0 : tid=5. Before calling a blocking receive message on empty mailbox
+task0 : tid=4. Before calling a blocking receive message on empty mailbox
+task0 : tid=3. Before calling a blocking receive message on empty mailbox
+task0 : tid=2. Before calling a blocking receive message on empty mailbox
+task0 : tid=1. Sending a non blocking message to tid=2
+task0 : tid=1. Before calling a blocking receive message on empty mailbox
+G99-TS332: TIMEOUT

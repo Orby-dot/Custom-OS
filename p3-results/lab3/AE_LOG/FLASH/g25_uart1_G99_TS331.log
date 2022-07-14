@@ -1,0 +1,24 @@
+=======SIM Target FLASH DOWNLOAD LOG - Tue Jul  5 18:26:09 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS331
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2022.07.05 18:26:15 =~=~=~=~=~=~=~=~=~=~=~=
+G99-TS331: START
+G99-TS331-LOG : task1(tid = 2) : Entering
+G99-TS331-LOG : task1(tid = 2) : Create a mailbox of 16 bytes
+G99-TS331-LOG : task1(tid = 2) : Set the priority of the worker to low. It will get preempted
+G99-TS331-LOG : task1(tid = 3) : Entering
+G99-TS331-LOG : task1(tid = 3) : Create a mailbox of 16 bytes
+G99-TS331-LOG : task1(tid = 3) : Set the priority of the worker to low. It will get preempted
+G99-TS331-LOG : task1(tid = 4) : Entering
+G99-TS331-LOG : task1(tid = 4) : Create a mailbox of 16 bytes
+G99-TS331-LOG : task1(tid = 4) : Set the priority of the worker to low. It will get preempted
+G99-TS331-LOG : task1(tid = 5) : Entering
+G99-TS331-LOG : task1(tid = 5) : Create a mailbox of 16 bytes
+G99-TS331-LOG : task1(tid = 5) : Set the priority of the worker to low. It will get preempted
+G99-TS331-LOG : task0 : Entering
+G99-TS331-LOG : task0 : Create a mailbox of size 64 bytes
+G99-TS331-LOG : task0 : Broadcasting messages to all workers
+G99-TS331-LOG : task0 : Receiving messages (blocking) from workers
+G99-TS331-LOG : task1(tid = 2) : worker task: Receiving messages
+G99-TS331-LOG : task1(tid = 3) : worker task: Receiving messages
+G99-TS331-LOG : task1(tid = 4) : worker task: Receiving messages
+G99-TS331-LOG : task1(tid = 5) : worker task: Receiving messages

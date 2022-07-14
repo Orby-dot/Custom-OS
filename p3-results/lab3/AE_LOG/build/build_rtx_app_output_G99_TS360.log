@@ -1,0 +1,19 @@
+  
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Software\Keil_v5\ARM\ARMCC\Bin'
+Build target 'RTX App SIM'
+linking...
+Program Size: Code=15788 RO-data=560 RW-data=60 ZI-data=4132  
+".\Objects\SIM\rtx-app-sim.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:01
+  
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Software\Keil_v5\ARM\ARMCC\Bin'
+Build target 'RTX App RAM'
+linking...
+.\Objects\RAM\rtx-app-ram.axf: Error: L6788E: Scatter-loading of execution region RW_IRAM1 to execution address [0x10004000,0x1000403c) will cause the contents of execution region RW_IRAM1 at load-address [0x10003fd4,0x10004010) to be corrupted at run-time.
+.\Objects\RAM\rtx-app-ram.axf: Error: L6220E: Load region LR_IROM1 size (16400 bytes) exceeds limit (16384 bytes). Region contains 39 bytes of padding and 0 bytes of veneers (total 39 bytes of linker generated content).
+Finished: 0 information, 0 warning and 2 error messages.
+".\Objects\RAM\rtx-app-ram.axf" - 2 Error(s), 0 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:01
+  
+Batch-Build summary: 1 succeeded, 1 failed, 0 skipped - Time Elapsed: 00:00:02
