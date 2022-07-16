@@ -830,7 +830,7 @@ int k_rt_tsk_susp(void)
 		// TODO: error for ENOMEM - don't see where this could occur - may fail at k_tsk_run_new() but not due to mem
 		// Still confused: https://piazza.com/class/l2ahaqd6n9c6nk?cid=457
 		gp_current_task->state = SUSPENDED;
-		pushToEDF(&readyQueuesArray[0], gp_current_task);
+		addTCBtoBack(readyQueuesArray, SUSP_PRIO, gp_current_task);
 		// I am assuming at this point the task is no longer in the EDF, so all we have to do is set it's state
 
 		// if the current task is suspended, we should schedule another RT task or some non-RT task
