@@ -69,6 +69,11 @@
 // the positions of msp field in the TCB structure
 #define TCB_MSP_OFFSET  8       // TCB.msp offset 
 
+typedef struct rt_task_info {
+	TIMEVAL			period; 	//frequency of job
+	TIMEVAL 		deadline; //last time for which this RT time should be complete by (to check for missed deadlines)	
+} rt_task_info;
+
 typedef struct tcb {
     struct tcb *prev;         /**< prev tcb, not used in the starter code     */
     struct tcb *next;         /**< next tcb, not used in the starter code     */
@@ -86,8 +91,8 @@ typedef struct tcb {
     U32        *psp;          /**< user sp  */
 		void*				msg;
 		task_t			destination;
-		mailbox_t		mailbox; 		
-		TIMEVAL			period;
+		mailbox_t		mailbox;
+		rt_task_info* rt_info;
 } TCB;
 
 /*

@@ -642,70 +642,70 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
     printf("task_id = %d, prio = %d.\n\r", task_id, prio);
 #endif /* DEBUG_0 */
 
-	if(prio > LOWEST || prio < HIGH)
+	if((prio > LOWEST || prio < HIGH) && prio!=PRIO_RT)
 	{
 		errno = EINVAL;
 		return RTX_ERR;
 	}
 	
-		if (task_id == gp_current_task->tid)
+	if (task_id == gp_current_task->tid)
+	{
+		if(gp_current_task->prio < prio)
 		{
-			if(gp_current_task->prio < prio)
-			{
-				gp_current_task->prio = prio;
-				
-				addTCBtoBack(readyQueuesArray,prio,gp_current_task);
-				gp_current_task->state = READY;
-				return k_tsk_run_new();
-				
-			}
-			else
-			{
-				gp_current_task->prio = prio;
-				return RTX_OK;
-			}
+			gp_current_task->prio = prio;
+			
+			addTCBtoBack(readyQueuesArray,prio,gp_current_task);
+			gp_current_task->state = READY;
+			return k_tsk_run_new();
 			
 		}
-		else 
+		else // this should include the case where we increase a task's prio to PRIO_RT
 		{
-			TCB * selectedTCB = &g_tcbs[(U32) task_id];
-			if((selectedTCB->priv == 1 && gp_current_task->priv == 0))
-			{
-				errno = EPERM;
-				return RTX_ERR;
-			}
-			else if(selectedTCB->prio == PRIO_NULL){
-				errno = EINVAL;
-				return RTX_ERR;
-			}
-			else if(selectedTCB->prio == prio)
-			{
-				return RTX_OK;
-			}
-			else
-			{
-				if(selectedTCB->state != BLK_RECV && selectedTCB->state != BLK_SEND)
-				{
-					removeSpecificTCB(readyQueuesArray,selectedTCB->prio,task_id);
-					
-					addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
-					addTCBtoBack(readyQueuesArray,prio,selectedTCB);
-					
-					
-					gp_current_task->state = READY;
-				}
-				else if(selectedTCB->state != BLK_SEND)
-				{
-					removeSpecificTCB(sendQueuesArray,selectedTCB->prio,task_id);
-					
-					addTCBtoBack(sendQueuesArray,prio,selectedTCB);
-				}
-				selectedTCB->prio = prio;
-
-				
-				return k_tsk_run_new();
-			}	
+			gp_current_task->prio = prio;
+			return RTX_OK;
 		}
+		
+	}
+	else 
+	{
+		TCB * selectedTCB = &g_tcbs[(U32) task_id];
+		if((selectedTCB->priv == 1 && gp_current_task->priv == 0))
+		{
+			errno = EPERM;
+			return RTX_ERR;
+		}
+		else if(selectedTCB->prio == PRIO_NULL){
+			errno = EINVAL;
+			return RTX_ERR;
+		}
+		else if(selectedTCB->prio == prio)
+		{
+			return RTX_OK;
+		}
+		else
+		{
+			if(selectedTCB->state != BLK_RECV && selectedTCB->state != BLK_SEND)
+			{
+				removeSpecificTCB(readyQueuesArray,selectedTCB->prio,task_id);
+				
+				addTCBtoFront(readyQueuesArray,gp_current_task->prio,gp_current_task);
+				addTCBtoBack(readyQueuesArray,prio,selectedTCB);
+				
+				
+				gp_current_task->state = READY;
+			}
+			else if(selectedTCB->state != BLK_SEND)
+			{
+				removeSpecificTCB(sendQueuesArray,selectedTCB->prio,task_id);
+				
+				addTCBtoBack(sendQueuesArray,prio,selectedTCB);
+			}
+			selectedTCB->prio = prio;
+
+			
+			return k_tsk_run_new();
+		}	
+	}
 }
 
 /**
@@ -775,22 +775,69 @@ int k_tsk_ls(task_t *buf, size_t count){
     return buf_i;
 }
 
+U32 getTotalTimeMicroSeconds(TIMEVAL * tv){
+	return tv->sec*1000000+tv->usec;
+}
+
+//Purpose: elevate a non-RT task to RT
 int k_rt_tsk_set(TIMEVAL *p_tv)
 {
 #ifdef DEBUG_0
     printf("k_rt_tsk_set: p_tv = 0x%x\r\n", p_tv);
 #endif /* DEBUG_0 */
-    return RTX_OK;   
+	
+		//check if the current task is already a RT task
+		if(gp_current_task->state == PRIO_RT) {
+			errno = EPERM;
+			return RTX_ERR;
+		}
+		
+		//verify that p_tv is a multiple of 2500 microseconds
+		U32 microSecondTime = getTotalTimeMicroSeconds(p_tv);
+		if(microSecondTime%2500!=0 || microSecondTime==0){
+			errno = EINVAL;
+			return RTX_ERR;
+		}
+		
+		// TODO: error for ENOMEM - don't see where this could occur - may fail at k_tsk_run_new() but not due to mem
+		// Kind of explains it for the rt_set_function: https://piazza.com/class/l2ahaqd6n9c6nk?cid=457
+		// Adding the line below for now but I don't think it's necessary for the current state of the rt_task_info struct
+		gp_current_task->rt_info = k_mpool_alloc(MPID_IRAM2, sizeof(rt_task_info));
+		if(gp_current_task->rt_info == NULL){
+			errno = ENOMEM;
+			return RTX_ERR;
+		}
+		
+		//Set to RT and release immediately
+		k_tsk_set_prio(gp_current_task->tid, PRIO_RT); // TODO: this won't work yet
+		pushToEDF(&readyQueuesArray[0], gp_current_task); // TODO: should we be adding to the front by force here - "release immediately"?
+		return k_tsk_run_new();
 }
 
+// Purpose: suspend a real-time task until its next period starts
+// This function should not be called unless the finished job has met the task's deadline 
 int k_rt_tsk_susp(void)
 {
 #ifdef DEBUG_0
     printf("k_rt_tsk_susp: entering\r\n");
 #endif /* DEBUG_0 */
-    return RTX_OK;
+
+		//if not called by an RT task, return -1
+		if(gp_current_task->prio != PRIO_RT) {
+			errno = EPERM;
+			return RTX_ERR;
+		}
+		// TODO: error for ENOMEM - don't see where this could occur - may fail at k_tsk_run_new() but not due to mem
+		// Still confused: https://piazza.com/class/l2ahaqd6n9c6nk?cid=457
+		gp_current_task->state = SUSPENDED;
+		
+		// I am assuming at this point the task is no longer in the EDF, so all we have to do is set it's state
+
+		//if the current task is suspended, we should schedule another RT task or some non-RT task
+		return k_tsk_run_new();
 }
 
+// Purpose: obtain real-time task period information from the kernel
 int k_rt_tsk_get(task_t tid, TIMEVAL *buffer)
 {
 #ifdef DEBUG_0
@@ -799,13 +846,29 @@ int k_rt_tsk_get(task_t tid, TIMEVAL *buffer)
 #endif /* DEBUG_0 */    
     if (buffer == NULL) {
         return RTX_ERR;
-    }   
-    
+    }
+		
     /* The code fills the buffer with some fake rt task information. 
        You should fill the buffer with correct information    */
+		// if the data is ABCDEEFF, something error has occured
     buffer->sec  = 0xABCD;
     buffer->usec = 0xEEFF;
     
+		//calling task not RT
+		if(gp_current_task->prio!=PRIO_RT){
+			errno = EPERM;
+			return RTX_ERR;
+		}
+		
+		//task_id does not point to an RT task
+		if(g_tcbs[tid].prio != PRIO_RT) {
+			errno = EINVAL;
+			return RTX_ERR;
+		}
+		
+    buffer->sec  = g_tcbs[tid].rt_info->period.sec;
+    buffer->usec = g_tcbs[tid].rt_info->period.usec; 
+		
     return RTX_OK;
 }
 /*
