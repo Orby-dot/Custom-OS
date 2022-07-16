@@ -294,7 +294,7 @@ int subtractTime(TCB* tcb, U32 time)
 	{
 		return 0;
 	}
-	else if(time < tcb->remainingTime.usec)
+	else if(time <= tcb->remainingTime.usec)
 	{
 		tcb->remainingTime.usec = tcb->remainingTime.usec - time;
 		return 1;
