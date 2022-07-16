@@ -44,6 +44,8 @@
 
 #include "k_inc.h"
 #include "ready_queue.h"
+#include "EDF.h"
+#include "k_task.h"
 
 /*
  *===========================================================================
