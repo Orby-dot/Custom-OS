@@ -72,6 +72,7 @@
 typedef struct rt_task_info {
 	TIMEVAL			period; 	//frequency of job
 	TIMEVAL 		deadline; //last time for which this RT time should be complete by (to check for missed deadlines)	
+	TIMEVAL			remainingTime;
 } rt_task_info;
 
 typedef struct tcb {

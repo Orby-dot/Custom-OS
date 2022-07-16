@@ -4,7 +4,7 @@
 
 // Converts common.h-style priority level to index from 0 to 4
 U8 priorityLevelToIndex(U8 priorityLevel) {
-	if (priorityLevel >= 0x80 && priorityLevel <= 0x85) {
+	if (priorityLevel >= 0x80 && priorityLevel <= 0x86) {
 		return (priorityLevel - 0x80);
 	} else {
 		return 4; // for the null task FF

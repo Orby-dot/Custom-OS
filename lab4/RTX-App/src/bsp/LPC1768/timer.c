@@ -37,6 +37,9 @@
 
 
 #include "timer.h"
+#include "rtx.h"
+#include "k_inc.h"
+#include "k_rtx_init.h"
 
 #define BIT(X) ( 1UL << (X) )
 
@@ -124,6 +127,25 @@ uint32_t timer_irq_init(uint8_t n_timer)
     return 0;
 }
 
+int subtractTime(TCB* tcb, U32 time)
+{
+	if (tcb->rt_info->remainingTime.sec ==0 && time > tcb->rt_info->remainingTime.usec)
+	{
+		return 0;
+	}
+	else if(time < tcb->rt_info->remainingTime.usec)
+	{
+		tcb->rt_info->remainingTime.usec = tcb->rt_info->remainingTime.usec - time;
+		return 1;
+	}
+	else
+	{
+		tcb->rt_info->remainingTime.usec = tcb->rt_info->remainingTime.usec + 1000000 - time;
+		tcb->rt_info->remainingTime.sec = tcb->rt_info->remainingTime.sec - 1;
+		return 1;
+	}
+}
+
 /**
  * @brief: use CMSIS ISR for TIMER0 IRQ Handler
  */
@@ -131,9 +153,27 @@ uint32_t timer_irq_init(uint8_t n_timer)
 void TIMER0_IRQHandler(void)
 {
     /* ack inttrupt, see section  21.6.1 on pg 493 of LPC17XX_UM */
-    LPC_TIM0->IR = BIT(0);  
+    LPC_TIM0->IR = BIT(0); 
+
+		TCB * currentTCB = readyQueuesArray[(SUSP_PRIO - 0x80)].head;
+	
+		while(currentTCB ==NULL)
+		{
+			if(subtractTime(currentTCB, 500))
+			{
+				currentTCB = currentTCB->next;
+			}
+			else{
+				removeSpecificTCB(readyQueuesArray,SUSP_PRIO,currentTCB->tid);
+				pushToEDF(&readyQueuesArray[0],currentTCB);
+			}
+			
+		}
+	
     
     g_timer_count++ ;
+		
+		k_tsk_run_new();
 }
 
 
