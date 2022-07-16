@@ -48,7 +48,7 @@
 
 int errno = 0;
 
-readyQueue_t readyQueuesArray[6];
+readyQueue_t readyQueuesArray[7];
 //level 6 is receive queue
 //level 7 is send queue
 readyQueue_t sendQueuesArray[5];
@@ -89,7 +89,7 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     
     /* add timer(s) initialization code */
     
-		initializeArrayOfReadyQueues(readyQueuesArray,6);
+		initializeArrayOfReadyQueues(readyQueuesArray,7);
 		initializeArrayOfReadyQueues(sendQueuesArray,5);
 
 	TASK_INIT taskinfo;
