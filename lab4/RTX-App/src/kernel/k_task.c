@@ -146,9 +146,10 @@ TCB *scheduler(void)
 		selectedTCB = popFromEDF(readyQueuesArray);
 	}
 	
-	for (U8 i = 1; i < 5 ;i++) {
+	for (U8 i = 1; i < 6 ;i++) {
 		if (readyQueuesArray[i].head){
 			selectedTCB = removeTCB(readyQueuesArray, i);
+			break;
 		}
 	}
 	
