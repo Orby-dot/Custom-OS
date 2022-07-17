@@ -42,6 +42,8 @@
 
 
 volatile uint32_t g_timer_count = 0; // increment every 500 us
+TM_TICK previousTime = {.tc = 0, .pc = 0 }; 
+TM_TICK currentTime = {.tc = 0, .pc = 500000 };
 
 /**
  * @brief: initialize timer IRQ. Only timer 0 is supported
@@ -132,26 +134,38 @@ void TIMER0_IRQHandler(void)
 {
     /* ack inttrupt, see section  21.6.1 on pg 493 of LPC17XX_UM */
     LPC_TIM0->IR = BIT(0); 
-
-		TCB * currentTCB = readyQueuesArray[(SUSP_PRIO - 0x80)].head;
 	
+		get_tick(&currentTime, TIMER1);
+	
+		if(currentTime.tc < previousTime.tc)//overflow
+		{
+			previousTime.tc = currentTime.tc; 
+			currentTime.pc = currentTime.pc + (0xffffffff - previousTime.pc);
+			previousTime.pc = 0;
+		}
+
+		TCB * currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
+		U32 period = ((currentTime.tc - previousTime.tc) / 10000 + (currentTime.pc -  previousTime.pc) * 1000000);
+		previousTime = currentTime;
 		while(currentTCB ==NULL)
 		{
-			if(subtractTime(currentTCB, 500))
+			if(subtractTime(currentTCB, period))
 			{
 				currentTCB = currentTCB->next;
 			}
 			else{
-				removeSpecificTCB(&readyQueuesArray,SUSP_PRIO,currentTCB->tid);
+				removeSpecificTCB(readyQueuesArray,SUSP_PRIO,currentTCB->tid);
+				currentTCB->state = READY;
 				pushToEDF(&readyQueuesArray[0],currentTCB);
 			}
 			
 		}
-	
+		
     
     g_timer_count++ ;
 		
 		k_tsk_run_new();
+
 }
 
 
