@@ -86,7 +86,8 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     if ( uart_irq_init(0) != RTX_OK ) {
         return RTX_ERR;
     }
-    
+		timer_irq_init(0);
+    timer_freerun_init(1);
     /* add timer(s) initialization code */
     
 		initializeArrayOfReadyQueues(readyQueuesArray,8);
