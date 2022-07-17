@@ -310,6 +310,25 @@ int get_tick(TM_TICK *tk, uint8_t n_timer)
     return 0;
 }
 
+int subtractTime(TCB* tcb, U32 time)
+{
+	if (tcb->remainingTime.sec ==0 && time > tcb->remainingTime.usec)
+	{
+		return 0;
+	}
+	else if(time <= tcb->remainingTime.usec)
+	{
+		tcb->remainingTime.usec = tcb->remainingTime.usec - time;
+		return 1;
+	}
+	else
+	{
+		tcb->remainingTime.usec = tcb->remainingTime.usec + 1000000 - time;
+		tcb->remainingTime.sec = tcb->remainingTime.sec - 1;
+		return 1;
+	}
+}
+
 /*
  *===========================================================================
  *                             END OF FILE
