@@ -5,7 +5,7 @@ int pushToEDF(readyQueue_t * queue, TCB * tsk)
 	while(currentTCB != NULL)
 	{
 		//if found a tsk with a longer period
-		if(isShorter(tsk->period,currentTCB->period))
+		if(isShorter(tsk->rt_info->period,currentTCB->rt_info->period))
 		{
 			//if that tsk is the head
 			if(currentTCB == queue->head)

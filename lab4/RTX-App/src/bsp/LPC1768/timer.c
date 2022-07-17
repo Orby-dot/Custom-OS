@@ -37,6 +37,9 @@
 
 
 #include "timer.h"
+#include "rtx.h"
+#include "k_inc.h"
+#include "k_rtx_init.h"
 
 #define BIT(X) ( 1UL << (X) )
 
@@ -124,6 +127,25 @@ uint32_t timer_irq_init(uint8_t n_timer)
     pTimer->TCR = 1;
 
     return 0;
+}
+
+int subtractTime(TCB* tcb, U32 time)
+{
+	if (tcb->rt_info->remainingTime.sec ==0 && time > tcb->rt_info->remainingTime.usec)
+	{
+		return 0;
+	}
+	else if(time <= tcb->rt_info->remainingTime.usec)
+	{
+		tcb->rt_info->remainingTime.usec = tcb->rt_info->remainingTime.usec - time;
+		return 1;
+	}
+	else
+	{
+		tcb->rt_info->remainingTime.usec = tcb->rt_info->remainingTime.usec + 1000000 - time;
+		tcb->rt_info->remainingTime.sec = tcb->rt_info->remainingTime.sec - 1;
+		return 1;
+	}
 }
 
 /**
@@ -300,25 +322,6 @@ int get_tick(TM_TICK *tk, uint8_t n_timer)
     tk->pc = pTimer->PC;
     
     return 0;
-}
-
-int subtractTime(TCB* tcb, U32 time)
-{
-	if (tcb->remainingTime.sec ==0 && time > tcb->remainingTime.usec)
-	{
-		return 0;
-	}
-	else if(time <= tcb->remainingTime.usec)
-	{
-		tcb->remainingTime.usec = tcb->remainingTime.usec - time;
-		return 1;
-	}
-	else
-	{
-		tcb->remainingTime.usec = tcb->remainingTime.usec + 1000000 - time;
-		tcb->remainingTime.sec = tcb->remainingTime.sec - 1;
-		return 1;
-	}
 }
 
 /*
