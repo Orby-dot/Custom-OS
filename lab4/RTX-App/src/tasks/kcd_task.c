@@ -271,7 +271,7 @@ void task_kcd(void)
         }
     }
 
-    mem_dealloc(msg_buf); // will probably never run
+    // mem_dealloc(msg_buf); // will probably never run
 }
 
 /*
