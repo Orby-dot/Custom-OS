@@ -145,6 +145,10 @@ TCB *scheduler(void)
 	if(readyQueuesArray[0].head){
 		selectedTCB = popFromEDF(readyQueuesArray);
 	}
+	if(selectedTCB){
+		selectedTCB->state = RUNNING;
+		return selectedTCB;
+	}
 	
 	for (U8 i = 1; i < 6 ;i++) {
 		if (readyQueuesArray[i].head){
