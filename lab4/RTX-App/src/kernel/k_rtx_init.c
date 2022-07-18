@@ -93,7 +93,7 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
 		initializeArrayOfReadyQueues(readyQueuesArray,8);
 		initializeArrayOfReadyQueues(sendQueuesArray,5);
 
-	TASK_INIT taskinfo;
+		TASK_INIT taskinfo;
     // KCD
     taskinfo.ptask = task_kcd;
     taskinfo.u_stack_size = PROC_STACK_SIZE;
@@ -102,6 +102,16 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     taskinfo.priv = 0; // unprivileged
     k_tsk_create_new(&taskinfo, &g_tcbs[TID_KCD], TID_KCD);
 
+		// WALL CLOCK
+    taskinfo.ptask = task_wall_clock;
+    taskinfo.u_stack_size = PROC_STACK_SIZE;
+    taskinfo.tid = TID_WCLCK;
+    taskinfo.sec = 1; // 1 second
+    taskinfo.usec = 0; // 1 second
+    taskinfo.prio = PRIO_RT;
+    taskinfo.priv = 0; // unprivileged
+    k_tsk_create_new(&taskinfo, &g_tcbs[TID_WCLCK], TID_WCLCK);
+		
     // CONSOLE 
     taskinfo.ptask = task_cdisp;
     taskinfo.u_stack_size = PROC_STACK_SIZE;

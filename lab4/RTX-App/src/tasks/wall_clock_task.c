@@ -8,6 +8,7 @@
 #include "k_msg.h"
 #include "uart_irq.h"
 #include "uart_polling.h"
+#include "timer.h"
 
 // Purpose: unprivileged soft real-time task that displays a digital clock on the RTX console terminal
 // HH:MM:SS format
@@ -30,8 +31,16 @@ void task_wall_clock(void)
 	*buf = 'W';
 	send_msg_nb(TID_KCD, (void*)header);
 	
+	char* msg_buf = mem_alloc(KCD_CMD_BUF_SIZE);
 	while(1){
 		// wait for timer1 interrupt handler and go in when called
+		recv_msg_nb(msg_buf, KCD_CMD_BUF_SIZE);
+		
+		// read from timer1
+		TM_TICK*tc;
+		get_tick(tc, 1);
+		printf("%d\n", tc->tc);
+		tsk_yield();
 	}
 }
 

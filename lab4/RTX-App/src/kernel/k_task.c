@@ -144,6 +144,8 @@ TCB *scheduler(void)
 	
 	if(readyQueuesArray[0].head){
 		selectedTCB = popFromEDF(readyQueuesArray);
+		selectedTCB->state = RUNNING;
+		return selectedTCB;
 	}
 	
 	for (U8 i = 1; i < 6 ;i++) {
@@ -263,6 +265,17 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
      *            to allocate variable size user stack.
      * -------------------------------------------------------------*/
 		
+		// RT-TASK needs to set period and initialize rt_info struct
+		if(p_tcb->prio == PRIO_RT){
+			p_tcb->rt_info = k_mpool_alloc(MPID_IRAM2, sizeof(rt_task_info));
+			p_tcb->rt_info->period.sec = p_taskinfo->sec;
+			p_tcb->rt_info->period.usec = p_taskinfo->usec;
+			if(p_tcb->rt_info == NULL){
+				errno = ENOMEM;
+				return RTX_ERR;
+			}	
+		}
+		
 		U32 sizeToAllocate = p_taskinfo->u_stack_size>PROC_STACK_SIZE ? p_taskinfo->u_stack_size : PROC_STACK_SIZE;
     usp = (U32*)(k_mpool_alloc(MPID_IRAM2, sizeToAllocate));
     if (usp == NULL) {
@@ -340,7 +353,12 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
 
     p_tcb->msp = ksp;
 		p_tcb->psp = usp;
-		if(tid != TID_NULL) addTCBtoBack(readyQueuesArray,p_tcb->prio,p_tcb);
+		
+		// if RT, it should be put in the EDF, else put it in it's ready queue
+		if(p_tcb->prio == PRIO_RT){
+			pushToEDF(&readyQueuesArray[0], p_tcb);
+		}
+		else if(tid != TID_NULL) addTCBtoBack(readyQueuesArray,p_tcb->prio,p_tcb);
 		p_tcb->initialized = 1;
 
     return RTX_OK;
