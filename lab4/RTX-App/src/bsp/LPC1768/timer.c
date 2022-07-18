@@ -129,13 +129,15 @@ uint32_t timer_irq_init(uint8_t n_timer)
     return 0;
 }
 
+// 1. takes tcb and time to subtract, first subtract microsecond, then seconds, else cannot subtract 
+// 2. 
 int subtractTime(TCB* tcb, U32 time)
 {
-	if (tcb->rt_info->remainingTime.sec ==0 && time > tcb->rt_info->remainingTime.usec)
+	if (tcb->rt_info->remainingTime.sec ==0 && time >= tcb->rt_info->remainingTime.usec)
 	{
 		return 0;
 	}
-	else if(time <= tcb->rt_info->remainingTime.usec)
+	else if(time < tcb->rt_info->remainingTime.usec)
 	{
 		tcb->rt_info->remainingTime.usec = tcb->rt_info->remainingTime.usec - time;
 		return 1;
@@ -156,7 +158,6 @@ void TIMER0_IRQHandler(void)
 {
     /* ack inttrupt, see section  21.6.1 on pg 493 of LPC17XX_UM */
     LPC_TIM0->IR = BIT(0); 
-	
 		get_tick(&currentTime, TIMER1);
 	
 		if(currentTime.pc < previousTime.pc)//overflow
@@ -170,16 +171,20 @@ void TIMER0_IRQHandler(void)
 		U32 period ;
 		if((currentTime.tc -  previousTime.tc) ==1)
 		{
-			period = ((currentTime.pc + (0xffffffff - previousTime.pc))/ 10000);
+			period = ((currentTime.pc + (0xffffffff - previousTime.pc))/ 100);
 		}
 		else
 		{
-			period = ((currentTime.pc - previousTime.pc) / 10000 );
+			period = ((currentTime.pc - previousTime.pc) / 100 );
 		}
-		previousTime = currentTime;
+
+		
+		previousTime.pc = currentTime.pc; // TODO: possibly sus?
+		previousTime.tc = currentTime.tc;
+		
 		while(currentTCB !=NULL)
 		{
-			if(subtractTime(currentTCB, period))
+			if(subtractTime(currentTCB, period)) // if remaining period is <= remaining time do something
 			{
 				currentTCB = currentTCB->next;
 			}
@@ -191,9 +196,17 @@ void TIMER0_IRQHandler(void)
 			currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
 			
 		}
-		
     
     g_timer_count++;
+		
+		if(gp_current_task->prio == PRIO_RT){
+			pushToEDF(&readyQueuesArray[0], gp_current_task);
+		}
+		else{
+			addTCBtoFront(readyQueuesArray, gp_current_task->prio, gp_current_task);
+		}
+		
+		k_tsk_run_new();
 				
 }
 

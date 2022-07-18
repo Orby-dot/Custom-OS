@@ -823,8 +823,14 @@ int k_rt_tsk_set(TIMEVAL *p_tv)
 			return RTX_ERR;
 		}
 		
+		gp_current_task->rt_info->period.sec = p_tv->sec;
+		gp_current_task->rt_info->period.usec = p_tv->usec;
+		
+		gp_current_task->rt_info->remainingTime.sec = gp_current_task->rt_info->period.sec;
+		gp_current_task->rt_info->remainingTime.usec = gp_current_task->rt_info->period.usec;		
+		
 		//Set to RT and release immediately
-		k_tsk_set_prio(gp_current_task->tid, PRIO_RT); // TODO: this won't work yet
+		k_tsk_set_prio(gp_current_task->tid, PRIO_RT);
 		pushToEDF(&readyQueuesArray[0], gp_current_task); // TODO: should we be adding to the front by force here - "release immediately"?
 		return k_tsk_run_new();
 }
@@ -847,6 +853,9 @@ int k_rt_tsk_susp(void)
 		gp_current_task->state = SUSPENDED;
 		addTCBtoBack(readyQueuesArray, SUSP_PRIO, gp_current_task);
 		// I am assuming at this point the task is no longer in the EDF, so all we have to do is set it's state
+		
+		gp_current_task->rt_info->remainingTime.sec = gp_current_task->rt_info->period.sec;
+		gp_current_task->rt_info->remainingTime.usec = gp_current_task->rt_info->period.usec;
 
 		// if the current task is suspended, we should schedule another RT task or some non-RT task
 		return k_tsk_run_new();

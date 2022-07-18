@@ -66,7 +66,9 @@ int	ae_init(RTX_SYS_INFO *sys_info,
 
 void ae_exit(void)
 {
-    while(1);
+    while(1){
+			tsk_yield();
+		}
 }
 
 /**************************************************************************//**

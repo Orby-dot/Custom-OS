@@ -116,7 +116,7 @@ void task_wall_clock(void)
 		// needs to be replaced with comms to uart but that's not priority at the moment, need to first get the task working periodically
 		if(!FLAG_RemoveWallClock){
 			// insert code to print to uart and remove printf
-			printf("%s\n", display);
+			printf("\r\n%s\r\n", display);
 		}
 		
 		rt_tsk_susp();
