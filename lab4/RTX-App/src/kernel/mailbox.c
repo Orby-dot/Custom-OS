@@ -5,7 +5,7 @@ void addMessage(mailbox_t *mailbox, void *message_pointer) {
 	
 	RTX_MSG_HDR* header = message_pointer;
 	U8 length = header->length;
-	U32 available_space = 0;
+	// U32 available_space = 0; // unused variable
 	
 	if( (length) > (mailbox->max_size - mailbox->current_size)){ //length larger than available size in mailbox
 		// NOT ENOUGH MEM;

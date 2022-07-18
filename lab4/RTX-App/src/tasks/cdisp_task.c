@@ -84,7 +84,7 @@ void task_cdisp(void)
         }
     }
 
-    mem_dealloc(msg_buf); // will probably never run
+   //  mem_dealloc(msg_buf); // will probably never run
 }
 
 /*
