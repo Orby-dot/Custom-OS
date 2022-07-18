@@ -177,8 +177,7 @@ void TIMER0_IRQHandler(void)
 		{
 			period = ((currentTime.pc - previousTime.pc) / 100 );
 		}
-
-		
+	
 		previousTime.pc = currentTime.pc; // TODO: possibly sus?
 		previousTime.tc = currentTime.tc;
 		

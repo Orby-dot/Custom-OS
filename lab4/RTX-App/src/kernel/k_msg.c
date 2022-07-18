@@ -67,15 +67,19 @@ int k_send_msg(task_t receiver_tid, const void *buf) {
 	if (buf == NULL ){ // buf is null
 		errno = EFAULT;
 		return RTX_ERR;
+		
 	} else if((U32)receiver_tid<=10 && g_tcbs[(U32)receiver_tid].mailbox.ring_buffer == NULL){ // no mailbox. For UART, it should still be fine b/c first check fails
 		errno = ENOENT;		
 		return RTX_ERR;
+	
 	} else if (currentMsg->length<MIN_MSG_SIZE || ((U32)receiver_tid>10 && receiver_tid != TID_UART)) {
 		errno = EINVAL;		
 		return RTX_ERR;
+		
 	} else if (currentMsg->length>g_tcbs[(U32)receiver_tid].mailbox.max_size){
 		errno = EMSGSIZE;		
 		return RTX_ERR;
+		
 	} // NO ENOSPC in blocking send
 	
 	//if msg can fit in mailbox
@@ -120,19 +124,21 @@ int k_send_msg_nb(task_t receiver_tid, const void *buf) {
 	} else if((U32)receiver_tid<=10 && g_tcbs[(U32)receiver_tid].mailbox.ring_buffer == NULL){ // no mailbox
 		errno = ENOENT;		
 		return RTX_ERR;
+		
 	} else if (currentMsg->length<MIN_MSG_SIZE || ((U32)receiver_tid>10 && receiver_tid != TID_UART)) {
 		errno = EINVAL;		
 		return RTX_ERR;
+		
 	} else if (receiver_tid != TID_UART && currentMsg->length>g_tcbs[(U32)receiver_tid].mailbox.max_size){
 		errno = EMSGSIZE;		
 		return RTX_ERR;
 	}
 	
-	if(receiver_tid != TID_UART && (g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >=g_tcbs[(U32)receiver_tid].mailbox.max_size){
+	if(receiver_tid != TID_UART && (g_tcbs[(U32)receiver_tid].mailbox.current_size + currentMsg->length) >g_tcbs[(U32)receiver_tid].mailbox.max_size){
 		errno = ENOSPC;
 		return RTX_ERR;		
 	}
-	else if(receiver_tid == TID_UART && (uart_mailbox->current_size + currentMsg->length) >= uart_mailbox->max_size){
+	else if(receiver_tid == TID_UART && (uart_mailbox->current_size + currentMsg->length) > uart_mailbox->max_size){
 		errno = ENOSPC;
 		return RTX_ERR;
 	}
