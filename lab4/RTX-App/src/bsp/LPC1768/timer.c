@@ -167,7 +167,15 @@ void TIMER0_IRQHandler(void)
 		}
 
 		TCB * currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
-		U32 period = ((currentTime.tc - previousTime.tc) / 10000 + (currentTime.pc -  previousTime.pc) * 1000000);
+		U32 period ;
+		if((currentTime.pc -  previousTime.pc) ==1)
+		{
+			period = ((currentTime.pc + (0xffffffff - previousTime.pc))/ 10000);
+		}
+		else
+		{
+			period = ((currentTime.tc - previousTime.tc) / 10000 );
+		}
 		previousTime = currentTime;
 		while(currentTCB ==NULL)
 		{
