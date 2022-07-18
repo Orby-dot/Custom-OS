@@ -131,11 +131,11 @@ uint32_t timer_irq_init(uint8_t n_timer)
 
 int subtractTime(TCB* tcb, U32 time)
 {
-	if (tcb->rt_info->remainingTime.sec ==0 && time > tcb->rt_info->remainingTime.usec)
+	if (tcb->rt_info->remainingTime.sec ==0 && time >= tcb->rt_info->remainingTime.usec)
 	{
 		return 0;
 	}
-	else if(time <= tcb->rt_info->remainingTime.usec)
+	else if(time < tcb->rt_info->remainingTime.usec)
 	{
 		tcb->rt_info->remainingTime.usec = tcb->rt_info->remainingTime.usec - time;
 		return 1;
@@ -177,7 +177,7 @@ void TIMER0_IRQHandler(void)
 			period = ((currentTime.tc - previousTime.tc) / 10000 );
 		}
 		previousTime = currentTime;
-		while(currentTCB ==NULL)
+		while(currentTCB !=NULL)
 		{
 			if(subtractTime(currentTCB, period))
 			{
