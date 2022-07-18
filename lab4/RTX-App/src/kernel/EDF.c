@@ -63,6 +63,11 @@ TCB * popFromEDF(readyQueue_t * readyQueuesArray)
 		{
 			currentTCB->next->prev = NULL;
 		}
+		else{
+			currentTCB->next->prev = NULL;
+			currentTCB->next->prev = NULL;
+			readyQueuesArray[0].tail = NULL;
+		}
 	}
 	
 	return currentTCB;

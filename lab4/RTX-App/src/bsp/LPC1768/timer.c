@@ -159,7 +159,7 @@ void TIMER0_IRQHandler(void)
 	
 		get_tick(&currentTime, TIMER1);
 	
-		if(currentTime.tc < previousTime.tc)//overflow
+		if(currentTime.pc < previousTime.pc)//overflow
 		{
 			previousTime.tc = currentTime.tc; 
 			currentTime.pc = currentTime.pc + (0xffffffff - previousTime.pc);
@@ -168,13 +168,13 @@ void TIMER0_IRQHandler(void)
 
 		TCB * currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
 		U32 period ;
-		if((currentTime.pc -  previousTime.pc) ==1)
+		if((currentTime.tc -  previousTime.tc) ==1)
 		{
 			period = ((currentTime.pc + (0xffffffff - previousTime.pc))/ 10000);
 		}
 		else
 		{
-			period = ((currentTime.tc - previousTime.tc) / 10000 );
+			period = ((currentTime.pc - previousTime.pc) / 10000 );
 		}
 		previousTime = currentTime;
 		while(currentTCB ==NULL)
@@ -192,10 +192,8 @@ void TIMER0_IRQHandler(void)
 		}
 		
     
-    g_timer_count++ ;
-		
-		k_tsk_run_new();
-
+    g_timer_count++;
+				
 }
 
 

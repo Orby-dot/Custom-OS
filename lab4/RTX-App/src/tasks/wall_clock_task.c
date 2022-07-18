@@ -10,6 +10,50 @@
 #include "uart_polling.h"
 #include "timer.h"
 
+
+char* timeFormat(U32 seconds){
+	char display_string[8];
+	int hours = seconds/3600;
+	int minutes = seconds/60;
+	int seconds = seconds%60;
+	
+	display_string[2] = ':';
+	display_string[5] = ':';
+	
+	// display hours, minutes, and seconds but with two digits each
+	// hours
+	if(hours<10){
+		display_string[0] = '0';
+		display_string[1] = hours+'0';
+	}
+	else{
+		display_string[0] = (hours/10)+'0';
+		display_string[1] = (hours%10)+'0';
+	}
+
+	// minutes
+	if(minutes<10){
+		display_string[3] = '0';
+		display_string[4] = minutes+'0';
+	}
+	else{
+		display_string[3] = (minutes/10)+'0';
+		display_string[4] = (minutes%10)+'0';
+	}
+
+	// seconds
+	if(seconds<10){
+		display_string[6] = '0';
+		display_string[7] = seconds+'0';
+	}
+	else{
+		display_string[6] = (seconds/10)+'0';
+		display_string[7] = (seconds%10)+'0';
+	}
+	
+	return display_string;	
+}
+
 // Purpose: unprivileged soft real-time task that displays a digital clock on the RTX console terminal
 // HH:MM:SS format
 void task_wall_clock(void)
@@ -31,15 +75,52 @@ void task_wall_clock(void)
 	*buf = 'W';
 	send_msg_nb(TID_KCD, (void*)header);
 	
+	int FLAG_RemoveWallClock = 0;
+	int offset = 0; // used to reset the counter since I cannot directly change the timer (I don't think I can)
+	
 	char* msg_buf = mem_alloc(KCD_CMD_BUF_SIZE);
+	TM_TICK*time1;
+	U32 seconds = 0;
+	char* display[8];
 	while(1){
 		// wait for timer1 interrupt handler and go in when called
-		recv_msg_nb(msg_buf, KCD_CMD_BUF_SIZE);
+		// recv_msg_nb(msg_buf, KCD_CMD_BUF_SIZE);
 		
-		// read from timer1
-		TM_TICK*tc;
-		get_tick(tc, 1);
-		printf("%d\n", tc->tc);
+		if(recv_msg_nb(msg_buf, KCD_CMD_BUF_SIZE) == RTX_OK){
+			RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
+			char *data = (char *)(msg_buf);
+			data += 6;
+			
+			if(header->length>6){ // arguments have been sent back
+				
+				if(*data == 'R'){ // reset the wall counter
+					get_tick(time1, 1);
+					offset = -(time1->tc);
+					display = timeFormat(0);
+				}
+				else if(*data == 'T'){ // remove the wall clock display
+					FLAG_RemoveWallClock = 1;
+				}
+				else if(*data == 'S' && header->length == 15){ // set the wall clock display time
+					data+=2;
+					display = data;
+				}
+			}
+		}
+		else{
+			// no message received so simply increment update wall clock
+			get_tick(time1,1);
+			display = timeFormat(time1->tc+offset);
+
+			// read from timer1
+			// needs to be replaced with comms to uart but that's not priority at the moment, need to first get the task working periodically
+		}
+
+		if(!FLAG_RemoveWallClock){
+			// insert code to print to uart and remove printf
+			printf("%s\n", display);
+		}
+		
 		tsk_yield();
 	}
 }
