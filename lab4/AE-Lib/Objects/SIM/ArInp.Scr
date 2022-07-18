@@ -8,4 +8,4 @@
 .\objects\sim\ae_timer.o
 .\objects\sim\ae_util.o
 .\objects\sim\main.o
-.\objects\sim\ae_tasks.o
+..\..\lab3_released_tests\TS-Lib\G99\TS310\ae-lib-sim.lib

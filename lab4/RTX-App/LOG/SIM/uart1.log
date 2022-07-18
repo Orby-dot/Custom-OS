@@ -1,225 +1,84 @@
-sizeof(RTX_MSG_HDR) = 6 
-sizeof(struct rtx_msg_hdr) = 6 
-&msg_hdr = 0x2007d3f0, &(msg_hdr.sender_tid) = 0x2007d3f4, &(msg_hdr.type) = 0x2007d3f5
-priv_task1: TID =1
-TID = 1, malbox free bytes = 128.
-tid:          0
-state:        1
-prio:         255
-priv:         0
-ptask:        0x3111
-k_sp_base:    0x2007d000
-k_sp:         0x2007cfa8
-k_stack_size: 0x400
-u_sp_base:    0x2007ca00
-u_sp:         0x2007c9e0
-u_stack_size: 0x200
-tid:          1
-state:        2
-prio:         128
-priv:         1
-ptask:        0x2505
-k_sp_base:    0x2007d800
-k_sp:         0x2007d7d0
-k_stack_size: 0x400
-u_sp_base:    0x2007d400
-u_sp:         0x2007d3e0
-u_stack_size: 0x200
-tid:          2
-state:        1
-prio:         128
-priv:         0
-ptask:        0x2d21
-k_sp_base:    0x2007dc00
-k_sp:         0x2007dbd0
-k_stack_size: 0x400
-u_sp_base:    0x2007d600
-u_sp:         0x2007d5e0
-u_stack_size: 0x200
-ERR: tsk_get failed
-ERR: tsk_get failed
-tid 1 has a mailbox
-TID = 1, malbox free bytes = 128.
-tid 8 has a mailbox
-TID = 8, malbox free bytes = 128.
-tid 9 has a mailbox
-TID = 9, malbox free bytes = 512.
-task2: entering 
-AAAAA
-BBBBB
-CCCCC
-DDDDD
-EEEEE
-FFFFF
-priv_task1 before yielding cpu.
-priv_task1 after yielding cpu.
-priv_task1: ret_val=0
-GGGGG
-HHHHH
-IIIII
-JJJJJ
-KKKKK
-LLLLL
-priv_task1 before yielding cpu.
-priv_task1 after yielding cpu.
-priv_task1: ret_val=0
-MMMMM
-NNNNN
-OOOOO
-PPPPP
-QQQQQ
-RRRRR
-priv_task1 before yielding cpu.
-priv_task1 after yielding cpu.
-priv_task1: ret_val=0
-SSSSS
-TTTTT
-UUUUU
-VVVVV
-WWWWW
-XXXXX
-priv_task1 before yielding cpu.
-priv_task1 after yielding cpu.
-priv_task1: ret_val=0
-YYYYY
-ZZZZZ
-AAAAA
-BBBBB
-CCCCC
-DDDDD
-priv_task1 before yielding cpu.
-priv_task1 after yielding cpu.
-priv_task1: ret_val=0
-EEEEE
-FFFFF
-GGGGG
-HHHHH
-IIIII
-JJJJJ
-priv_task1 before yielding cpu.
-priv_task1 after yielding cpu.
-priv_task1: ret_v%al=0
-KKKKK
-LLLLL
-MMMMM
-NNNNN
-OOOOO
-GPPPPP
-priv_task1 before yielding cpu.
-priv_task1 after yielding cpu.
-priv_task1: ret_val=0
-QQQQQ
-RRRRR
-SSSSS
-PTTTTT
-UUUUU
-VVVVV
-priv_task1 before yielding cpu.
-priv_task1 after yielding cpu.
-priv_task1: ret_val=0
-WWWWW
-ptr = 0x100071e0
-0x100071e0: 0x10
-0x10007500: 0x80
-0x10007600: 0x100
-0x10007800: 0x400
-4 free memory block(s) found
-task1: TID =2
-11111
-22222
-33333
-44444
-55555
-66666
-task1 before yielding cpu.
-
-tCommand Sent
-ask1 after yielding cpu.
-task1: ret_val=0
-77777
-88888
-99999
-00000
-11111
-22222
-task1 before yielding cpu.
-Ktask1 after yielding cpu.
-task1: ret_val=0
-33333
-44444
-55555
-66666
-77777
-88888
-task1 before yielding cpu.
-
-tInvalid Command
-ask1 after yielding cpu.
-task1: ret_val=0
-99999
-00000
-11111
-22222
-33333
-44444
-task1 before yielding cpu.
-task1 after yielding cpu.
-task1: ret_val=0
-55555
-66666
-77777
-88888
-99999
-%L00000
-task1 before yielding cpu.
-task1 after yielding cpu.
-task1: ret_val=0
-11111
-22222
-33333
-44444
-55555
-66666
-task1 before yielding cpu.
-Mtask1 after yielding cpu.
-task1: ret_val=0
-77777
-88888
-99999
-00000
-11111
-22222
-task1 before yielding cpu.
-task1 after yielding cpu.
-task1: ret_val=0
-33333
-44444
-55555
-66666
-77777
-88888
-task1 before yielding cpu.
-1t289
-ask1 after yielding cpu.
-task1: ret_val=0
-99999
-00000
-11111
-22222
-33333
-44444
-task1 before yielding cpu.
-task1 after yielding cpu.
-task1: ret_val=0
-55555
-66666
-77777
-88888
-99999
-00000
-task1 before yielding cpu.
-task1 after yielding cpu.
-task1: ret_val=0
-11111
-22222
-3333
+G99-TS310: START
+task0: TID =1 entering
+G99-TS310-LOG2: task0: creating a MEDIUM prio task that receives messages from the other tasks.
+G99-TS310-LOG2: task0: creating a MEDIUM prio task that runs the task0_send_msg_0 function.
+G99-TS310-LOG2: task0: creating a MEDIUM prio task that runs the task0_send_msg_1 function.
+G99-TS310-LOG2: task0: creating a MEDIUM prio task that runs the task0_send_msg_2 function.
+G99-TS310-LOG2:, test0_recv_task: creating a mailbox of size 7 Bytes
+task 0 - sender 2 buf: c
+G99-TS310-LOG: Test[0]-[0]: .
+G99-TS310-LOG: Test[0]-[0]: result = 1.
+task 0 - sender 1 buf: b
+G99-TS310-LOG: Test[0]-[1]: .
+G99-TS310-LOG: Test[0]-[1]: result = 1.
+task 0 - sender 0 buf: a
+G99-TS310-LOG: Test[0]-[2]: .
+G99-TS310-LOG: Test[0]-[2]: result = 1.
+char_message: c
+char_message: b
+char_message: a
+test0_messages[0]: c
+test0_messages[1]: b
+test0_messages[2]: a
+G99-TS310-LOG: Test[0]-[3]: .
+G99-TS310-LOG: Test[0]-[3]: result = 1.
+G99-TS310-LOG2: test1: creating a MEDIUM prio task task1_receive_msg that attempt to receive a message.
+G99-TS310-LOG2: test1_recv_task: creating a mailbox of size 7 Bytes.
+G99-TS310-LOG: Test[1]-[0]: .
+G99-TS310-LOG: Test[1]-[0]: result = 1.
+G99-TS310-LOG2: test1: creating a MEDIUM prio task task1_send_msg_0 that sends a message.
+task1 - sender 0 buf: d
+char_message: d
+G99-TS310-LOG: Test[1]-[1]: .
+G99-TS310-LOG: Test[1]-[1]: result = 1.
+G99-TS310-LOG: Test[1]-[2]: .
+G99-TS310-LOG: Test[1]-[2]: result = 1.
+G99-TS310-LOG: Test[1]-[3]: .
+G99-TS310-LOG: Test[1]-[3]: result = 1.G99-TS310: START
+task0: TID =1 entering
+G99-TS310-LOG2: task0: creating a MEDIUM prio task that receives messages from the other tasks.
+G99-TS310-LOG2: task0: creating a MEDIUM prio task that runs the task0_send_msg_0 function.
+G99-TS310-LOG2: task0: creating a MEDIUM prio task that runs the task0_send_msg_1 function.
+G99-TS310-LOG2: task0: creating a MEDIUM prio task that runs the task0_send_msg_2 function.
+G99-TS310-LOG2:, test0_recv_task: creating a mailbox of size 7 Bytes
+task 0 - sender 2 buf: c
+G99-TS310-LOG: Test[0]-[0]: .
+G99-TS310-LOG: Test[0]-[0]: result = 1.
+task 0 - sender 1 buf: b
+G99-TS310-LOG: Test[0]-[1]: .
+G99-TS310-LOG: Test[0]-[1]: result = 1.
+task 0 - sender 0 buf: a
+G99-TS310-LOG: Test[0]-[2]: .
+G99-TS310-LOG: Test[0]-[2]: result = 1.
+char_message: c
+char_message: b
+char_message: a
+test0_messages[0]: c
+test0_messages[1]: b
+test0_messages[2]: a
+G99-TS310-LOG: Test[0]-[3]: .
+G99-TS310-LOG: Test[0]-[3]: result = 1.
+G99-TS310-LOG2: test1: creating a MEDIUM prio task task1_receive_msg that attempt to receive a message.
+G99-TS310-LOG2: test1_recv_task: creating a mailbox of size 7 Bytes.
+G99-TS310-LOG: Test[1]-[0]: .
+G99-TS310-LOG: Test[1]-[0]: result = 1.
+G99-TS310-LOG2: test1: creating a MEDIUM prio task task1_send_msg_0 that sends a message.
+task1 - sender 0 buf: d
+char_message: d
+G99-TS310-LOG: Test[1]-[1]: .
+G99-TS310-LOG: Test[1]-[1]: result = 1.
+G99-TS310-LOG: Test[1]-[2]: .
+G99-TS310-LOG: Test[1]-[2]: result = 1.
+G99-TS310-LOG: Test[1]-[3]: .
+G99-TS310-LOG: Test[1]-[3]: result = 1.
+G99-TS310: HardFault
+G99-TS310: ERROR: Last Active Test [1]-[3] - 
+G99-TS310: ABORTED
+G99-TS310-LOG: Test 0: 4/4 PASSED. Expected = 0xF, result = 0xF
+G99-TS310-LOG: Test 1: 4/4 PASSED. Expected = 0xF, result = 0xF
+G99-TS310-LOG: Test 2: 0/0 PASSED. Expected = 0x0, result = 0x0
+G99-TS310-LOG: Test 3: 0/0 PASSED. Expected = 0x0, result = 0x0
+G99-TS310: 2/4 test function(s) COMPLETED.
+G99-TS310: 8/8 tests PASSED.
+G99-TS310: 0/8 tests FAILED.
+G99-TS310: END
