@@ -111,11 +111,10 @@ void task_wall_clock(void)
 			// no message received so simply increment update wall clock
 			get_tick(time1,1);
 			display = timeFormat(time1->tc+offset);
-
-			// read from timer1
-			// needs to be replaced with comms to uart but that's not priority at the moment, need to first get the task working periodically
 		}
 
+		// read from timer1
+		// needs to be replaced with comms to uart but that's not priority at the moment, need to first get the task working periodically
 		if(!FLAG_RemoveWallClock){
 			// insert code to print to uart and remove printf
 			printf("%s\n", display);
