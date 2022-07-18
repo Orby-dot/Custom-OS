@@ -11,11 +11,10 @@
 #include "timer.h"
 
 
-char* timeFormat(U32 seconds){
-	char display_string[8];
-	int hours = seconds/3600;
-	int minutes = seconds/60;
-	int seconds = seconds%60;
+char* timeFormat(char * display_string, U32 inputTime){
+	int hours = inputTime/3600;
+	int minutes = inputTime/60;
+	int seconds = inputTime%60;
 	
 	display_string[2] = ':';
 	display_string[5] = ':';
@@ -79,9 +78,9 @@ void task_wall_clock(void)
 	int offset = 0; // used to reset the counter since I cannot directly change the timer (I don't think I can)
 	
 	char* msg_buf = mem_alloc(KCD_CMD_BUF_SIZE);
-	TM_TICK*time1;
+	TM_TICK*time1 = mem_alloc(sizeof(TM_TICK));
 	U32 seconds = 0;
-	char* display[8];
+	char* display = mem_alloc(8);
 	while(1){
 		// wait for timer1 interrupt handler and go in when called
 		// recv_msg_nb(msg_buf, KCD_CMD_BUF_SIZE);
@@ -96,7 +95,7 @@ void task_wall_clock(void)
 				if(*data == 'R'){ // reset the wall counter
 					get_tick(time1, 1);
 					offset = -(time1->tc);
-					display = timeFormat(0);
+					timeFormat(display, 0);
 				}
 				else if(*data == 'T'){ // remove the wall clock display
 					FLAG_RemoveWallClock = 1;
@@ -110,7 +109,7 @@ void task_wall_clock(void)
 		else{
 			// no message received so simply increment update wall clock
 			get_tick(time1,1);
-			display = timeFormat(time1->tc+offset);
+			display = timeFormat(display, time1->tc+offset);
 		}
 
 		// read from timer1
@@ -120,7 +119,7 @@ void task_wall_clock(void)
 			printf("%s\n", display);
 		}
 		
-		tsk_yield();
+		rt_tsk_susp();
 	}
 }
 

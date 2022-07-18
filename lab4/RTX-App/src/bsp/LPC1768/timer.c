@@ -177,7 +177,7 @@ void TIMER0_IRQHandler(void)
 			period = ((currentTime.pc - previousTime.pc) / 10000 );
 		}
 		previousTime = currentTime;
-		while(currentTCB ==NULL)
+		while(currentTCB !=NULL)
 		{
 			if(subtractTime(currentTCB, period))
 			{
@@ -188,6 +188,7 @@ void TIMER0_IRQHandler(void)
 				currentTCB->state = READY;
 				pushToEDF(&readyQueuesArray[0],currentTCB);
 			}
+			currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
 			
 		}
 		
