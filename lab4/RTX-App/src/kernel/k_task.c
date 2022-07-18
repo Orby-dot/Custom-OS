@@ -144,8 +144,6 @@ TCB *scheduler(void)
 	
 	if(readyQueuesArray[0].head){
 		selectedTCB = popFromEDF(readyQueuesArray);
-	}
-	if(selectedTCB){
 		selectedTCB->state = RUNNING;
 		return selectedTCB;
 	}
@@ -153,13 +151,9 @@ TCB *scheduler(void)
 	for (U8 i = 1; i < 6 ;i++) {
 		if (readyQueuesArray[i].head){
 			selectedTCB = removeTCB(readyQueuesArray, i);
-			break;
+			selectedTCB->state = RUNNING;
+			return selectedTCB;
 		}
-	}
-	
-	if(selectedTCB){
-		selectedTCB->state = RUNNING;
-		return selectedTCB;
 	}
 	
 	return &g_tcbs[0]; // null task
