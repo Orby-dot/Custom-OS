@@ -108,9 +108,9 @@ void task_wall_clock(void)
 		if(recv_msg_nb(msg_buf, KCD_CMD_BUF_SIZE) == RTX_OK){
 			RTX_MSG_HDR *header = (RTX_MSG_HDR *)msg_buf; 
 			char *data = (char *)(msg_buf);
-			data += 6;
+			data += 7;
 			
-			if(header->length>6){ // arguments have been sent back
+			if(header->length>7){ // arguments have been sent back
 				
 				if(*data == 'R'){ // reset the wall counter
 					get_tick(time1, 1);
