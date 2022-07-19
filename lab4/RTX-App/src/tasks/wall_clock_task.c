@@ -100,7 +100,8 @@ void task_wall_clock(void)
 	char* msg_buf = mem_alloc(KCD_CMD_BUF_SIZE);
 	TM_TICK*time1 = mem_alloc(sizeof(TM_TICK));
 	U32 seconds = 0;
-	char* display = mem_alloc(8);
+	char* display = mem_alloc(9);
+	display[8] = '\0';
 	while(1){
 		// wait for timer1 interrupt handler and go in when called
 		// recv_msg_nb(msg_buf, KCD_CMD_BUF_SIZE);
@@ -136,10 +137,10 @@ void task_wall_clock(void)
 		// needs to be replaced with comms to uart but that's not priority at the moment, need to first get the task working periodically
 		if(!FLAG_RemoveWallClock){
 			// insert code to print to uart and remove printf
-			// printf("\r\n%s\r\n", display);
-			char *disp = mem_alloc(11);
-			sprintf(disp, "\r%s\r", display);
-			printToConsole2(disp, 11);
+			printf("\r\n%s\r\n", display);
+			char *disp = mem_alloc(12);
+			sprintf(disp, "\r%s\r\0", display);
+			printToConsole2(disp, 12);
 			mem_dealloc(disp);
 		}
 		
