@@ -113,7 +113,7 @@ const U32 g_p_stack_size = PROC_STACK_SIZE;
 // remove this bug array in your lab2 code
 // the user stack should come from MPID_IRAM2 memory pool
 //U32 g_p_stacks[MAX_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
-U32 g_p_stacks[NUM_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
+//U32 g_p_stacks[NUM_TASKS][PROC_STACK_SIZE >> 2] __attribute__((aligned(8)));
 /*
  *===========================================================================
  *                            FUNCTIONS
