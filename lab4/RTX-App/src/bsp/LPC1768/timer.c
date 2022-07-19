@@ -160,18 +160,12 @@ void TIMER0_IRQHandler(void)
     LPC_TIM0->IR = BIT(0); 
 		get_tick(&currentTime, TIMER1);
 	
-		if(currentTime.pc < previousTime.pc)//overflow
-		{
-			previousTime.tc = currentTime.tc; 
-			currentTime.pc = currentTime.pc + (0xffffffff - previousTime.pc);
-			previousTime.pc = 0;
-		}
 
 		TCB * currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
 		U32 period ;
-		if((currentTime.tc -  previousTime.tc) ==1)
+		if((currentTime.tc != previousTime.tc))
 		{
-			period = ((currentTime.pc + (0xffffffff - previousTime.pc))/ 100);
+			period = ((currentTime.pc + (0x5F5E100 - previousTime.pc))/ 100);
 		}
 		else
 		{
@@ -183,16 +177,16 @@ void TIMER0_IRQHandler(void)
 		
 		while(currentTCB !=NULL)
 		{
-			if(subtractTime(currentTCB, period)) // if remaining period is <= remaining time do something
-			{
-				currentTCB = currentTCB->next;
-			}
-			else{
+
+			if(!(subtractTime(currentTCB, period))){
 				removeSpecificTCB(readyQueuesArray,SUSP_PRIO,currentTCB->tid);
 				currentTCB->state = READY;
 				pushToEDF(&readyQueuesArray[0],currentTCB);
+				currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
 			}
-			currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
+			else{
+				currentTCB = currentTCB->next;
+			}
 			
 		}
     
