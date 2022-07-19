@@ -195,6 +195,11 @@ int k_mpool_dealloc(mpool_t mpid, void *ptr)
 #ifdef DEBUG_0
     printf("k_mpool_dealloc: mpid = %d, ptr = 0x%x\r\n", mpid, ptr);
 #endif /* DEBUG_0 */
+
+        if ( (int)ptr == 0x2007D3E0 ) {
+            printf("Deallocating 0x2007D3E0...\r\n");
+        }
+
 		if (errno == EINVAL){ // Previous call to alloc did not have MPID
 			return RTX_ERR;
 		}

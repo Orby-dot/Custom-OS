@@ -505,6 +505,7 @@ int k_tsk_create(task_t *task, void (*task_entry)(void), U8 prio, U32 stack_size
 		}
 		
 		*task=freeTCB->tid;
+        printf("+++++ k_tsk_create with tid: %x\r\n", freeTCB->tid);
 		freeTCB->state = READY;
 		freeTCB->prio = prio;
 		freeTCB->priv = 0;
@@ -611,8 +612,8 @@ void k_tsk_exit(void)
 #ifdef DEBUG_0
     printf("k_tsk_exit: entering...\n\r");
 #endif /* DEBUG_0 */
-    if (debugEntryPrint) printf("===== task exit =====\r\n");
-	k_mpool_dealloc(MPID_IRAM2,gp_current_task->psp);
+    printf("+++++ k_tsk_exit with tid: %x\r\n", gp_current_task->tid);
+	k_mpool_dealloc(MPID_IRAM2,gp_current_task->psp); // @Nick ;)
 	
 	gp_current_task->state = DORMANT;
 	
