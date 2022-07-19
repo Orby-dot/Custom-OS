@@ -78,7 +78,7 @@ void printToConsole2(char *data, U32 data_len)
 void task_wall_clock(void)
 {
 	// create mailbox
-	mbx_create(KCD_MBX_SIZE); // required? not sure
+	// mbx_create(KCD_MBX_SIZE); // required? not sure
 
 	// register commands with KCD task by sending to mailbox
 	// WR - wall clock reset

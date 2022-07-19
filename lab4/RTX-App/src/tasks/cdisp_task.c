@@ -52,7 +52,7 @@ void printToUART(char *data, U32 data_len)
 
 void task_cdisp(void)
 {
-    mbx_create(CON_MBX_SIZE);
+    // mbx_create(CON_MBX_SIZE);
 
     U8 *msg_buf = mem_alloc(KCD_CMD_BUF_SIZE); // is repeatedly overwritten
 

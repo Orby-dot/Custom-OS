@@ -119,6 +119,11 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     taskinfo.prio = HIGH;
     taskinfo.priv = 1; //privileged
     k_tsk_create_new(&taskinfo, &g_tcbs[TID_CON], TID_CON);
+
+    k_mbx_create_cstm_task(TID_KCD, KCD_MBX_SIZE);
+    k_mbx_create_cstm_task(TID_CON, CON_MBX_SIZE);
+    k_mbx_create_cstm_task(TID_WCLCK, KCD_MBX_SIZE);
+
 	
     if ( k_tsk_init(tasks, num_tasks) != RTX_OK ) {
         return RTX_ERR;
