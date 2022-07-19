@@ -10,7 +10,6 @@
 #include "uart_polling.h"
 #include "timer.h"
 
-
 char* timeFormat(char * display_string, U32 inputTime){
 	int hours = inputTime/3600;
 	int minutes = inputTime/60;
@@ -51,6 +50,27 @@ char* timeFormat(char * display_string, U32 inputTime){
 	}
 	
 	return display_string;	
+}
+
+void printToConsole2(char *data, U32 data_len)
+{
+    char *to_send = mem_alloc(6 + data_len);
+    RTX_MSG_HDR *header_ts = (RTX_MSG_HDR *)to_send;
+    char *data_ts = (char *)(to_send);
+    data_ts += 6;
+
+    header_ts->length = data_len + 6;
+    header_ts->sender_tid = TID_KCD;
+    header_ts->type = DISPLAY;
+
+    for (int i = 0; i < data_len; i++)
+    {
+        *(data_ts + i) = *(data + i);
+    }
+    //printf("KCD SENDING TO CONSOLE LENGTH %d********* \n\r", header_ts->length);
+    send_msg(TID_CON, to_send);
+
+    mem_dealloc(to_send);
 }
 
 // Purpose: unprivileged soft real-time task that displays a digital clock on the RTX console terminal
@@ -116,7 +136,11 @@ void task_wall_clock(void)
 		// needs to be replaced with comms to uart but that's not priority at the moment, need to first get the task working periodically
 		if(!FLAG_RemoveWallClock){
 			// insert code to print to uart and remove printf
-			printf("\r\n%s\r\n", display);
+			// printf("\r\n%s\r\n", display);
+			char *disp = mem_alloc(11);
+			sprintf(disp, "\r%s\r", display);
+			printToConsole2(disp, 11);
+			mem_dealloc(disp);
 		}
 		
 		rt_tsk_susp();
@@ -128,4 +152,3 @@ void task_wall_clock(void)
  *                             END OF FILE
  *===========================================================================
  */
-
