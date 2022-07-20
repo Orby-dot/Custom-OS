@@ -12,8 +12,8 @@
 
 char* timeFormat(char * display_string, U32 inputTime){
 	int hours = inputTime/3600;
-	int minutes = inputTime/60;
-	int seconds = inputTime%60;
+	int minutes = (inputTime - hours*3600)/60;
+	int seconds = (inputTime - hours*3600-minutes*60);
 	
 	display_string[2] = ':';
 	display_string[5] = ':';
@@ -52,6 +52,14 @@ char* timeFormat(char * display_string, U32 inputTime){
 	return display_string;	
 }
 
+U32 parseTime(char *data){
+	U32 seconds = 0;
+	seconds = (10*(data[0]-'0')+(data[1]-'0'))*3600; // hours to seconds;
+	seconds+= (10*(data[3]-'0')+(data[4]-'0'))*60; ;
+	seconds+= (10*(data[6]-'0')+(data[7]-'0'))*1; ;
+	return seconds;
+}
+
 void printToConsole2(char *data, U32 data_len)
 {
     char *to_send = mem_alloc(6 + data_len);
@@ -63,7 +71,7 @@ void printToConsole2(char *data, U32 data_len)
     header_ts->sender_tid = TID_KCD;
     header_ts->type = DISPLAY;
 
-    for (int i = 0; i < data_len; i++)
+    for (int i = 0; i < 8; i++)
     {
         *(data_ts + i) = *(data + i);
     }
@@ -121,8 +129,9 @@ void task_wall_clock(void)
 				else if(*data == 'T'){ // remove the wall clock display
 					FLAG_RemoveWallClock = 1;
 				}
-				else if(*data == 'S' && header->length == 15){ // set the wall clock display time
+				else if(*data == 'S'){ // set the wall clock display time
 					data+=2;
+					offset = parseTime(data);
 					display = data;
 				}
 			}
