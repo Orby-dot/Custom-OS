@@ -10,7 +10,7 @@
 #include "uart_polling.h"
 #include "timer.h"
 
-char* timeFormat(char * display_string, U32 inputTime){
+void timeFormat(char * display_string, U32 inputTime){
 	int hours = inputTime/3600;
 	int minutes = (inputTime - hours*3600)/60;
 	int seconds = (inputTime - hours*3600-minutes*60);
@@ -48,8 +48,6 @@ char* timeFormat(char * display_string, U32 inputTime){
 		display_string[6] = (seconds/10)+'0';
 		display_string[7] = (seconds%10)+'0';
 	}
-	
-	return display_string;	
 }
 
 U32 parseTime(char *data){
@@ -71,7 +69,7 @@ void printToConsole2(char *data, U32 data_len)
     header_ts->sender_tid = TID_KCD;
     header_ts->type = DISPLAY;
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < data_len; i++)
     {
         *(data_ts + i) = *(data + i);
     }
@@ -120,18 +118,19 @@ void task_wall_clock(void)
 			data += 7;
 			
 			if(header->length>7){ // arguments have been sent back
+				get_tick(time1, 1);
 				
 				if(*data == 'R'){ // reset the wall counter
-					get_tick(time1, 1);
 					offset = -(time1->tc);
 					timeFormat(display, 0);
 				}
 				else if(*data == 'T'){ // remove the wall clock display
-					FLAG_RemoveWallClock = 1;
+					FLAG_RemoveWallClock = !FLAG_RemoveWallClock;
+					timeFormat(display, time1->tc+offset);
 				}
 				else if(*data == 'S'){ // set the wall clock display time
 					data+=2;
-					offset = parseTime(data);
+					offset = parseTime(data) - time1->tc;
 					display = data;
 				}
 			}
@@ -139,17 +138,18 @@ void task_wall_clock(void)
 		else{
 			// no message received so simply increment update wall clock
 			get_tick(time1,1);
-			display = timeFormat(display, time1->tc+offset);
+			timeFormat(display, time1->tc+offset);
 		}
 
+		display[8] = '\0';
 		// read from timer1
 		// needs to be replaced with comms to uart but that's not priority at the moment, need to first get the task working periodically
 		if(!FLAG_RemoveWallClock){
 			// insert code to print to uart and remove printf
 			printf("\r\n%s\r\n", display);
-			char *disp = mem_alloc(12);
-			sprintf(disp, "\r%s\r\0", display);
-			printToConsole2(disp, 12);
+			char *disp = mem_alloc(15);
+			sprintf(disp, "\r%s\r", display);
+			printToConsole2(disp, 15);
 			mem_dealloc(disp);
 		}
 		
