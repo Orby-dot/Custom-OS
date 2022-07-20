@@ -1,32 +1,66 @@
 #include "EDF.h"
-int pushToEDF(readyQueue_t * queue, TCB * tsk)
+
+int pushToEDF(readyQueue_t * queue, TCB * tsk, U8 mode)
 {
 	TCB* currentTCB = queue->head;
 	while(currentTCB != NULL)
 	{
-		//if found a tsk with a longer period
-		if(isShorter(tsk->rt_info->period,currentTCB->rt_info->period))
+		if(mode)
 		{
-			//if that tsk is the head
-			if(currentTCB == queue->head)
+			//if found a tsk with a longer period
+			if(isShorter(tsk->rt_info->remainingTime,currentTCB->rt_info->remainingTime))
 			{
-				queue->head = tsk;
-				tsk ->next = currentTCB;
-				currentTCB->prev = tsk;
+				//if that tsk is the head
+				if(currentTCB == queue->head)
+				{
+					queue->head = tsk;
+					tsk ->next = currentTCB;
+					currentTCB->prev = tsk;
+				}
+				//if not
+				else
+				{
+					TCB * temp = currentTCB->prev;
+				
+					temp->next = tsk;
+					tsk->prev = temp;
+				
+					currentTCB->prev = tsk;
+					tsk->next = currentTCB;
+				}
+				return 1;
 			}
-			//if not
-			else
-			{
-				TCB * temp = currentTCB->prev;
-			
-				temp->next = tsk;
-				tsk->prev = temp;
-			
-				currentTCB->prev = tsk;
-				tsk->next = currentTCB;
-			}
-			return 1;
 		}
+		else
+		{
+			if(isShorter(tsk->rt_info->period,currentTCB->rt_info->period))
+			{
+				//if that tsk is the head
+				if(currentTCB == queue->head)
+				{
+					queue->head = tsk;
+					tsk ->next = currentTCB;
+					currentTCB->prev = tsk;
+				}
+				//if not
+				else
+				{
+					TCB * temp = currentTCB->prev;
+				
+					temp->next = tsk;
+					tsk->prev = temp;
+				
+					currentTCB->prev = tsk;
+					tsk->next = currentTCB;
+				}
+				return 1;
+			}
+		}
+		
+		
+		
+		
+		
 		//cycle thru LL
 		currentTCB = currentTCB->next;
 	}
@@ -55,16 +89,16 @@ int pushToEDF(readyQueue_t * queue, TCB * tsk)
 
 TCB * popFromEDF(readyQueue_t * readyQueuesArray)
 {
-	TCB* currentTCB = readyQueuesArray[0].head;
+	TCB* currentTCB = readyQueuesArray->head;
 	if(currentTCB != NULL)
 	{	
-		readyQueuesArray[0].head = currentTCB->next;
+		readyQueuesArray->head = currentTCB->next;
 		if(currentTCB->next != NULL)
 		{
 			currentTCB->next->prev = NULL;
 		}
 		else{
-			readyQueuesArray[0].tail = NULL;
+			readyQueuesArray->tail = NULL;
 		}
 	}
 	
@@ -72,6 +106,7 @@ TCB * popFromEDF(readyQueue_t * readyQueuesArray)
 }
 int isShorter(TIMEVAL current, TIMEVAL reference)
 {
+		
 	if(current.sec < reference.sec)
 	{
 		return 1;

@@ -143,7 +143,7 @@ TCB *scheduler(void)
 	TCB * selectedTCB = NULL;
 	
 	if(readyQueuesArray[0].head){
-		selectedTCB = popFromEDF(readyQueuesArray);
+		selectedTCB = popFromEDF(&readyQueuesArray[0]);
 		selectedTCB->state = RUNNING;
 		return selectedTCB;
 	}
@@ -352,7 +352,7 @@ int k_tsk_create_new(TASK_INIT *p_taskinfo, TCB *p_tcb, task_t tid)
 		
 		// if RT, it should be put in the EDF, else put it in it's ready queue
 		if(p_tcb->prio == PRIO_RT){
-			pushToEDF(&readyQueuesArray[0], p_tcb);
+			pushToEDF(&readyQueuesArray[0], p_tcb,PERIOD);
 		}
 		else if(tid != TID_NULL) addTCBtoBack(readyQueuesArray,p_tcb->prio,p_tcb);
 		p_tcb->initialized = 1;
@@ -831,7 +831,7 @@ int k_rt_tsk_set(TIMEVAL *p_tv)
 		
 		//Set to RT and release immediately
 		k_tsk_set_prio(gp_current_task->tid, PRIO_RT);
-		pushToEDF(&readyQueuesArray[0], gp_current_task); // TODO: should we be adding to the front by force here - "release immediately"?
+		pushToEDF(&readyQueuesArray[0], gp_current_task,PERIOD); // TODO: should we be adding to the front by force here - "release immediately"?
 		return k_tsk_run_new();
 }
 
@@ -851,11 +851,12 @@ int k_rt_tsk_susp(void)
 		// TODO: error for ENOMEM - don't see where this could occur - may fail at k_tsk_run_new() but not due to mem
 		// Still confused: https://piazza.com/class/l2ahaqd6n9c6nk?cid=457
 		gp_current_task->state = SUSPENDED;
-		addTCBtoBack(readyQueuesArray, SUSP_PRIO, gp_current_task);
 		// I am assuming at this point the task is no longer in the EDF, so all we have to do is set it's state
 		
 		gp_current_task->rt_info->remainingTime.sec = gp_current_task->rt_info->period.sec;
 		gp_current_task->rt_info->remainingTime.usec = gp_current_task->rt_info->period.usec;
+		
+		pushToEDF(&readyQueuesArray[SUSP_PRIO - 0x7f], gp_current_task,REMAINTIME);
 
 		// if the current task is suspended, we should schedule another RT task or some non-RT task
 		return k_tsk_run_new();

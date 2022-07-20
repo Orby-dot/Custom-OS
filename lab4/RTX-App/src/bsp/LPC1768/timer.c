@@ -177,9 +177,9 @@ void TIMER0_IRQHandler(void)
 		{
 
 			if(!(subtractTime(currentTCB, period))){
-				removeSpecificTCB(readyQueuesArray,SUSP_PRIO,currentTCB->tid);
+				popFromEDF(&readyQueuesArray[SUSP_PRIO - 0x7f]);
 				currentTCB->state = READY;
-				pushToEDF(&readyQueuesArray[0],currentTCB);
+				pushToEDF(&readyQueuesArray[0],currentTCB,PERIOD);
 				currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
 			}
 			else{
@@ -191,7 +191,7 @@ void TIMER0_IRQHandler(void)
     g_timer_count++;
 		
 		if(gp_current_task->prio == PRIO_RT){
-			pushToEDF(&readyQueuesArray[0], gp_current_task);
+			pushToEDF(&readyQueuesArray[0], gp_current_task,PERIOD);
 		}
 		else{
 			addTCBtoFront(readyQueuesArray, gp_current_task->prio, gp_current_task);
