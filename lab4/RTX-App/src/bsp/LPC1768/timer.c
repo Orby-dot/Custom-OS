@@ -133,21 +133,18 @@ uint32_t timer_irq_init(uint8_t n_timer)
 // 2. 
 int subtractTime(TCB* tcb, U32 time)
 {
-	if (tcb->rt_info->remainingTime.sec ==0 && time >= tcb->rt_info->remainingTime.usec)
-	{
-		return 0;
-	}
-	else if(time < tcb->rt_info->remainingTime.usec)
-	{
-		tcb->rt_info->remainingTime.usec = tcb->rt_info->remainingTime.usec - time;
-		return 1;
-	}
-	else
-	{
-		tcb->rt_info->remainingTime.usec = tcb->rt_info->remainingTime.usec + 1000000 - time;
-		tcb->rt_info->remainingTime.sec = tcb->rt_info->remainingTime.sec - 1;
-		return 1;
-	}
+    U32 remainingTime = tcb->rt_info->remainingTime.sec*1000000 + tcb->rt_info->remainingTime.usec;
+    if (time >= remainingTime)
+    {
+        return 0;
+    }
+    else
+    {
+        remainingTime -= time;
+        tcb->rt_info->remainingTime.usec = remainingTime % 1000000;
+        tcb->rt_info->remainingTime.sec = remainingTime / 1000000;
+        return 1;
+    }
 }
 
 /**
@@ -172,14 +169,14 @@ void TIMER0_IRQHandler(void)
 			period = ((currentTime.pc - previousTime.pc) / 100 );
 		}
 	
-		previousTime.pc = currentTime.pc; // TODO: possibly sus?
+		previousTime.pc = currentTime.pc; // TODO: possibly sus? // Answer: def not sus
 		previousTime.tc = currentTime.tc;
 		
 		while(currentTCB !=NULL)
 		{
 
 			if(!(subtractTime(currentTCB, period))){
-				removeSpecificTCB(readyQueuesArray,SUSP_PRIO,currentTCB->tid);
+				popFromEDF(&readyQueuesArray[(SUSP_PRIO - 0x7f)]);
 				currentTCB->state = READY;
 				pushToEDF(&readyQueuesArray[0],currentTCB);
 				currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;
