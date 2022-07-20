@@ -86,13 +86,14 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     if ( uart_irq_init(0) != RTX_OK ) {
         return RTX_ERR;
     }
-    
+		timer_irq_init(0);
+    timer_freerun_init(1);
     /* add timer(s) initialization code */
     
 		initializeArrayOfReadyQueues(readyQueuesArray,8);
 		initializeArrayOfReadyQueues(sendQueuesArray,5);
 
-	TASK_INIT taskinfo;
+		TASK_INIT taskinfo;
     // KCD
     taskinfo.ptask = task_kcd;
     taskinfo.u_stack_size = PROC_STACK_SIZE;
@@ -101,6 +102,16 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     taskinfo.priv = 0; // unprivileged
     k_tsk_create_new(&taskinfo, &g_tcbs[TID_KCD], TID_KCD);
 
+		// WALL CLOCK
+    taskinfo.ptask = task_wall_clock;
+    taskinfo.u_stack_size = PROC_STACK_SIZE;
+    taskinfo.tid = TID_WCLCK;
+    taskinfo.sec = 1; // 1 second
+    taskinfo.usec = 0; // 1 second
+    taskinfo.prio = PRIO_RT;
+    taskinfo.priv = 0; // unprivileged
+    k_tsk_create_new(&taskinfo, &g_tcbs[TID_WCLCK], TID_WCLCK);
+		
     // CONSOLE 
     taskinfo.ptask = task_cdisp;
     taskinfo.u_stack_size = PROC_STACK_SIZE;
@@ -108,6 +119,11 @@ int k_rtx_init(RTX_SYS_INFO *sys_info, TASK_INIT *tasks, int num_tasks)
     taskinfo.prio = HIGH;
     taskinfo.priv = 1; //privileged
     k_tsk_create_new(&taskinfo, &g_tcbs[TID_CON], TID_CON);
+
+    k_mbx_create_cstm_task(TID_KCD, KCD_MBX_SIZE);
+    k_mbx_create_cstm_task(TID_CON, CON_MBX_SIZE);
+    k_mbx_create_cstm_task(TID_WCLCK, KCD_MBX_SIZE);
+
 	
     if ( k_tsk_init(tasks, num_tasks) != RTX_OK ) {
         return RTX_ERR;

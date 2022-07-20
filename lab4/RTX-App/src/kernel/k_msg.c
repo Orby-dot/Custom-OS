@@ -60,6 +60,27 @@ int k_mbx_create(size_t size) {
 	return RTX_OK;
 }
 
+int k_mbx_create_cstm_task(task_t tid, size_t size) {
+#ifdef DEBUG_0
+    printf("k_mbx_create: size = %u\r\n", size);
+#endif /* DEBUG_0 */
+	//i set the head of the mailbox to null when we first create the task
+	if(g_tcbs[tid].mailbox.head != NULL)
+	{
+		errno = EEXIST;
+		return RTX_ERR;
+	} else if (size < MIN_MSG_SIZE) {
+		errno = EINVAL;
+		return RTX_ERR;
+	}
+	initializeMailbox(&g_tcbs[tid].mailbox, gp_current_task->tid,size);
+	if (g_tcbs[tid].mailbox.ring_buffer == NULL) {
+		errno = ENOMEM;
+		return RTX_ERR;
+	}
+	return RTX_OK;
+}
+
 int k_send_msg(task_t receiver_tid, const void *buf) {
     // printf("k_send_msg: receiver_tid = %d, buf=0x%x\r\n", receiver_tid, buf);
 	RTX_MSG_HDR * currentMsg = (RTX_MSG_HDR*)buf;

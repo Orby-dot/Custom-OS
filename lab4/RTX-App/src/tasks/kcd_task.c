@@ -151,7 +151,7 @@ void task_kcd(void)
     }
 
     // request a mailbox of size KCD_MBX_SIZE
-    mbx_create(KCD_MBX_SIZE);
+    // mbx_create(KCD_MBX_SIZE);
 
     char *msg_buf = mem_alloc(KCD_CMD_BUF_SIZE); // is repeatedly overwritten
 
@@ -170,6 +170,7 @@ void task_kcd(void)
 
         if (header->type == KCD_REG)
         {
+            printf("REGISTRATION: %c id: %x\n\r", data[0], header->sender_tid);  
             assignTaskId(data[0], header->sender_tid);
         }
         else if (header->type == KEY_IN)

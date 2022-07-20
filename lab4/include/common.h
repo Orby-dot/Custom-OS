@@ -235,7 +235,9 @@ typedef struct task_init
     U32         u_stack_size;       /**< user stack size in bytes           */
     task_t      tid;                /**< task id, output param, deprecated  */
     U8          prio;               /**< execution priority                 */
-    U8          priv;               /**< = 0 unprivileged, =1 privileged    */    
+    U8          priv;               /**< = 0 unprivileged, =1 privileged    */   
+		U32					sec;							/**< Optional - for initializing RT task */
+		U32					usec;							/**< Optional - for initializing RT task */
 } TASK_INIT;
 
 /**
