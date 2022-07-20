@@ -147,9 +147,10 @@ void task_wall_clock(void)
 		if(!FLAG_RemoveWallClock){
 			// insert code to print to uart and remove printf
 			printf("\r\n%s\r\n", display);
-			char *disp = mem_alloc(15);
-			sprintf(disp, "\r%s\r", display);
-			printToConsole2(disp, 15);
+			char *disp = mem_alloc(23);
+			sprintf(disp, "\033[s\033[H\033[72G%s\033[u", display);
+			// sprintf(disp, "\r%s\r", display);
+			printToConsole2(disp, 23);
 			mem_dealloc(disp);
 		}
 		
