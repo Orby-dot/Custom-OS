@@ -81,7 +81,7 @@ int isShorter(TIMEVAL current, TIMEVAL reference)
 		return 0;
 	}
 	else{
-		return current.usec <= reference.usec;
+		return current.usec < reference.usec;
 	}
 	
 	

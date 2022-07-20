@@ -145,6 +145,7 @@ int subtractTime(TCB* tcb, U32 time)
         tcb->rt_info->remainingTime.sec = remainingTime / 1000000;
         return 1;
     }
+
 }
 
 /**
@@ -176,7 +177,7 @@ void TIMER0_IRQHandler(void)
 		{
 
 			if(!(subtractTime(currentTCB, period))){
-				popFromEDF(&readyQueuesArray[(SUSP_PRIO - 0x7f)]);
+				removeSpecificTCB(readyQueuesArray,SUSP_PRIO,currentTCB->tid);
 				currentTCB->state = READY;
 				pushToEDF(&readyQueuesArray[0],currentTCB);
 				currentTCB = readyQueuesArray[(SUSP_PRIO - 0x7f)].head;

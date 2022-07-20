@@ -296,7 +296,7 @@ void priv_task1(void) {
             uart1_put_char(out_char);
         }
         uart1_put_string("\n\r");
-        for ( int x = 0; x < DELAY; x++); // some artifical delay 
+        //for ( int x = 0; x < DELAY; x++); // some artifical delay 
  
         if ( (++i)%6 == 0 ) {
             uart1_put_string("priv_task1 before calling rt_tsk_susp.\n\r");
@@ -308,7 +308,7 @@ void priv_task1(void) {
 void priv_task1(void) {
     while (1) {
         printf("priv_task1: executing\r\n");
-        for ( int x = 0; x < DELAY; x++); // some artificial delay
+        //for ( int x = 0; x < DELAY; x++); // some artificial delay
     }
 }
 #endif
@@ -476,11 +476,14 @@ void task1(void)
     
     for (int i = 0; i < 30 ;i++) {
         char out_char = '0' + i%10;
+			
+				/*
         for (int j = 0; j < 5; j++ ) {
             uart1_put_char(out_char);
         }
         uart1_put_string("\n\r");
         for ( int x = 0; x < DELAY; x++); // some artifical delay 
+			*/
         
         ret_val = recv_msg_nb(g_buf2, BUF_LEN);
         if ( ret_val == RTX_OK ) {
