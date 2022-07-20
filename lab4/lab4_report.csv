@@ -1,5 +1,6 @@
 Name,PlannedHours,RealHours,Contributions
-Kevin,30,,""
-Aryaman,30,,""
-Nick,30,,""
-Jason,30,,""
+Kevin,30,34,"RT functions, Wall Clock, UART commands"
+Aryaman,30,32,"Lab 3 Fixes, UART commands, Wall Clock debugging"
+Nick,30,36,"Lab 3 Fixes, EDF/Scheduler, Timer0 IRQ"
+Jason,30,30,"EDF/Scheduler, Wall Clock debugging"
+,, ,
