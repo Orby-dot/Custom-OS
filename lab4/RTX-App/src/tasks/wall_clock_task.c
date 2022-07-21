@@ -121,14 +121,16 @@ void task_wall_clock(void)
 				get_tick(time1, 1);
 				
 				if(*data == 'R'){ // reset the wall counter
+					FLAG_RemoveWallClock = 0;
 					offset = -(time1->tc);
 					timeFormat(display, 0);
 				}
 				else if(*data == 'T'){ // remove the wall clock display
-					FLAG_RemoveWallClock = !FLAG_RemoveWallClock;
+					FLAG_RemoveWallClock = 1;
 					timeFormat(display, time1->tc+offset);
 				}
 				else if(*data == 'S'){ // set the wall clock display time
+					FLAG_RemoveWallClock = 0;
 					data+=2;
 					offset = parseTime(data) - time1->tc;
 					display = data;
@@ -146,7 +148,7 @@ void task_wall_clock(void)
 		// needs to be replaced with comms to uart but that's not priority at the moment, need to first get the task working periodically
 		if(!FLAG_RemoveWallClock){
 			// insert code to print to uart and remove printf
-			printf("\r\n%s\r\n", display);
+			// printf("\r\n%s\r\n", display);
 			char *disp = mem_alloc(23);
 			sprintf(disp, "\033[s\033[H\033[73G%s\033[u", display);
 			// sprintf(disp, "\r%s\r", display);
