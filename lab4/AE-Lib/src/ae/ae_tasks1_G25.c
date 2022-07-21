@@ -53,7 +53,7 @@ task 0 will finish the last 5 msg, task 1 will then read them.
  *===========================================================================
  */
     
-#define     NUM_TESTS       2       // number of tests
+#define     NUM_TESTS       1       // number of tests
 #define     NUM_INIT_TASKS  1       // number of tasks during initialization
 #define     BUF_LEN         35     // receiver buffer length
 #define     MY_MSG_TYPE     100     // some customized message type
@@ -128,11 +128,11 @@ void update_ae_xtest(int test_id)
 
 void gen_req0(int test_id)
 {
-    g_tsk_cases[test_id].p_ae_case->num_bits = 22;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = 11;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
-    g_tsk_cases[test_id].len = 25; // assign a value no greater than MAX_LEN_SEQ
-    g_tsk_cases[test_id].pos_expt = 23;
+    g_tsk_cases[test_id].len = 11; // assign a value no greater than MAX_LEN_SEQ
+    g_tsk_cases[test_id].pos_expt = 11;
        
     update_ae_xtest(test_id);
 }
@@ -140,7 +140,7 @@ void gen_req0(int test_id)
 void gen_req1(int test_id)
 {
     //bits[0:3] pos check, bits[4:12] for exec order check
-    g_tsk_cases[test_id].p_ae_case->num_bits = 27;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = 11;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
     g_tsk_cases[test_id].len = 0;       // N/A for this test
@@ -161,7 +161,7 @@ int test0_start(int test_id)
     
     //test 0-[0]
     *p_index = 0;
-    strcpy(g_ae_xtest.msg, "task0: creating a HIGH prio task that runs task1 function");
+    strcpy(g_ae_xtest.msg, "task0: creating a HIGH  NON-RT prio task that runs task1 function");
     ret_val = tsk_create(&g_tids[1], &task1, HIGH, 0x200);  /*create a user task */
     sub_result = (ret_val == RTX_OK) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);    
@@ -170,29 +170,6 @@ int test0_start(int test_id)
         test_exit();
     }
     
-    
-    task_t  *p_seq_expt = g_tsk_cases[test_id].seq_expt;
-		p_seq_expt[0] = g_tids[0];
-		p_seq_expt[1] = g_tids[1];
-		
-		for(int i = 2 ;i < 7 ; i ++)
-		{
-			p_seq_expt[i]   = g_tids[0];
-		}
-		for(int i = 7 ;i < 13 ; i ++)
-		{
-			p_seq_expt[i]   = g_tids[1];
-		}
-		for(int i = 13 ;i < 18 ; i ++)
-		{
-			p_seq_expt[i]   = g_tids[0];
-		}
-		for(int i = 18 ;i < 22 ; i ++)
-		{
-			p_seq_expt[i]   = g_tids[1];
-		}
-		p_seq_expt[22] = g_tids[0];
-		
     
     
     return RTX_OK;
@@ -307,40 +284,31 @@ void task0(void)
     ret_val = test0_start(test_id);
     
     if ( ret_val == RTX_OK ) {
-        printf("%s: TID = %u, task0: calling tsk_yield()\r\n", PREFIX_LOG2, tid);     
-        tsk_yield();    // let task1 run to create its mailbox
+        //printf("%s: TID = %u, task0: calling tsk_yield()\r\n", PREFIX_LOG2, tid);     
+        //tsk_yield();    // let task1 run to create its mailbox
         //update_exec_seq(test_id, tid);
         
-        U8 *buf1 = mem_alloc(sizeof(RTX_MSG_HDR) +1);   
-				if(buf1 ==NULL)
-				{
-					printf("FAILED at mem\r\n");
-					tsk_exit();
-				}
-        ((RTX_MSG_HDR*)buf1)->length = sizeof(RTX_MSG_HDR) +1;
-        ((RTX_MSG_HDR*)buf1)->type = MY_MSG_TYPE;
-        ((RTX_MSG_HDR*)buf1)->sender_tid = tid;
-				((char*)buf1)[sizeof(RTX_MSG_HDR)] = 'a';
-        
-        for(int i = 0 ; i < 10; i++)
-				{
-					ret_val = send_msg(g_tids[1], buf1);
-					sprintf(g_ae_xtest.msg, "task0: send_msg_nb to tid(%u)", g_tids[1]);
-					update_exec_seq(test_id, tid);
-					
-					(*p_index)++;
-					((char*)buf1)[sizeof(RTX_MSG_HDR)] =((char*)buf1)[sizeof(RTX_MSG_HDR)]+1 ;
-					sub_result = (ret_val == RTX_OK) ? 1 : 0;	
-					process_sub_result(test_id, *p_index, sub_result);							
-				}    
-				
-				tsk_yield();//allows task 1 to read the last 5 msgs
-				update_exec_seq(test_id, tid);
-				
-        
-        mem_dealloc(buf1);
+      TIMEVAL tv; 
+    
+			tv.sec  = 0;
+			tv.usec = 30000;
+			
+			rt_tsk_set(&tv);  
+			printf("%s: TID = %u, task0: Is now a RT-TSK\r\n", PREFIX_LOG2, tid);    
+			
+			for(int i = 0; i < 10; i++)
+			{
+				//update_exec_seq(test_id, tid);
+				printf("%s: TID = %u, task0: Count is: %u\r\n", PREFIX_LOG2, tid, i);
+				rt_tsk_susp();
+				(*p_index)++;
+				strcpy(g_ae_xtest.msg, "Successful suspend then awake of task 0");
+				sub_result = 1;
+				process_sub_result(test_id, *p_index, sub_result);    
+
+			}
     } 
-		test1_start(test_id + 1, test_id);
+		//test1_start(test_id + 1, test_id);
     
 }
 
@@ -354,36 +322,24 @@ void task1(void)
 		U8      *p_index   = &(g_ae_xtest.index);
     U8 *buf = mem_alloc(BUF_LEN);
 		int     test_id    = 0;
+		task_t tid = tsk_gettid();
 		int     sub_result = 0;
     
-    uart1_put_string("task2: entering \n\r");
-		strcpy(g_ae_xtest.msg, "task1: creating a mailbox");
-    (*p_index) ++;
-    ret_val = mbx_create(BUF_LEN);
-		sub_result = (ret_val == RTX_OK) ? 1 : 0;
-    process_sub_result(test_id, *p_index, sub_result);
-		update_exec_seq(test_id, g_tids[1]);
+    uart1_put_string("task1: entering \n\r");
+    //p_index) ++;
+    
+		for(int i = 0 ; i <= 100; i ++)
+	{
+		//update_exec_seq(test_id, tid);
+		printf("Tsk 1: count = %u \r\n",i);
+		for(int j = 0; j <100;j++){}//delay
+		
+	}
+	*p_index++;
+	strcpy(g_ae_xtest.msg, "Successful end of Non-RT task 1");
+	sub_result = 1;
+	process_sub_result(test_id, *p_index, sub_result);    
 	
-		//printf("CREATED MAILBOX\r\n");
-		for(int i = 0 ; i < 10 ;i++)
-		{
-			
-			ret_val = recv_msg(buf, BUF_LEN);  // blocking receive
-			strcpy(g_ae_xtest.msg, "task1: Reciving msg");
-			(*p_index) ++;
-				if(ret_val == RTX_OK && (char)buf[6] == ('a'+i))
-				{
-					//uart1_put_string("task2: Recieved \n\r");
-					sub_result = 1;
-					process_sub_result(test_id, *p_index, sub_result);
-				}
-				else
-				{
-					sub_result = 0;
-					process_sub_result(test_id, *p_index, sub_result);
-				}
-				update_exec_seq(test_id, g_tids[1]);
-		}
     tsk_exit();
 }
    
