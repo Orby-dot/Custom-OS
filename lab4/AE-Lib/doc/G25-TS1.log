@@ -1,112 +1,146 @@
-G99-TS300: START
-G99-TS300-LOG2: TID = 1, task0 entering
-G99-TS300-LOG: Test[0]-[0]: task0: creating a HIGH prio task that runs task1 function.
-G99-TS300-LOG: Test[0]-[0]: result = 1.
-G99-TS300-LOG2: TID = 1, task0: calling tsk_yield()
-task2: entering 
-G99-TS300-LOG: Test[0]-[1]: task1: creating a mailbox.
-G99-TS300-LOG: Test[0]-[1]: result = 1.
-G99-TS300-LOG: Test[0]-[2]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[2]: result = 1.
-G99-TS300-LOG: Test[0]-[3]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[3]: result = 1.
-G99-TS300-LOG: Test[0]-[4]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[4]: result = 1.
-G99-TS300-LOG: Test[0]-[5]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[5]: result = 1.
-G99-TS300-LOG: Test[0]-[6]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[6]: result = 1.
-G99-TS300-LOG: Test[0]-[7]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[7]: result = 1.
-G99-TS300-LOG: Test[0]-[8]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[8]: result = 1.
-G99-TS300-LOG: Test[0]-[9]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[9]: result = 1.
-G99-TS300-LOG: Test[0]-[10]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[10]: result = 1.
-G99-TS300-LOG: Test[0]-[11]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[11]: result = 1.
-G99-TS300-LOG: Test[0]-[12]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[12]: result = 1.
-G99-TS300-LOG: Test[0]-[13]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[13]: result = 1.
-G99-TS300-LOG: Test[0]-[14]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[14]: result = 1.
-G99-TS300-LOG: Test[0]-[15]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[15]: result = 1.
-G99-TS300-LOG: Test[0]-[16]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[16]: result = 1.
-G99-TS300-LOG: Test[0]-[17]: task0: send_msg_nb to tid(2).
-G99-TS300-LOG: Test[0]-[17]: result = 1.
-G99-TS300-LOG: Test[0]-[18]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[18]: result = 1.
-G99-TS300-LOG: Test[0]-[19]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[19]: result = 1.
-G99-TS300-LOG: Test[0]-[20]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[20]: result = 1.
-G99-TS300-LOG: Test[0]-[21]: task1: Reciving msg.
-G99-TS300-LOG: Test[0]-[21]: result = 1.
-G99-TS300-LOG: real exec order: 1 -> 2 -> 1 -> 1 -> 1 -> 1 -> 1 -> 2 -> 2 -> 2 -> 2 -> 2 -> 2 -> 1 -> 1 -> 1 -> 1 -> 1 -> 2 -> 2 -> 2 -> 2 -> 1 -> NIL
-G99-TS300-LOG: expt exec order: 1 -> 2 -> 1 -> 1 -> 1 -> 1 -> 1 -> 2 -> 2 -> 2 -> 2 -> 2 -> 2 -> 1 -> 1 -> 1 -> 1 -> 1 -> 2 -> 2 -> 2 -> 2 -> 1 -> NIL
-G99-TS300-LOG: Test[1]-[0]: checking execution shortfalls.
-G99-TS300-LOG: Test[1]-[0]: result = 1.
-G99-TS300-LOG: Test[1]-[1]: checking unexpected execution once.
-G99-TS300-LOG: Test[1]-[1]: result = 1.
-G99-TS300-LOG: Test[1]-[2]: checking unexpected execution twice.
-G99-TS300-LOG: Test[1]-[2]: result = 1.
-G99-TS300-LOG: Test[1]-[3]: checking correct number of executions.
-G99-TS300-LOG: Test[1]-[3]: result = 1.
-G99-TS300-LOG: Test[1]-[4]: checking execution sequence @ 0.
-G99-TS300-LOG: Test[1]-[4]: result = 1.
-G99-TS300-LOG: Test[1]-[5]: checking execution sequence @ 1.
-G99-TS300-LOG: Test[1]-[5]: result = 1.
-G99-TS300-LOG: Test[1]-[6]: checking execution sequence @ 2.
-G99-TS300-LOG: Test[1]-[6]: result = 1.
-G99-TS300-LOG: Test[1]-[7]: checking execution sequence @ 3.
-G99-TS300-LOG: Test[1]-[7]: result = 1.
-G99-TS300-LOG: Test[1]-[8]: checking execution sequence @ 4.
-G99-TS300-LOG: Test[1]-[8]: result = 1.
-G99-TS300-LOG: Test[1]-[9]: checking execution sequence @ 5.
-G99-TS300-LOG: Test[1]-[9]: result = 1.
-G99-TS300-LOG: Test[1]-[10]: checking execution sequence @ 6.
-G99-TS300-LOG: Test[1]-[10]: result = 1.
-G99-TS300-LOG: Test[1]-[11]: checking execution sequence @ 7.
-G99-TS300-LOG: Test[1]-[11]: result = 1.
-G99-TS300-LOG: Test[1]-[12]: checking execution sequence @ 8.
-G99-TS300-LOG: Test[1]-[12]: result = 1.
-G99-TS300-LOG: Test[1]-[13]: checking execution sequence @ 9.
-G99-TS300-LOG: Test[1]-[13]: result = 1.
-G99-TS300-LOG: Test[1]-[14]: checking execution sequence @ 10.
-G99-TS300-LOG: Test[1]-[14]: result = 1.
-G99-TS300-LOG: Test[1]-[15]: checking execution sequence @ 11.
-G99-TS300-LOG: Test[1]-[15]: result = 1.
-G99-TS300-LOG: Test[1]-[16]: checking execution sequence @ 12.
-G99-TS300-LOG: Test[1]-[16]: result = 1.
-G99-TS300-LOG: Test[1]-[17]: checking execution sequence @ 13.
-G99-TS300-LOG: Test[1]-[17]: result = 1.
-G99-TS300-LOG: Test[1]-[18]: checking execution sequence @ 14.
-G99-TS300-LOG: Test[1]-[18]: result = 1.
-G99-TS300-LOG: Test[1]-[19]: checking execution sequence @ 15.
-G99-TS300-LOG: Test[1]-[19]: result = 1.
-G99-TS300-LOG: Test[1]-[20]: checking execution sequence @ 16.
-G99-TS300-LOG: Test[1]-[20]: result = 1.
-G99-TS300-LOG: Test[1]-[21]: checking execution sequence @ 17.
-G99-TS300-LOG: Test[1]-[21]: result = 1.
-G99-TS300-LOG: Test[1]-[22]: checking execution sequence @ 18.
-G99-TS300-LOG: Test[1]-[22]: result = 1.
-G99-TS300-LOG: Test[1]-[23]: checking execution sequence @ 19.
-G99-TS300-LOG: Test[1]-[23]: result = 1.
-G99-TS300-LOG: Test[1]-[24]: checking execution sequence @ 20.
-G99-TS300-LOG: Test[1]-[24]: result = 1.
-G99-TS300-LOG: Test[1]-[25]: checking execution sequence @ 21.
-G99-TS300-LOG: Test[1]-[25]: result = 1.
-G99-TS300-LOG: Test[1]-[26]: checking execution sequence @ 22.
-G99-TS300-LOG: Test[1]-[26]: result = 1.
-G99-TS300: FINISHED
-G99-TS300-LOG: Test 0: 22/22 PASSED. Expected = 0x3FFFFF, result = 0x3FFFFF
-G99-TS300-LOG: Test 1: 27/27 PASSED. Expected = 0x7FFFFFF, result = 0x7FFFFFF
-G99-TS300: 2/2 test function(s) COMPLETED.
-G99-TS300: 49/49 tests PASSED.
-G99-TS300: 0/49 tests FAILED.
-G99-TS300: END
+G25-TS300: START
+G2[s[H[73G00:00:00[u5-TS300-LOG2: TID = 1, task0 entering
+G25-TS300-LOG: Test[0]-[0]: task0: creating a HIGH  NON-RT prio task that runs task1 function.
+G25-TS300-LOG: Test[0]-[0]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Is now a RT-TSK
+G25-TS300-LOG2: TID = 1, task0: Count is: 0
+task1: entering 
 
+Tsk 1: count = 0 
+Tsk 1: count = 1 
+Tsk 1: count = 2 
+Tsk 1: count = 3 
+Tsk 1: count = 4 
+Tsk 1: count = 5 
+Tsk 1: count = 6 
+Tsk 1: count = 7 
+Tsk 1: count = 8 
+Tsk 1: count = 9 
+Tsk 1: count = 10 
+Tsk 1: count = 11 
+Tsk 1: count = 12 
+Tsk 1: count = 13 
+Tsk 1: count = 14 
+Tsk 1: count = 15 
+Tsk 1: count = 16 
+TskG25-TS300-LOG: Test[0]-[1]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[1]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Count is: 1
+ 1: count = 17 
+Tsk 1: count = 18 
+Tsk 1: count = 19 
+Tsk 1: count = 20 
+Tsk 1: count = 21 
+Tsk 1: count = 22 
+Tsk 1: count = 23 
+Tsk 1: count = 24 
+Tsk 1: count = 25 
+Tsk 1: count = 26 
+Tsk 1: count = 27 
+Tsk 1: count = 28 
+Tsk 1: count = 29 
+Tsk 1: count = 30 
+Tsk 1: count = 31 
+Tsk 1: count = 32 
+Tsk 1: count = 33 
+Tsk 1: counG25-TS300-LOG: Test[0]-[2]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[2]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Count is: 2
+t = 34 
+Tsk 1: count = 35 
+Tsk 1: count = 36 
+Tsk 1: count = 37 
+Tsk 1: count = 38 
+Tsk 1: count = 39 
+Tsk 1: count = 40 
+Tsk 1: count = 41 
+Tsk 1: count = 42 
+Tsk 1: count = 43 
+Tsk 1: count = 44 
+Tsk 1: count = 45 
+Tsk 1: count = 46 
+Tsk 1: count = 47 
+Tsk 1: count = 48 
+Tsk 1: count = 49 
+Tsk 1: count = 50 
+Tsk 1: count = 51 G25-TS300-LOG: Test[0]-[3]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[3]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Count is: 3
+
+Tsk 1: count = 52 
+Tsk 1: count = 53 
+Tsk 1: count = 54 
+Tsk 1: count = 55 
+Tsk 1: count = 56 
+Tsk 1: count = 57 
+Tsk 1: count = 58 
+Tsk 1: count = 59 
+Tsk 1: count = 60 
+Tsk 1: count = 61 
+Tsk 1: count = 62 
+Tsk 1: count = 63 
+Tsk 1: count = 64 
+Tsk 1: count = 65 
+Tsk 1: count = 66 
+Tsk 1: count = 67 
+Tsk 1: count = 68 
+Tsk 1:G25-TS300-LOG: Test[0]-[4]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[4]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Count is: 4
+ count = 69 
+Tsk 1: count = 70 
+Tsk 1: count = 71 
+Tsk 1: count = 72 
+Tsk 1: count = 73 
+Tsk 1: count = 74 
+Tsk 1: count = 75 
+Tsk 1: count = 76 
+Tsk 1: count = 77 
+Tsk 1: count = 78 
+Tsk 1: count = 79 
+Tsk 1: count = 80 
+Tsk 1: count = 81 
+Tsk 1: count = 82 
+Tsk 1: count = 83 
+Tsk 1: count = 84 
+Tsk 1: count = 85 
+Tsk 1: count G25-TS300-LOG: Test[0]-[5]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[5]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Count is: 5
+= 86 
+Tsk 1: count = 87 
+Tsk 1: count = 88 
+Tsk 1: count = 89 
+Tsk 1: count = 90 
+Tsk 1: count = 91 
+Tsk 1: count = 92 
+Tsk 1: count = 93 
+Tsk 1: count = 94 
+Tsk 1: count = 95 
+Tsk 1: count = 96 
+Tsk 1: count = 97 
+Tsk 1: count = 98 
+Tsk 1: count = 99 
+Tsk 1: count = 100 
+G25-TS300-LOG: Test[0]-[6]: Successful end of Non-RT task 1.G25-TS300-LOG: Test[0]-[7]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[7]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Count is: 6
+
+G25-TS300-LOG: Test[0]-[6]: result = 1.
+G25-TS300-LOG: Test[0]-[8]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[8]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Count is: 7
+G25-TS300-LOG: Test[0]-[9]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[9]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Count is: 8
+G25-TS300-LOG: Test[0]-[10]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[10]: result = 1.
+G25-TS300-LOG2: TID = 1, task0: Count is: 9
+G25-TS300-LOG: Test[0]-[11]: Successful suspend then awake of task 0.
+G25-TS300-LOG: Test[0]-[11]: result = 1.
+G25-TS300: FINISHED
+G25-TS300-LOG: Test 0: 12/12 PASSED. Expected = 0xFFF, result = 0xFFF
+G25-TS300: 1/1 test function(s) COMPLETED.
+G25-TS300: 12/12 tests PASSED.
+G25-TS300: 0/12 tests FAILED.
+G25-TS300: END

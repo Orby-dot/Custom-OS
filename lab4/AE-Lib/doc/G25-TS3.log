@@ -1,22 +1,22 @@
-G99-TS300: START
-G99-TS300-LOG2: TID = 1, task0 entering
-G99-TS300-LOG: Test[0]-[0]: task0: creating a LOW prio task that runs task1 function.
-G99-TS300-LOG: Test[0]-[0]: result = 1.
-G99-TS300-LOG: Test[0]-[1]: task0: creating a MEDIUM prio task that runs task2 function.
-G99-TS300-LOG: Test[0]-[1]: result = 1.
-G99-TS300-LOG: Test[0]-[2]: task0: creating a mailbox of size 128 Bytes.
-G99-TS300-LOG: Test[0]-[2]: result = 1.
-G99-TS300-LOG: Test[0]-[3]: task0: calling mbx_get on itself, should be equal to BUF_LEN (since nothing sent).
-G99-TS300-LOG: Test[0]-[3]: result = 1.
-G99-TS300-LOG: Test[0]-[4]: task0: calling mbx_get on UART MAILBOX, should be equal to UART_MBX_SIZE (since nothing sent).
-G99-TS300-LOG: Test[0]-[4]: result = 1.
-G99-TS300-LOG: Test[0]-[5]: task0: calling mbx_ls, should return 1 + KCD + CON = 3.
-G99-TS300-LOG: Test[0]-[5]: result = 1.
-G99-TS300-LOG: Test[0]-[6]: task0: calling mbx_get on wrong tid, should return RTX_ERr and errno.
-G99-TS300-LOG: Test[0]-[6]: result = 1.
-G99-TS300: FINISHED
-G99-TS300-LOG: Test 0: 7/7 PASSED. Expected = 0x7F, result = 0x7F
-G99-TS300: 1/1 test function(s) COMPLETED.
-G99-TS300: 7/7 tests PASSED.
-G99-TS300: 0/7 tests FAILED.
-G99-TS300: END
+G25-TS3: START
+G2[s[H[73G00:00:00[u5-TS3-LOG2: TID = 1, task0 entering
+G25-TS3-LOG: Test[0]-[0]: task0: creating a LOW prio task that runs task1 function.
+G25-TS3-LOG: Test[0]-[0]: result = 1.
+G25-TS3-LOG: Test[0]-[1]: task0: creating a MEDIUM prio task that runs task2 function.
+G25-TS3-LOG: Test[0]-[1]: result = 1.
+G25-TS3-LOG: Test[0]-[2]: task0: creating a mailbox of size 128 Bytes.
+G25-TS3-LOG: Test[0]-[2]: result = 1.
+G25-TS3-LOG: Test[0]-[3]: task0: calling mbx_get on itself, should be equal to BUF_LEN (since nothing sent).
+G25-TS3-LOG: Test[0]-[3]: result = 1.
+G25-TS3-LOG: Test[0]-[4]: task0: calling mbx_get on UART MAILBOX, should be equal to UART_MBX_SIZE (since nothing sent).
+G25-TS3-LOG: Test[0]-[4]: result = 1.
+G25-TS3-LOG: Test[0]-[5]: task0: calling mbx_ls, should return 1 + WLCLK + KCD + CON = 3.
+G25-TS3-LOG: Test[0]-[5]: result = 1.
+G25-TS3-LOG: Test[0]-[6]: task0: calling mbx_get on wrong tid, should return RTX_ERr and errno.
+G25-TS3-LOG: Test[0]-[6]: result = 1.
+G25-TS3: FINISHED
+G25-TS3-LOG: Test 0: 7/7 PASSED. Expected = 0x7F, result = 0x7F
+G25-TS3: 1/1 test function(s) COMPLETED.
+G25-TS3: 7/7 tests PASSED.
+G25-TS3: 0/7 tests FAILED.
+G25-TS3: END
