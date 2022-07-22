@@ -665,7 +665,7 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
     }
 
     if (!letMeChangeToRT && g_tcbs[task_id].prio != PRIO_RT && prio == PRIO_RT) { //Non-RT task tryna switch to RT prio
-        letMeChangeToRT = TRUE;
+        letMeChangeToRT = FALSE;
         errno = EPERM;
         return RTX_ERR;
     }

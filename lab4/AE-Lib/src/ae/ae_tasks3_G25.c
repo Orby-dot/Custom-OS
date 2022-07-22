@@ -1,30 +1,4 @@
-/*
- ****************************************************************************
- *
- *                  UNIVERSITY OF WATERLOO ECE 350 RTOS LAB
- *
- *                     Copyright 2020-2021 Yiqing Huang
- *                          All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions are met:
- *  - Redistributions of source code must retain the above copyright
- *    notice and the following disclaimer.
- *
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- *  ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
- *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- *  POSSIBILITY OF SUCH DAMAGE.
- ****************************************************************************
- */
+
 
 /**************************************************************************//**
  * @file        ae_tasks300.c
@@ -60,9 +34,9 @@
  *                             GLOBAL VARIABLES 
  *===========================================================================
  */
-const char   PREFIX[]      = "G99-TS300";
-const char   PREFIX_LOG[]  = "G99-TS300-LOG";
-const char   PREFIX_LOG2[] = "G99-TS300-LOG2";
+const char   PREFIX[]      = "G25-TS3";
+const char   PREFIX_LOG[]  = "G25-TS3-LOG";
+const char   PREFIX_LOG2[] = "G25-TS3-LOG2";
 TASK_INIT    g_init_tasks[NUM_INIT_TASKS];
 
 AE_XTEST     g_ae_xtest;                // test data, re-use for each test
@@ -203,10 +177,10 @@ int test0_start(int test_id)
 
     //test 0-[5]
     (*p_index)++;
-    sprintf(g_ae_xtest.msg, "task0: calling mbx_ls, should return 1 + KCD + CON = 3");
+    sprintf(g_ae_xtest.msg, "task0: calling mbx_ls, should return 1 + WLCLK + KCD + CON = 3");
     task_t buf[10];
     ret_val = mbx_ls(&buf[0], 10);
-    sub_result = (ret_val == 3) ? 1 : 0;
+    sub_result = (ret_val == 4) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
 
     //test 0-[6]
@@ -216,18 +190,8 @@ int test0_start(int test_id)
     sub_result = ((ret_val == RTX_ERR) && errno == ENOENT) ? 1 : 0;
     process_sub_result(test_id, *p_index, sub_result);
 
+    test_exit();
 
-    task_t  *p_seq_expt = g_tsk_cases[test_id].seq_expt;
-    for ( int i = 0; i < 6; i += 3 ) {
-        p_seq_expt[i]   = g_tids[0];
-        p_seq_expt[i+1] = g_tids[1];
-        p_seq_expt[i+2] = g_tids[2];
-    }
-    p_seq_expt[6] = g_tids[0];
-    p_seq_expt[7] = g_tids[1];
-    p_seq_expt[8] = g_tids[0];
-    
-    
     return RTX_OK;
 }
 
@@ -262,7 +226,6 @@ void task0(void)
     
     ret_val = test0_start(test_id);
   
-    test_exit();
 }
 
 /**************************************************************************//**
