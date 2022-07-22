@@ -10,13 +10,13 @@
       <TargetName>AE Lib SIM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>LPC1768</Device>
           <Vendor>NXP</Vendor>
-          <PackID>Keil.LPC1700_DFP.2.7.1</PackID>
+          <PackID>Keil.LPC1700_DFP.2.7.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x10000000,0x8000) IRAM2(0x2007C000,0x8000) IROM(0x00000000,0x80000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -513,6 +513,11 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>ae_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+            </File>
+            <File>
               <FileName>ae_tasks300_G99.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
@@ -528,9 +533,9 @@
           <GroupName>AE-active</GroupName>
           <Files>
             <File>
-              <FileName>ae_tasks.c</FileName>
+              <FileName>ae_tasks3_G25.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -607,16 +612,6 @@
           </GroupOption>
           <Files>
             <File>
-              <FileName>ae_tasks_mbx_cmd_reg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks_mbx_cmd_reg.c</FilePath>
-            </File>
-            <File>
-              <FileName>ae_tasks3_G25.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
-            </File>
-            <File>
               <FileName>ae_tasks2_G25.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks2_G25.c</FilePath>
@@ -626,6 +621,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks1_G25.c</FilePath>
             </File>
+            <File>
+              <FileName>ae_tasks_wclk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks_wclk.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -634,13 +634,13 @@
       <TargetName>AE Lib RAM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>LPC1768</Device>
           <Vendor>NXP</Vendor>
-          <PackID>Keil.LPC1700_DFP.2.7.1</PackID>
+          <PackID>Keil.LPC1700_DFP.2.7.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x10000000,0x8000) IRAM2(0x2007C000,0x8000) IROM(0x00000000,0x80000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -1137,6 +1137,11 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>ae_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+            </File>
+            <File>
               <FileName>ae_tasks300_G99.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks300_G99.c</FilePath>
@@ -1152,9 +1157,9 @@
           <GroupName>AE-active</GroupName>
           <Files>
             <File>
-              <FileName>ae_tasks.c</FileName>
+              <FileName>ae_tasks3_G25.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks.c</FilePath>
+              <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1231,16 +1236,6 @@
           </GroupOption>
           <Files>
             <File>
-              <FileName>ae_tasks_mbx_cmd_reg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks_mbx_cmd_reg.c</FilePath>
-            </File>
-            <File>
-              <FileName>ae_tasks3_G25.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\ae\ae_tasks3_G25.c</FilePath>
-            </File>
-            <File>
               <FileName>ae_tasks2_G25.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks2_G25.c</FilePath>
@@ -1249,6 +1244,11 @@
               <FileName>ae_tasks1_G25.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ae\ae_tasks1_G25.c</FilePath>
+            </File>
+            <File>
+              <FileName>ae_tasks_wclk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ae\ae_tasks_wclk.c</FilePath>
             </File>
           </Files>
         </Group>
