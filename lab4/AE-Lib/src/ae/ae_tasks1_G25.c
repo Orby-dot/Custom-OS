@@ -128,11 +128,11 @@ void update_ae_xtest(int test_id)
 
 void gen_req0(int test_id)
 {
-    g_tsk_cases[test_id].p_ae_case->num_bits = 11;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = 12;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
-    g_tsk_cases[test_id].len = 11; // assign a value no greater than MAX_LEN_SEQ
-    g_tsk_cases[test_id].pos_expt = 11;
+    g_tsk_cases[test_id].len = 12; // assign a value no greater than MAX_LEN_SEQ
+    g_tsk_cases[test_id].pos_expt = 12;
        
     update_ae_xtest(test_id);
 }
@@ -140,7 +140,7 @@ void gen_req0(int test_id)
 void gen_req1(int test_id)
 {
     //bits[0:3] pos check, bits[4:12] for exec order check
-    g_tsk_cases[test_id].p_ae_case->num_bits = 11;  
+    g_tsk_cases[test_id].p_ae_case->num_bits = 12;  
     g_tsk_cases[test_id].p_ae_case->results = 0;
     g_tsk_cases[test_id].p_ae_case->test_id = test_id;
     g_tsk_cases[test_id].len = 0;       // N/A for this test
@@ -309,6 +309,7 @@ void task0(void)
 			}
     } 
 		//test1_start(test_id + 1, test_id);
+		test_exit();
     
 }
 
@@ -335,7 +336,7 @@ void task1(void)
 		for(int j = 0; j <100;j++){}//delay
 		
 	}
-	*p_index++;
+	(*p_index)++;
 	strcpy(g_ae_xtest.msg, "Successful end of Non-RT task 1");
 	sub_result = 1;
 	process_sub_result(test_id, *p_index, sub_result);    
