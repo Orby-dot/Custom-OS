@@ -55,9 +55,6 @@ U32 parseTime(char *data){
 	seconds = (10*(data[0]-'0')+(data[1]-'0'))*3600; // hours to seconds;
 	seconds+= (10*(data[3]-'0')+(data[4]-'0'))*60; ;
 	seconds+= (10*(data[6]-'0')+(data[7]-'0'))*1; ;
-
-	if (seconds >= 24*3600) 
-		return 0;
 	return seconds;
 }
 
