@@ -23,12 +23,36 @@
 #define     BUF_LEN         100
 #define     MY_MSG_TYPE     100     // some customized message type, better move it to common_ext.h
 
+#define     NUM_TESTS       1       // number of tests
+#define     BUF_LEN         35     // receiver buffer length
+#define     MY_MSG_TYPE     100     // some customized message type
 #define     NUM_INIT_TASKS  2       // number of tasks during initialization
+
 TASK_INIT   g_init_tasks[NUM_INIT_TASKS];
 
 U8 g_buf1[BUF_LEN];
 U8 g_buf2[BUF_LEN];
 task_t g_tasks[MAX_TASKS];
+
+
+
+const char   PREFIX[]      = "G25-TS11";
+const char   PREFIX_LOG[]  = "G25-TS11-LOG";
+const char   PREFIX_LOG2[] = "G25-TS11-LOG2";
+
+AE_XTEST     g_ae_xtest;                // test data, re-use for each test
+AE_CASE      g_ae_cases[NUM_TESTS];
+AE_CASE_TSK  g_tsk_cases[NUM_TESTS];
+
+/* The following arrays can also be dynamic allocated to reduce ZI-data size
+ *  They do not have to be global buffers (provided the memory allocator has no bugs)
+ */
+ 
+U8 g_buf1[BUF_LEN];
+U8 g_buf2[BUF_LEN];
+task_t g_tasks[MAX_TASKS];
+task_t g_tids[MAX_TASKS];
+
 
 void set_ae_init_tasks (TASK_INIT **pp_tasks, int *p_num)
 {
@@ -48,6 +72,26 @@ void set_ae_tasks(TASK_INIT *tasks, int num)
     tasks[0].ptask = &priv_task1;
     tasks[1].priv  = 0;
     tasks[1].ptask = &task1;
+
+    init_ae_tsk_test();
+}
+
+void init_ae_tsk_test(void)
+{
+    g_ae_xtest.test_id = 0;
+    g_ae_xtest.index = 0;
+    g_ae_xtest.num_tests = NUM_TESTS;
+    g_ae_xtest.num_tests_run = 0;
+    
+    for ( int i = 0; i< NUM_TESTS; i++ ) {
+        g_tsk_cases[i].p_ae_case = &g_ae_cases[i];
+        g_tsk_cases[i].p_ae_case->results  = 0x0;
+        g_tsk_cases[i].p_ae_case->test_id  = i;
+        g_tsk_cases[i].p_ae_case->num_bits = 10;
+        g_tsk_cases[i].pos = 0;  // first avaiable slot to write exec seq tid
+        // *_expt fields are case specific, deligate to specific test case to initialize
+    }
+    printf("%s: START\r\n", PREFIX);
 }
 
 /**************************************************************************//**
@@ -56,15 +100,11 @@ void set_ae_tasks(TASK_INIT *tasks, int num)
  *****************************************************************************/
 
 void priv_task1(void) {
-    int i = 0;
-    int j = 0;
-    long int x = 0;
     int ret_val = 10;
     mbx_t mbx_id = -1;
     task_t tid = tsk_gettid();
     task_t tid1; 
     char *buf = NULL;           // this is a user dynamically allocated buffer
-    RTX_MSG_HDR msg_hdr;
     
     buf = mem_alloc(BUF_LEN);
     mbx_id = mbx_create(BUF_LEN);  // create a mailbox for itself
@@ -119,10 +159,6 @@ void priv_task1(void) {
  *****************************************************************************/
 void task1(void)
 {
-    long int x = 0;
-    int ret_val = 10;
-    int i = 0;
-    int j = 0;
     task_t tid = tsk_gettid();
     
     size_t msg_hdr_size = sizeof(struct rtx_msg_hdr);
@@ -146,36 +182,111 @@ void task1(void)
     mem_dealloc(ptr1);
     mem_dump();
 
-    //printf("task1: TID =%d\r\n", tid); 
-    for (i = 1;i<10;i++) {
-        char out_char = '0' + i%10;
-        for (j = 0; j < 1; j++ ) {
-            uart1_put_char(out_char);
-        }
-        //uart1_put_string("\n\r");
-        
-        for ( x = 0; x < DELAY; x++); // some artifical delay
-        if ( i%6 == 0 ) {
-            //uart1_put_string("task1 before yielding cpu.\n\r");
-            ret_val = tsk_yield();
-            //uart1_put_string("task1 after yielding cpu.\n\r");
-            //printf("task1: ret_val=%d\n\r", ret_val);
-#ifdef DEBUG_0
-            //printf("task1: tid = %d, ret_val=%d\n\r", tid, ret_val);
-#endif /* DEBUG_0 */
-        }
-    }
-        printf("Test Begins.......\r\n");
 
+        printf("%s: ERRNO TEST IN TASK 1\r\n", PREFIX);
+
+        U8      *p_index    = &(g_ae_xtest.index);
+        int     sub_result  = 0;
+                
         TIMEVAL tv;    
 
         tv.sec  = 0;
         tv.usec = 0;
 
-        int ret = rt_tsk_set(&tv);
-        if (ret == RTX_ERR) {
-            printf("rt_tsk_set failed");
-        }
+        int ret = 7;
+        
+        // 0 - 0 
+        ret = rt_tsk_set(&tv);
+
+        *p_index = 0;
+        strcpy(g_ae_xtest.msg, "Checking errno when rt_tsk_set with 0 period");
+        sub_result = (ret == RTX_ERR && errno == EINVAL) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+
+        // 0 - 1
+        tv.sec  = 0;
+        tv.usec = 350;
+        ret = rt_tsk_set(&tv);
+
+        (*p_index)++;
+        strcpy(g_ae_xtest.msg, "Checking errno when rt_tsk_set with non-divisible period");
+        sub_result = (ret == RTX_ERR && errno == EINVAL) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+        // 0 - 2
+        ret = rt_tsk_susp();
+
+        (*p_index)++;
+        strcpy(g_ae_xtest.msg, "Checking errno when rt_tsk_susp on non-rt task");
+        sub_result = (ret == RTX_ERR && errno == EPERM) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+        // 0 - 3
+        TIMEVAL buffy;
+        task_t my_tid = tsk_gettid();
+        ret = rt_tsk_get(my_tid, &buffy); 
+
+        (*p_index)++;
+        strcpy(g_ae_xtest.msg, "Checking rt_tsk_get fails since I'm not a rt task.");
+        sub_result = (ret == RTX_ERR && errno==EPERM) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+        // 0 - 4
+        ret = tsk_set_prio(my_tid, PRIO_RT);
+
+        (*p_index)++;
+        strcpy(g_ae_xtest.msg, "Checking set_prio to PRIO_RT fails for a non-RT task.");
+        sub_result = (ret == RTX_ERR && errno == EPERM) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+        // 0 - 5        
+        tv.sec  = 1;
+        tv.usec = 0;
+        ret = rt_tsk_set(&tv);
+
+        (*p_index)++;
+        strcpy(g_ae_xtest.msg, "Checking valid rt_tsk_set");
+        sub_result = (ret == RTX_OK) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+        // 0 - 6
+        tv.sec  = 1;
+        tv.usec = 0;
+        ret = rt_tsk_set(&tv);
+
+        (*p_index)++;
+        strcpy(g_ae_xtest.msg, "Checking errno when rt_tsk_set called twice");
+        sub_result = (ret == RTX_ERR && errno == EPERM) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+        // 0 - 7
+        ret = rt_tsk_get(99, &buffy); 
+
+        (*p_index)++;
+        strcpy(g_ae_xtest.msg, "Checking rt_tsk_get fails for invalid tid.");
+        sub_result = (ret == RTX_ERR && errno==EINVAL) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+        // 0 - 8
+        ret = rt_tsk_get(my_tid, &buffy); 
+
+        (*p_index)++;
+        strcpy(g_ae_xtest.msg, "Checking rt_tsk_get passes for me, now that I'm RT :).");
+        sub_result = (ret == RTX_OK && buffy.sec == 1 && buffy.usec == 0) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+        // 0 - 9
+        ret = tsk_set_prio(my_tid, LOWEST);
+
+        (*p_index)++;
+        strcpy(g_ae_xtest.msg, "Checking set_prio fails for a RT task.");
+        sub_result = (ret == RTX_ERR && errno == EPERM) ? 1 : 0;
+        process_sub_result(0, *p_index, sub_result);
+
+        g_ae_xtest.num_tests_run++;
+
+        test_exit();
 
         tsk_exit();         // terminating the task
 }
@@ -184,20 +295,6 @@ void task1(void)
  */
 void task2(void)
 {
-    int ret_val;
-    U8 *buf = mem_alloc(BUF_LEN);
-    
-    //uart1_put_string("task2: entering \n\r");
-    
-    ret_val = mbx_create(BUF_LEN);
-		//printf("CREATED MAILBOX\r\n");
-	for(int i = 0 ; i < 10 ;i++)
-		{
-    ret_val = recv_msg(buf, BUF_LEN);  // blocking receive    
-		//printf("TASK2: I got it! Here it is: %c\r\n",(char)buf[6]);
-		}
-    mem_dealloc(buf);   // free the buffer space
-    //printf("TASK 2 DED\r\n");
     tsk_exit();
 }
 
