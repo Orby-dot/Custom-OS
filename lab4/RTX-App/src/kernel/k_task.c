@@ -116,7 +116,7 @@ The memory map of the OS image may look like the following:
 ---------------------------------------------------------------------------*/ 
 
 BOOL debugEntryPrint = FALSE;
-
+BOOL letMeChangeToRT = FALSE;
 
 
 /*
@@ -657,6 +657,21 @@ int k_tsk_set_prio(task_t task_id, U8 prio)
     printf("task_id = %d, prio = %d.\n\r", task_id, prio);
 #endif /* DEBUG_0 */
 
+    // RT edge cases:
+
+    if (g_tcbs[task_id].prio == PRIO_RT && prio != PRIO_RT) { //RT task tryna switch to non-RT prio
+        errno = EPERM;
+        return RTX_ERR;
+    }
+
+    if (!letMeChangeToRT && g_tcbs[task_id].prio != PRIO_RT && prio == PRIO_RT) { //Non-RT task tryna switch to RT prio
+        letMeChangeToRT = TRUE;
+        errno = EPERM;
+        return RTX_ERR;
+    }
+
+    
+
 	if((prio > LOWEST || prio < HIGH) && prio!=PRIO_RT)
 	{
 		errno = EINVAL;
@@ -802,7 +817,7 @@ int k_rt_tsk_set(TIMEVAL *p_tv)
 #endif /* DEBUG_0 */
 	
 		//check if the current task is already a RT task
-		if(gp_current_task->state == PRIO_RT) {
+		if(gp_current_task->prio == PRIO_RT) {
 			errno = EPERM;
 			return RTX_ERR;
 		}
@@ -830,6 +845,7 @@ int k_rt_tsk_set(TIMEVAL *p_tv)
 		gp_current_task->rt_info->remainingTime.usec = gp_current_task->rt_info->period.usec;		
 		
 		//Set to RT and release immediately
+        letMeChangeToRT = TRUE;
 		k_tsk_set_prio(gp_current_task->tid, PRIO_RT);
 		pushToEDF(&readyQueuesArray[0], gp_current_task,PERIOD); // TODO: should we be adding to the front by force here - "release immediately"?
 		return k_tsk_run_new();
@@ -885,6 +901,11 @@ int k_rt_tsk_get(task_t tid, TIMEVAL *buffer)
 			return RTX_ERR;
 		}
 		
+        if (tid >= MAX_TASKS) {
+            errno = EINVAL;
+			return RTX_ERR;
+        }
+
 		//task_id does not point to an RT task
 		if(g_tcbs[tid].prio != PRIO_RT) {
 			errno = EINVAL;

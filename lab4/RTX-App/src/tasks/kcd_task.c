@@ -170,7 +170,7 @@ void task_kcd(void)
 
         if (header->type == KCD_REG)
         {
-            printf("REGISTRATION: %c id: %x\n\r", data[0], header->sender_tid);  
+            // printf("REGISTRATION: %c id: %x\n\r", data[0], header->sender_tid);  
             assignTaskId(data[0], header->sender_tid);
         }
         else if (header->type == KEY_IN)
