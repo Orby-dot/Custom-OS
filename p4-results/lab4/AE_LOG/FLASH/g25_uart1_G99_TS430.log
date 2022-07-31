@@ -1,0 +1,12 @@
+=======SIM Target FLASH DOWNLOAD LOG - Fri Jul 22 06:28:51 EDT 2022 - ECESTAF71  ==========
+g25 tested by G99_TS430
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2022.07.22 06:29:00 =~=~=~=~=~=~=~=~=~=~=~=
+G99-TS430: START
+G99-TS430: HardFault
+G99-TS430: ERROR: Last Active Test [0]-[0] - 
+G99-TS430: ABORTED
+G99-TS430-LOG: Test 0: 0/1 PASSED. Expected = 0x1, result = 0x0
+G99-TS430: 0/1 test function(s) COMPLETED.
+G99-TS430: 0/1 tests PASSED.
+G99-TS430: 1/1 tests FAILED.
+G99-TS430: END

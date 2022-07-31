@@ -1,0 +1,16 @@
+  
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Software\Keil_v5\ARM\ARMCC\Bin'
+Build target 'RTX App SIM'
+linking...
+Program Size: Code=15456 RO-data=276 RW-data=88 ZI-data=2296  
+".\Objects\SIM\rtx-app-sim.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:01
+  
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Software\Keil_v5\ARM\ARMCC\Bin'
+Build target 'RTX App RAM'
+linking...
+Program Size: Code=15448 RO-data=276 RW-data=88 ZI-data=2296  
+".\Objects\RAM\rtx-app-ram.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:02
+  
+Batch-Build summary: 2 succeeded, 0 failed, 0 skipped - Time Elapsed: 00:00:03

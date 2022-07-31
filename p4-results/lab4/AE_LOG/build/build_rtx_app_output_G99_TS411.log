@@ -1,0 +1,43 @@
+  
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Software\Keil_v5\ARM\ARMCC\Bin'
+Build target 'RTX App SIM'
+linking...
+Program Size: Code=16800 RO-data=276 RW-data=112 ZI-data=2320  
+".\Objects\SIM\rtx-app-sim.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:01
+  
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Software\Keil_v5\ARM\ARMCC\Bin'
+Build target 'RTX App RAM'
+linking...
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching bit_array.o(i.getXPosition).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching helper.o(i.findSize).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching printf.o(i.init_printf).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching k_task.o(i.getTotalTimeMicroSeconds).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching exit.o(.text).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching ae_util.o(i.count_set_bits).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching bit_array.o(i.convertLevelToIndex).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching bit_array.o(i.getBitPositionMask).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching helper.o(i.log_2).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching k_task.o(i.k_tsk_gettid).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching sys_exit.o(.text).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching printf.o(i.putcp).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching hal.o(.emb_text).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching __rtentry2.o(.ARM.Collect$$rtentry$$0000000D).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching libspace.o(.text).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching null_task.o(i.task_null).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching heapauxi.o(.text).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching rtexit2.o(.ARM.Collect$$rtexit$$00000004).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching ae.o(i.ae_exit).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching libinit.o(.ARM.Collect$$libinit$$00000000).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching use_no_semi.o(.text).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching libshutdown.o(.ARM.Collect$$libshutdown$$00000000).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6406E: No space in execution regions with .ANY selector matching indicate_semi.o(.text).
+.\Objects\RAM\rtx-app-ram.axf: Error: L6407E: Sections of aggregate size 0x11c bytes could not fit into .ANY selector(s).
+Not enough information to list image symbols.
+Not enough information to list load addresses in the image map.
+Finished: 2 information, 0 warning and 24 error messages.
+".\Objects\RAM\rtx-app-ram.axf" - 24 Error(s), 0 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:02
+  
+Batch-Build summary: 1 succeeded, 1 failed, 0 skipped - Time Elapsed: 00:00:03
